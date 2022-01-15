@@ -6,12 +6,12 @@ VALUES ('aborkowski', 'Artur', 'Borkowski', 'aborkowski@gmail.com', 'has1o');
 
 
 -- Wydawnictwo
-INSERT INTO Wydawnictwo (nazwa) VALUES ('Prószyński i S-ka');
-INSERT INTO Wydawnictwo (nazwa) VALUES ('Rebis');
-INSERT INTO Wydawnictwo (nazwa) VALUES ('Media Rodzina');
-INSERT INTO Wydawnictwo (nazwa) VALUES ('W.A.B.');
-INSERT INTO Wydawnictwo (nazwa) VALUES ('Wydawnictwo Literackie');
-INSERT INTO Wydawnictwo (nazwa) VALUES ('Wydawnictwo Iskry');
+INSERT INTO Wydawnictwo (nazwa) VALUES ('Prószyński i S-ka'); -- 1
+INSERT INTO Wydawnictwo (nazwa) VALUES ('Rebis'); -- 2
+INSERT INTO Wydawnictwo (nazwa) VALUES ('Media Rodzina'); -- 3
+INSERT INTO Wydawnictwo (nazwa) VALUES ('W.A.B.'); -- 4
+INSERT INTO Wydawnictwo (nazwa) VALUES ('Wydawnictwo Literackie'); -- 5
+INSERT INTO Wydawnictwo (nazwa) VALUES ('Wydawnictwo Iskry'); -- 6
 
 
 -- Dziedzina
@@ -85,24 +85,23 @@ VALUES (7,'sport'); -- 30
 
 -- Autor
 INSERT INTO Autor (imie, nazwisko)
-VALUES ('Jane','Austen');
+VALUES ('Jane','Austen'); -- 1
 INSERT INTO Autor (imie, nazwisko)
-VALUES ('J.R.R.','Tolkien');
+VALUES ('J.R.R.','Tolkien'); -- 2
 INSERT INTO Autor (imie, nazwisko)
-VALUES ('Witold','Gombrowicz');
+VALUES ('Witold','Gombrowicz'); -- 3
 INSERT INTO Autor (imie, nazwisko)
-VALUES ('George','Orwell');
+VALUES ('George','Orwell'); -- 4
 INSERT INTO Autor (imie, nazwisko)
-VALUES ('Fiodor','Dostojewski');
+VALUES ('Fiodor','Dostojewski'); --5
 INSERT INTO Autor (imie, nazwisko)
-VALUES ('J.K.','Rowling');
+VALUES ('J.K.','Rowling'); -- 6
 INSERT INTO Autor (imie, nazwisko)
-VALUES ('Harper','Lee');
+VALUES ('Harper','Lee'); -- 7
 INSERT INTO Autor (imie, nazwisko)
-VALUES ('Terry','Pratchett');
+VALUES ('Terry','Pratchett'); -- 8
 INSERT INTO Autor (imie, nazwisko)
-VALUES ('Neil','Gaiman');   -- 2 autor Dobry omen
-
+VALUES ('Neil','Gaiman'); -- 9
 
 -- Czytelnik
 INSERT INTO Czytelnik (imie, nazwisko, email, telefon, login, haslo)
@@ -121,6 +120,21 @@ VALUES (1, 'Dobry omen', 2019, 9788381690867); -- 2
 INSERT INTO Ksiazka (Wydawnictwo_idWydawnictwo, tytul, rok_wydania, ISBN)
 VALUES (2, 'Zabić drozda', 2015, 9788378187929); -- 3
 
+INSERT INTO Ksiazka (Wydawnictwo_idWydawnictwo, tytul, rok_wydania, ISBN)
+VALUES (3, 'Harry Potter i Kamień Filozoficzny', 2016, 9788380082113); -- 4
+INSERT INTO Ksiazka (Wydawnictwo_idWydawnictwo, tytul, rok_wydania, ISBN)
+VALUES (3, 'Harry Potter i Komnata Tajemnic', 2016, 9788380082137); -- 5
+INSERT INTO Ksiazka (Wydawnictwo_idWydawnictwo, tytul, rok_wydania, ISBN)
+VALUES (4, 'Folwark zwierzęcy', 2021, 9788328072596); -- 6
+INSERT INTO Ksiazka (Wydawnictwo_idWydawnictwo, tytul, rok_wydania, ISBN)
+VALUES (4, 'Zbrodnia i kara', 2018, 9788328055971); -- 7
+INSERT INTO Ksiazka (Wydawnictwo_idWydawnictwo, tytul, rok_wydania, ISBN)
+VALUES (4, '1984', 2021, 9788328072466); -- 8
+INSERT INTO Ksiazka (Wydawnictwo_idWydawnictwo, tytul, rok_wydania, ISBN)
+VALUES (5, 'Ferdydurke', 2012, 9788308049211); -- 9
+
+
+
 -- Rezerwacja
 INSERT INTO Rezerwacja (Czytelnik_idCzytelnik, Ksiazka_idKsiazka, data_rezerwacji)
 VALUES (1,1,'2022-01-07 00:44:56.943037');
@@ -137,6 +151,19 @@ VALUES (2,9);
 INSERT INTO Ksiazka_Autor (Ksiazka_idKsiazka, Autor_idAutor)
 VALUES (3,7);
 
+INSERT INTO Ksiazka_Autor (Ksiazka_idKsiazka, Autor_idAutor)
+VALUES (4,6);
+INSERT INTO Ksiazka_Autor (Ksiazka_idKsiazka, Autor_idAutor)
+VALUES (5,6);
+INSERT INTO Ksiazka_Autor (Ksiazka_idKsiazka, Autor_idAutor)
+VALUES (6,4);
+INSERT INTO Ksiazka_Autor (Ksiazka_idKsiazka, Autor_idAutor)
+VALUES (7,5);
+INSERT INTO Ksiazka_Autor (Ksiazka_idKsiazka, Autor_idAutor)
+VALUES (8,4);
+INSERT INTO Ksiazka_Autor (Ksiazka_idKsiazka, Autor_idAutor)
+VALUES (9,3);
+
 -- Ksiazka_Dziedzina
 INSERT INTO Ksiazka_Dziedzina (Ksiazka_idKsiazka, Dziedzina_idDziedzina)
 VALUES (1,8);
@@ -145,23 +172,56 @@ VALUES (2,8);
 INSERT INTO Ksiazka_Dziedzina (Ksiazka_idKsiazka, Dziedzina_idDziedzina)
 VALUES (3,11);
 
+INSERT INTO Ksiazka_Dziedzina (Ksiazka_idKsiazka, Dziedzina_idDziedzina)
+VALUES (4,12);
+INSERT INTO Ksiazka_Dziedzina (Ksiazka_idKsiazka, Dziedzina_idDziedzina)
+VALUES (5,12);
+INSERT INTO Ksiazka_Dziedzina (Ksiazka_idKsiazka, Dziedzina_idDziedzina)
+VALUES (6,9);
+INSERT INTO Ksiazka_Dziedzina (Ksiazka_idKsiazka, Dziedzina_idDziedzina)
+VALUES (6,11);
+INSERT INTO Ksiazka_Dziedzina (Ksiazka_idKsiazka, Dziedzina_idDziedzina)
+VALUES (7,11);
+INSERT INTO Ksiazka_Dziedzina (Ksiazka_idKsiazka, Dziedzina_idDziedzina)
+VALUES (8,11);
+INSERT INTO Ksiazka_Dziedzina (Ksiazka_idKsiazka, Dziedzina_idDziedzina)
+VALUES (9,9);
+
+
+
 -- Egzemplarz
-INSERT INTO Egzemplarz (Ksiazka_idKsiazka)
-VALUES (1); -- 1
-INSERT INTO Egzemplarz (Ksiazka_idKsiazka)
-VALUES (1); -- 2
-INSERT INTO Egzemplarz (Ksiazka_idKsiazka)
-VALUES (2); -- 3
-INSERT INTO Egzemplarz (Ksiazka_idKsiazka)
-VALUES (3); -- 4
-INSERT INTO Egzemplarz (Ksiazka_idKsiazka)
-VALUES (3); -- 5
+INSERT INTO Egzemplarz (Ksiazka_idKsiazka) VALUES (1); -- 1
+INSERT INTO Egzemplarz (Ksiazka_idKsiazka) VALUES (1); -- 2
+INSERT INTO Egzemplarz (Ksiazka_idKsiazka) VALUES (2); -- 3
+INSERT INTO Egzemplarz (Ksiazka_idKsiazka) VALUES (3); -- 4
+INSERT INTO Egzemplarz (Ksiazka_idKsiazka) VALUES (3); -- 5
+INSERT INTO Egzemplarz (Ksiazka_idKsiazka) VALUES (4); -- 6
+INSERT INTO Egzemplarz (Ksiazka_idKsiazka) VALUES (5); -- 7
+INSERT INTO Egzemplarz (Ksiazka_idKsiazka) VALUES (5); -- 8
+INSERT INTO Egzemplarz (Ksiazka_idKsiazka) VALUES (5);
+INSERT INTO Egzemplarz (Ksiazka_idKsiazka) VALUES (6); -- 10
+INSERT INTO Egzemplarz (Ksiazka_idKsiazka) VALUES (6);
+INSERT INTO Egzemplarz (Ksiazka_idKsiazka) VALUES (7); -- 12
+INSERT INTO Egzemplarz (Ksiazka_idKsiazka) VALUES (7);
+INSERT INTO Egzemplarz (Ksiazka_idKsiazka) VALUES (8); -- 14
+INSERT INTO Egzemplarz (Ksiazka_idKsiazka) VALUES (8);
+INSERT INTO Egzemplarz (Ksiazka_idKsiazka) VALUES (9); -- 16
+INSERT INTO Egzemplarz (Ksiazka_idKsiazka) VALUES (9);
+INSERT INTO Egzemplarz (Ksiazka_idKsiazka) VALUES (9); -- 18
 
 -- Wypozyczenie
 INSERT INTO Wypozyczenie (Czytelnik_idCzytelnik, Egzemplarz_idEgzemplarz) --, data_wypozyczenia, data_planowanego_oddania, data_oddania
 VALUES (3,1);
-UPDATE Egzemplarz SET wypozyczona = true WHERE idEgzemplarz = 1;
+-- \/ to robi trigger
+-- UPDATE Egzemplarz SET wypozyczona = true WHERE idEgzemplarz = 1;
+
+
+-- Oddawanie ksiazki (trigger zmienia wypozyczona na false)
+-- UPDATE Wypozyczenie SET data_oddania = NOW() WHERE Egzemplarz_idEgzemplarz = 1 AND czytelnik_idCzytelnik = 3;
+
 
 
 -- INSERT INTO x ()
 -- VALUES ();
+
+-- UPDATE Czytelnik SET kara = 10.1 WHERE idCzytelnik = 2;

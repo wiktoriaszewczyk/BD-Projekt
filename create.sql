@@ -43,7 +43,7 @@ CREATE TABLE Czytelnik (
   nazwisko VARCHAR(255)   NOT NULL ,
   email VARCHAR(45)   NOT NULL UNIQUE,
   telefon INTEGER DEFAULT NULL ,
-  kara INTEGER NOT NULL DEFAULT 0,
+  kara FLOAT NOT NULL DEFAULT 0.0,
   login VARCHAR(45)   NOT NULL UNIQUE,
   haslo VARCHAR(45)   NOT NULL   ,
 CHECK (((telefon < 1000000000 AND telefon >= 100000000) OR telefon IS NULL) AND email LIKE '%_@_%._%'), 
@@ -141,11 +141,11 @@ CREATE INDEX IFK_Rel_09 ON Egzemplarz (Ksiazka_idKsiazka);
 CREATE TABLE Wypozyczenie (
   Czytelnik_idCzytelnik INTEGER   NOT NULL ,
   Egzemplarz_idEgzemplarz INTEGER   NOT NULL ,
-  data_wypozyczenia DATE   NOT NULL DEFAULT NOW(),
-  data_planowanego_oddania DATE   NOT NULL DEFAULT NOW() + INTERVAL '1 MONTH',
-  data_oddania DATE  DEFAULT NULL    ,
+  data_wypozyczenia timestamp   NOT NULL DEFAULT NOW(),
+  data_planowanego_oddania timestamp   NOT NULL DEFAULT NOW() + INTERVAL '1 MONTH',
+  data_oddania timestamp  DEFAULT NULL    ,
 CHECK(data_wypozyczenia < data_planowanego_oddania AND data_wypozyczenia <= data_oddania),
-PRIMARY KEY(Czytelnik_idCzytelnik, Egzemplarz_idEgzemplarz)    ,
+PRIMARY KEY(Czytelnik_idCzytelnik, Egzemplarz_idEgzemplarz, data_wypozyczenia) ,
   FOREIGN KEY(Czytelnik_idCzytelnik)
     REFERENCES Czytelnik(idCzytelnik),
   FOREIGN KEY(Egzemplarz_idEgzemplarz)
