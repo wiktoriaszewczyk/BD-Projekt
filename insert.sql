@@ -188,6 +188,10 @@ INSERT INTO Ksiazka_Dziedzina (Ksiazka_idKsiazka, Dziedzina_idDziedzina)
 VALUES (9,9);
 
 
+-- Dwie różne naddziedziny
+-- INSERT INTO Ksiazka_Dziedzina (Ksiazka_idKsiazka, Dziedzina_idDziedzina)
+-- VALUES (4,20);
+
 
 -- Egzemplarz
 INSERT INTO Egzemplarz (Ksiazka_idKsiazka) VALUES (1); -- 1
