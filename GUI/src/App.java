@@ -1,4 +1,4 @@
-// import javax.swing.*;
+import javax.swing.*;
 // import javax.swing.border.Border;
 // import javax.swing.plaf.BorderUIResource;
 
@@ -6,76 +6,10 @@
 // import java.awt.Font;
 // import java.awt.event.*;
 
-public class App /*implements ActionListener*/{
-  // private static JFrame frame;
-  // private static JPanel panel;
-  // private static JLabel userlabel;
-  // private static JLabel passwordlabel;
-  // private static JTextField userText;
-  // private static JPasswordField passwordText;
-  // private static JButton button;
-  // private static JLabel success;
-  // private static DB db;
+public class App {
   public static void main(String[] args){
-    // db = new DB(); 
     
-    // frame = new JFrame();
-    // frame.setTitle("Biblioteka - Projekt BD Wiktoria Szewczyk");
-    // frame.setSize(1200,700);
-    // frame.setLocationRelativeTo(null);  // center frame
-    // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    
-    // frame.getContentPane().setBackground(Color.green); // nie zmienia się jak jest panel
-
-    new MyFrame();
-
-
-    // panel = new JPanel();
-    // frame.add(panel);
-    // panel.setLayout(null);
-
-    // userlabel = new JLabel("User");
-    // userlabel.setBounds(10, 20, 80, 25);
-    // panel.add(userlabel);
-    
-    // userText = new JTextField();
-    // userText.setBounds(100, 20, 165, 25);
-    // panel.add(userText);
-
-    // passwordlabel = new JLabel("Password");
-    // passwordlabel.setBounds(10, 50, 80, 25);
-    // panel.add(passwordlabel);
-
-    // passwordText = new JPasswordField();
-    // passwordText.setBounds(100, 50, 165, 25);
-    // panel.add(passwordText);
-
-    // button = new JButton("Login");
-    // button.setBounds(10, 80, 80, 25);
-    // button.addActionListener(new App());
-    // panel.add(button);
-
-    // success = new JLabel("");
-    // success.setBounds(10,110,300,25);
-    // panel.add(success);
-
-    // frame.setVisible(true);
   }
-
-  // @Override
-  // public void actionPerformed(ActionEvent e) {
-  //   String user = userText.getText();
-  //   String password = passwordText.getText();
-  //   if(db.logPracownik(user, password)){
-  //     success.setText("Login successful!");
-  //   }
-  //   else{
-  //     success.setText("Incorrect passwordą!");
-  //   }
-    // panel.setVisible(false);
-    // System.out.println("aaa");
-  // }
-
 }
 
 

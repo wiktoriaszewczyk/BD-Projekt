@@ -37,6 +37,7 @@ END;
 $$
 LANGUAGE plpgsql;
 
+
 -------------------------------------------------------------------------------------
 
 -- czy zarezerwowana ksiazka jest juz dostepna

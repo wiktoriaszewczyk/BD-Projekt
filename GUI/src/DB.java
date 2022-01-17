@@ -47,8 +47,49 @@ public class DB {
         return toReturn;
     }
 
-    boolean rejestracjaCzytelnik(String imie, String nazwisko, String email, String telefon, String login, String haslo1){
-        return true;
+    boolean rejestracjaCzytelnik(String imie, String nazwisko, String email, int telefon, String login, String haslo){
+        boolean toReturn = false;
+        try{       
+            PreparedStatement pst = c.prepareCall( "INSERT INTO Czytelnik (imie, nazwisko, email, telefon, login, haslo) VALUES (?,?,?,?,?,?)" );
+            pst.setString(1,imie);
+            pst.setString(2,nazwisko);
+            pst.setString(3,email);
+            if(telefon!=0)
+                pst.setInt(4,telefon);
+            else
+                pst.setNull(4,Types.INTEGER);
+            pst.setString(5,login);
+            pst.setString(6,haslo);
+ 
+            toReturn = (pst.executeUpdate() != 0);
+            
+            pst.close(); 
+
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+        return toReturn;
+    }
+
+    boolean rejestracjaPracownik(String imie, String nazwisko, String email, String login, String haslo){
+        boolean toReturn = false;
+        try{       
+            PreparedStatement pst = c.prepareCall( "INSERT INTO Pracownik (login, imie, nazwisko, email, haslo) VALUES  (?,?,?,?,?)" );
+            pst.setString(1,login);
+            pst.setString(1,imie);
+            pst.setString(3,nazwisko);
+            pst.setString(4,email);
+            pst.setString(5,haslo);
+ 
+            toReturn = (pst.executeUpdate() != 0);
+
+            pst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+        return toReturn;
     }
 
 }
