@@ -1,18 +1,9 @@
-import javax.swing.*;
-// import javax.swing.border.Border;
-// import javax.swing.plaf.BorderUIResource;
-
-// import java.awt.Color;
-// import java.awt.Font;
-// import java.awt.event.*;
 
 public class App {
   public static void main(String[] args){
-    
+    new MyFrame();
   }
 }
-
-
 
 
 

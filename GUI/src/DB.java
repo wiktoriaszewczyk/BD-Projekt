@@ -1,4 +1,6 @@
+import java.math.BigDecimal;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class DB {
     Connection c = null; 
@@ -90,6 +92,33 @@ public class DB {
             System.out.println("Blad podczas przetwarzania danych:"+e);
         }
         return toReturn;
+    }
+
+    void infoKsiazki(ArrayList<Ksiazka> ksiazki){
+        // cos co czysci ksiazki - tak żeby wywolywać te funkcje kilka razy, po zmianach w tabeli
+        try{       
+            PreparedStatement pst = c.prepareCall( "SELECT idksiazka, tytul, rok_wydania, isbn, autorzy, dziedziny FROM ksiazka_info;" );
+ 
+            ResultSet rs;
+            rs = pst.executeQuery();
+            while (rs.next())  {
+                int idksiazka = rs.getInt(1);
+                String tytul = rs.getString(2);
+                int rok_wydania = rs.getInt(3);
+                BigDecimal isbn = rs.getBigDecimal(4);
+                String autorzy = rs.getString(5);
+                String dziedziny = rs.getString(6);
+                // int ilosc_egzemplarzy = 
+                // System.out.println(idksiazka + ", " + tytul + ", " + rok_wydania + ", " + isbn + ", " + autorzy + ", " + dziedziny);
+                ksiazki.add(new Ksiazka(idksiazka, tytul, rok_wydania, isbn, autorzy, dziedziny));
+            }
+            rs.close();      
+            pst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+
     }
 
 }

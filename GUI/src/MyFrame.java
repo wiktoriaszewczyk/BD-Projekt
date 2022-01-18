@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.Font;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,6 +17,14 @@ public class MyFrame extends JFrame{
     private static JPanel zarejestrujPracownikPanel;
     private static JPanel katalogKsiazekPanel;
 
+    private static KsiazkaPanel ksiazkaInfoPanel;
+        // private static JLabel tytul_autorLabel;
+        // private static JLabel rokWydaniaLabel;
+        // private static JLabel isbnLabel;
+        // private static JLabel dziedzinyLabel;
+    
+    
+
     MyFrame(){
         this.setTitle("Biblioteka - Projekt BD Wiktoria Szewczyk");
         this.setSize(1200,700);
@@ -27,15 +36,16 @@ public class MyFrame extends JFrame{
 
         loginPracownikPanelInit();
         zarejestrujPracownikPanelInit();
-
         zarejestrujCzytelnikPanelInit();
-
         katalogKsiazekPanelInit();
+        ksiazkaInfoPanelInit();
 
         this.add(startPanel);
         this.add(loginPracownikPanel);
         this.add(zarejestrujCzytelnikPanel);
         this.add(katalogKsiazekPanel);
+
+        this.add(ksiazkaInfoPanel);
 
 
         // this.setLayout(null);
@@ -97,6 +107,10 @@ public class MyFrame extends JFrame{
         buttonPracownik.setFocusable(false);
         buttonPracownik.addActionListener(e -> {startPanel.setVisible(false); loginPracownikPanel.setVisible(true);});
 
+        // JButton test = new JButton("test");
+        // test.setBounds(0,0,100,30);
+        // test.addActionListener(e -> db.infoKsiazki());
+
         startPanel.add(header);
         startPanel.add(loginLabel);
         startPanel.add(login);
@@ -107,6 +121,8 @@ public class MyFrame extends JFrame{
         startPanel.add(bladLogowania);
         startPanel.add(ksiegozbiorButton);
         startPanel.add(buttonPracownik);
+        
+        // startPanel.add(test);
     }
 
     private static void loginPracownikPanelInit(){
@@ -315,10 +331,26 @@ public class MyFrame extends JFrame{
         katalogKsiazekPanel.setBounds(0, 0, 1200, 700);
 
         JLabel header = new JLabel("Katalog ksiażek",SwingConstants.CENTER);
+        JButton powrotButton = new JButton("Powrót do startu");
+        
         header.setBounds(0,20,1200,50);
         header.setFont(new Font("TimesRoman",Font.BOLD,40));
 
-        JButton powrotButton = new JButton("Powrót do startu");
+
+        ArrayList<Ksiazka> ksiazki = new ArrayList<Ksiazka>();
+        db.infoKsiazki(ksiazki);
+
+        int y = 100;
+        for(Ksiazka k : ksiazki){
+            JButton tmp = new JButton(k.getTytul() + ", " + k.getAutorzy());
+            tmp.setBounds(200,y,800,35);
+            tmp.setFocusable(false);
+            tmp.addActionListener(e -> ksiazkaInfo(k));
+            y += 40;
+
+            katalogKsiazekPanel.add(tmp);
+        }
+
         powrotButton.setBounds(465, 500, 270, 30);
         powrotButton.setFocusable(false);
         powrotButton.addActionListener(e -> {startPanel.setVisible(true); katalogKsiazekPanel.setVisible(false);});
@@ -327,6 +359,11 @@ public class MyFrame extends JFrame{
         katalogKsiazekPanel.add(powrotButton);
 
         katalogKsiazekPanel.setVisible(false);
+    }
+
+    private static void ksiazkaInfoPanelInit(){
+        ksiazkaInfoPanel = new KsiazkaPanel();
+        ksiazkaInfoPanel.getPowrotButton().addActionListener(e -> {katalogKsiazekPanel.setVisible(true); ksiazkaInfoPanel.setVisible(false);});
     }
 
     // --------------------------------------------------------------------------------
@@ -429,6 +466,14 @@ public class MyFrame extends JFrame{
         return toReturn;
     }
 
+    private static void ksiazkaInfo(Ksiazka k){
+        ksiazkaInfoPanel.setVisible(true); katalogKsiazekPanel.setVisible(false);
+        ksiazkaInfoPanel.getTytul().setText(k.getTytul());
+        ksiazkaInfoPanel.getAutor().setText("Autor: " + k.getAutorzy());
+        ksiazkaInfoPanel.getRokWydania().setText("Rok wydania: " + String.valueOf(k.getRokwydania()));
+        ksiazkaInfoPanel.getIsbn().setText("ISBN: " + String.valueOf(k.getIsbn()));
+        ksiazkaInfoPanel.getDziedziny().setText("Kategorie: " + k.getDziedziny());
+    }
     public static void main(String[] args){
         new MyFrame();
     }
