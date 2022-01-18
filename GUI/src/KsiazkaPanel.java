@@ -7,7 +7,7 @@ public class KsiazkaPanel extends JPanel{
     private JLabel rokWydaniaLabel;
     private JLabel isbnLabel;
     private JLabel dziedzinyLabel;
-    public JButton powrotButton ;
+    private JButton powrotButton ;
     /*
         label ile egzemplarzy 
         label ile dostepnych
