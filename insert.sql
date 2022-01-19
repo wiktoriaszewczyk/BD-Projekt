@@ -214,8 +214,16 @@ INSERT INTO Egzemplarz (Ksiazka_idKsiazka) VALUES (9);
 INSERT INTO Egzemplarz (Ksiazka_idKsiazka) VALUES (9); -- 18
 
 -- Wypozyczenie
+INSERT INTO Wypozyczenie (Czytelnik_idCzytelnik, Egzemplarz_idEgzemplarz, data_wypozyczenia, data_planowanego_oddania)
+VALUES (1,4,'2021-09-19 11:37:44.361709','2021-10-19 11:37:44.361709');
+    UPDATE Wypozyczenie SET data_oddania = '2021-11-19 11:37:44.361709' WHERE Egzemplarz_idEgzemplarz = 4 AND czytelnik_idCzytelnik = 1;
 INSERT INTO Wypozyczenie (Czytelnik_idCzytelnik, Egzemplarz_idEgzemplarz) --, data_wypozyczenia, data_planowanego_oddania, data_oddania
 VALUES (3,1);
+
+INSERT INTO Wypozyczenie (Czytelnik_idCzytelnik, Egzemplarz_idEgzemplarz, data_wypozyczenia, data_planowanego_oddania, data_oddania)
+VALUES (2,5,'2021-10-19 11:37:44.361709','2021-11-19 11:37:44.361709',NULL);
+    UPDATE Wypozyczenie SET data_oddania = '2022-01-19 11:37:44.361709' WHERE Egzemplarz_idEgzemplarz = 5 AND czytelnik_idCzytelnik = 2;
+
 -- \/ to robi trigger
 -- UPDATE Egzemplarz SET wypozyczona = true WHERE idEgzemplarz = 1;
 

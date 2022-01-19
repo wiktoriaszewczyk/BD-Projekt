@@ -23,5 +23,3 @@ GROUP BY k.idKsiazka;
 
 -- Książka, autorzy, dziedziny
 
-
-

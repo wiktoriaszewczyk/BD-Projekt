@@ -22,9 +22,9 @@ public class DB {
         System.out.println("Połączenie!");
     }
 
-    boolean logowanie(boolean kto, String l, String p){
+    int logowanie(boolean kto, String l, String p){
         // kto false - czytelnik, true pracownik 
-        boolean toReturn = false;
+        int toReturn = 0;
         try{       
 
             CallableStatement cst;
@@ -39,7 +39,7 @@ public class DB {
             rs = cst.executeQuery();
             while (rs.next())  {
                 int result = rs.getInt(1);
-                toReturn = (result != 0);
+                toReturn = result;
             }
 
             rs.close();      
@@ -468,5 +468,247 @@ public class DB {
 
     }
 
+    void infoCzytelnik(Czytelnik czytelnik){
+        try{       
+            PreparedStatement pst = c.prepareCall( "SELECT * FROM czytelnik WHERE idczytelnik = ?;" );
+            pst.setInt(1, czytelnik.getId());
+
+            ResultSet rs;
+            rs = pst.executeQuery();
+            while (rs.next())  {
+                String imie = rs.getString(2);
+                String nazwisko = rs.getString(3);
+                String email = rs.getString(4);
+                Integer telefon = rs.getInt(5); // ? null
+                float kara = rs.getFloat(6);
+                String login = rs.getString(7);
+                String haslo = rs.getString(8);
+                czytelnik.setAll(imie, nazwisko, email, telefon, kara, login, haslo);
+            }
+            rs.close();      
+            pst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+    }
+
+    boolean aktualizujKaraCzytelnik(Czytelnik czytelnik){
+        boolean toReturn = false;
+        try{       
+            PreparedStatement pst = c.prepareCall( "UPDATE Czytelnik SET kara = ? WHERE idczytelnik = ?;" );
+            pst.setFloat(1,0);
+            pst.setInt(2,czytelnik.getId());
+ 
+            toReturn = (pst.executeUpdate() != 0);
+            if(toReturn){
+                czytelnik.zaplacKara();
+            }
+            pst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+        return toReturn;
+    }
+
+    void infoWypozyczone(DefaultListModel<Egzemplarz> list, int idCzytelnik){
+        list.clear();
+        try{       
+            PreparedStatement pst = c.prepareCall( "SELECT * FROM wypozyczone_egzemplarze_nieoddane WHERE czytelnik_idczytelnik = ?;" );
+
+            pst.setInt(1,idCzytelnik);
+            //  w.czytelnik_idczytelnik, w.data_wypozyczenia, w.data_planowanego_oddania, e.idegzemplarz, e.idksiazka, e.wypozyczona, e.tytul, e.rok_wydania, e.isbn, e.autorzy, e.dziedziny
+            ResultSet rs;
+            rs = pst.executeQuery();
+            while (rs.next())  {
+                String data_wypozyczenia = rs.getString(2);
+                String data_planowanego_oddania = rs.getString(3);
+                String data_oddania = "";
+                int idegzemplarz = rs.getInt(4);
+                int idksiazka = rs.getInt(5);
+                boolean wypozyczona = rs.getBoolean(6);
+                String tytul = rs.getString(7);
+                int rok_wydania = rs.getInt(8);
+                BigDecimal isbn = rs.getBigDecimal(9);
+                String autorzy = rs.getString(10);
+                String dziedziny = rs.getString(11);
+                list.addElement(new Egzemplarz(data_wypozyczenia, data_planowanego_oddania, data_oddania, idegzemplarz, wypozyczona , idksiazka, tytul, rok_wydania, isbn, autorzy, dziedziny));
+
+            }
+            rs.close();      
+            pst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+    }
+
+    boolean oddajEgzemplarz(int idCzytelnik, int idEgzemplarz){
+        boolean toReturn = false;
+        try{       
+            PreparedStatement pst = c.prepareCall( "UPDATE Wypozyczenie SET data_oddania = NOW() WHERE Egzemplarz_idEgzemplarz = ? AND czytelnik_idCzytelnik = ?;" );
+            pst.setInt(1,idEgzemplarz);
+            pst.setInt(2,idCzytelnik);
+ 
+            toReturn = (pst.executeUpdate() != 0);
+            pst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+        return toReturn;
+    }
+
+    void infoZarezerwowane(DefaultListModel<Ksiazka> list, int idCzytelnik){
+        list.clear();
+        try{       
+            PreparedStatement pst = c.prepareCall( "SELECT * FROM zarezerwowane_ksiazki WHERE czytelnik_idczytelnik = ?;" );
+            pst.setInt(1,idCzytelnik);
+            //  czytelnik_idczytelnik, idksiazka, tytul, rok_wydania, isbn, autorzy, dziedziny
+            ResultSet rs;
+            rs = pst.executeQuery();
+            while (rs.next())  {
+                int idksiazka = rs.getInt(2);
+                String tytul = rs.getString(3);
+                int rok_wydania = rs.getInt(4);
+                BigDecimal isbn = rs.getBigDecimal(5);
+                String autorzy = rs.getString(6);
+                String dziedziny = rs.getString(7);
+                list.addElement(new Ksiazka(idksiazka, tytul, rok_wydania, isbn, autorzy, dziedziny));
+
+            }
+            rs.close();      
+            pst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+    }
+
+    int dostepnoscZarezerwowanejKsiazki(int idKsiazka, int idCzytelnik){
+        int toReturn = 0;
+        try{       
+            CallableStatement cst = c.prepareCall( "{call rezerwacja_dostepnosc(?,?)}" );
+            cst.setInt(1,idKsiazka);
+            cst.setInt(2,idCzytelnik);
+ 
+            ResultSet rs;
+            rs = cst.executeQuery();
+            while (rs.next())  {
+                toReturn = rs.getInt(1);
+            }
+
+            rs.close();      
+            cst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+        return toReturn;
+    }
+
+    void infoWypozyczoneOddane(DefaultListModel<String> list, int idCzytelnik){
+        list.clear();
+        try{       
+            PreparedStatement pst = c.prepareCall( "SELECT * FROM wypozyczone_egzemplarze_oddane WHERE czytelnik_idczytelnik = ?;" );
+
+            pst.setInt(1,idCzytelnik);
+            //  w.czytelnik_idczytelnik, w.data_wypozyczenia, w.data_planowanego_oddania, e.idegzemplarz, e.idksiazka, e.wypozyczona, e.tytul, e.rok_wydania, e.isbn, e.autorzy, e.dziedziny
+            ResultSet rs;
+            rs = pst.executeQuery();
+            while (rs.next())  {
+                String data_wypozyczenia = rs.getString(2);
+                // String data_planowanego_oddania = rs.getString(3);
+                // String data_oddania = rs.getString(4);
+                // int idegzemplarz = rs.getInt(5);
+                // int idksiazka = rs.getInt(6);
+                // boolean wypozyczona = rs.getBoolean(7);
+                String tytul = rs.getString(8);
+                // int rok_wydania = rs.getInt(9);
+                // BigDecimal isbn = rs.getBigDecimal(10);
+                String autorzy = rs.getString(11);
+                // String dziedziny = rs.getString(12);
+                list.addElement(tytul + ", " + autorzy + ". Data wypożyczenia: " +data_wypozyczenia);
+                
+                // System.out.println(list.lastElement());
+            }
+            rs.close();      
+            pst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+    }
+
+    int dostepnoscKsiazki(int idKsiazka){
+        int toReturn = 0;
+        try{       
+            CallableStatement cst = c.prepareCall( "{call dostepnosc_ksiazki(?)}" );
+            cst.setInt(1,idKsiazka);
+ 
+            ResultSet rs;
+            rs = cst.executeQuery();
+            while (rs.next())  {
+                toReturn = rs.getInt(1);
+            }
+
+            rs.close();      
+            cst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+        return toReturn;
+    }
+
+    boolean wypozyczEgzemplarz(int idCzytelnik, int idEgzemplarz){
+        boolean toReturn = false;
+        try{       
+            PreparedStatement pst = c.prepareCall( "INSERT INTO Wypozyczenie (Czytelnik_idCzytelnik, Egzemplarz_idEgzemplarz) VALUES (?,?);" );
+            pst.setInt(1,idCzytelnik);
+            pst.setInt(2,idEgzemplarz);
+            
+            toReturn = (pst.executeUpdate() != 0);
+            pst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+        return toReturn;
+    }
+
+    boolean rezerwujEgzemplarz(int idCzytelnik, int idKsiazka){
+        boolean toReturn = false;
+        try{       
+            PreparedStatement pst = c.prepareCall( "INSERT INTO Rezerwacja (Czytelnik_idCzytelnik, Ksiazka_idKsiazka) VALUES (?,?);" );
+            pst.setInt(1,idCzytelnik);
+            pst.setInt(2,idKsiazka);
+            
+            toReturn = (pst.executeUpdate() != 0);
+            pst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+        return toReturn;
+    }
+
+    boolean usunRezerwacje(int idCzytelnik, int idKsiazka){
+        boolean toReturn = false;
+        try{       
+            PreparedStatement pst = c.prepareCall( "DELETE FROM rezerwacja WHERE czytelnik_idczytelnik = ? AND ksiazka_idksiazka = ?;" );
+            pst.setInt(1,idCzytelnik);
+            pst.setInt(2,idKsiazka);
+ 
+            toReturn = (pst.executeUpdate() != 0);
+
+            pst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+        return toReturn;
+    }
 
 }

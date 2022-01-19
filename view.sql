@@ -22,5 +22,32 @@ CREATE VIEW ksiazka_info AS
     JOIN dziedziny_ksiazki d ON k.idKsiazka = d.idKsiazka
     GROUP BY k.idKsiazka, d.dziedziny;
 
+CREATE VIEW egzemplarz_info AS
+    SELECT e.idegzemplarz, k.idksiazka, e.wypozyczona, k.tytul, k.rok_wydania, k.isbn, k.autorzy, k.dziedziny
+    FROM ksiazka_info k
+    JOIN egzemplarz e
+    ON k.idksiazka = e.ksiazka_idKsiazka;
+
+CREATE VIEW wypozyczone_egzemplarze_nieoddane AS
+    SELECT w.czytelnik_idczytelnik, TO_CHAR(w.data_wypozyczenia, 'DD MM YYYY') as data_wypozyczenia, TO_CHAR(w.data_planowanego_oddania, 'DD MM YYYY') as data_planowanego_oddania, e.idegzemplarz, e.idksiazka, e.wypozyczona, e.tytul, e.rok_wydania, e.isbn, e.autorzy, e.dziedziny
+    FROM wypozyczenie w
+    JOIN egzemplarz_info e
+    ON w.egzemplarz_idEgzemplarz = e.idEgzemplarz
+    WHERE w.data_oddania IS NULL;
+
+CREATE VIEW wypozyczone_egzemplarze_oddane AS
+    SELECT w.czytelnik_idczytelnik, TO_CHAR(w.data_wypozyczenia, 'DD MM YYYY') as data_wypozyczenia, TO_CHAR(w.data_planowanego_oddania, 'DD MM YYYY') as data_planowanego_oddania, TO_CHAR(w.data_oddania, 'DD MM YYYY') as data_oddania, e.idegzemplarz, e.idksiazka, e.wypozyczona, e.tytul, e.rok_wydania, e.isbn, e.autorzy, e.dziedziny
+    FROM wypozyczenie w
+    JOIN egzemplarz_info e
+    ON w.egzemplarz_idEgzemplarz = e.idEgzemplarz
+    WHERE w.data_oddania IS NOT NULL;
+
+CREATE VIEW zarezerwowane_ksiazki AS 
+    SELECT r.czytelnik_idczytelnik, k.idksiazka, k.tytul, k.rok_wydania, k.isbn, k.autorzy, k.dziedziny
+    FROM rezerwacja r
+    JOIN ksiazka_info k
+    ON r.ksiazka_idksiazka = k.idksiazka;
+
+
 --  widok z HAVING dla czytelnika i egzemplarzy!
 

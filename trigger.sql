@@ -49,16 +49,15 @@ CREATE OR REPLACE FUNCTION oddanie_ksiazki()
 RETURNS TRIGGER AS
 $$
 BEGIN
-    -- IF NEW.data_oddania IS NOT NULL THEN
-
-    -- END IF;
+    IF NEW.data_oddania IS NOT NULL THEN
+        UPDATE Egzemplarz SET wypozyczona = false WHERE idEgzemplarz = NEW.Egzemplarz_idEgzemplarz;
+        PERFORM dodaj_kara(NEW.Czytelnik_idCzytelnik, NEW.Egzemplarz_idEgzemplarz);
+    END IF;
 
     -- IF NEW.data_planowanego_oddania IS NOT NULL THEN
     --     RAISE NOTICE 'AAa'; 
     --     -- działa mimo że nie zmieniamy daty_oddania
     -- END IF;
-    
-    UPDATE Egzemplarz SET wypozyczona = false WHERE idEgzemplarz = NEW.Egzemplarz_idEgzemplarz;
 
     RETURN NEW;
 END;

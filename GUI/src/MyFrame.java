@@ -9,7 +9,8 @@ public class MyFrame extends JFrame{
 
     private static DB db = new DB(); 
 
-    private static boolean zalogowany_czytelnik = false;
+    // private static int zalogowany_czytelnik = 0;
+    private static Czytelnik zalogowanyCzytelnik = new Czytelnik();
     private static boolean zalogowany_pracownik = false;
 
     private static JPanel startPanel;
@@ -22,8 +23,16 @@ public class MyFrame extends JFrame{
     private static MenuPracownikaPanel ksiazkaPanel;
 
     private static JPanel zarejestrujCzytelnikPanel;
-    private static JPanel katalogKsiazekPanel;
+    private static MenuCzytelnikaPanel menuCzytelnikaPanel;
+    private static MenuCzytelnikaPanel wypozyczonePanel;
+    private static MenuCzytelnikaPanel egzemplarzInfoWypozyczonePanel;
+    private static MenuCzytelnikaPanel historiaPanel;
+    private static MenuCzytelnikaPanel zarezerwowanePanel;
+    private static MenuCzytelnikaPanel ksiazkaInfoZarezerwowanaPanel;
+    private static MenuCzytelnikaPanel katalogPanel;    // dla czytelnika
+    private static MenuCzytelnikaPanel ksiazkaInfoKatalogPanel;
 
+    private static JPanel katalogKsiazekPanel;  // nie dla czytelnika
     private static KsiazkaPanel ksiazkaInfoPanel;
 
     MyFrame(){
@@ -36,6 +45,8 @@ public class MyFrame extends JFrame{
         startPanelInit();
 
         loginPracownikPanelInit();
+        zarejestrujCzytelnikPanelInit();
+
         menuPracownikaPanelInit();
         pracownikPanelInit();
         autorPanelInit();
@@ -43,12 +54,22 @@ public class MyFrame extends JFrame{
         dziedzinaPanelInit();
         ksiazkaPanelInit();
 
-        zarejestrujCzytelnikPanelInit();
+        menuCzytelnikaPanel = new MenuCzytelnikaPanel();    // init po poprawnym zalogowaniu
+        wypozyczonePanel = new MenuCzytelnikaPanel();
+        egzemplarzInfoWypozyczonePanel = new MenuCzytelnikaPanel();
+        zarezerwowanePanel = new MenuCzytelnikaPanel();
+        ksiazkaInfoZarezerwowanaPanel = new MenuCzytelnikaPanel();
+        historiaPanel = new MenuCzytelnikaPanel();
+        katalogPanel = new MenuCzytelnikaPanel();
+        ksiazkaInfoKatalogPanel = new MenuCzytelnikaPanel();
+
         katalogKsiazekPanelInit();
         ksiazkaInfoPanelInit();
 
         this.add(startPanel);
+        this.add(zarejestrujCzytelnikPanel);
         this.add(loginPracownikPanel);
+
         this.add(menuPracownikaPanel);
         this.add(pracownikPanel);
         this.add(autorPanel);
@@ -56,7 +77,15 @@ public class MyFrame extends JFrame{
         this.add(dziedzinaPanel);
         this.add(ksiazkaPanel);
 
-        this.add(zarejestrujCzytelnikPanel);
+        this.add(menuCzytelnikaPanel);
+        this.add(wypozyczonePanel);
+        this.add(egzemplarzInfoWypozyczonePanel);
+        this.add(zarezerwowanePanel);
+        this.add(ksiazkaInfoZarezerwowanaPanel);
+        this.add(historiaPanel);
+        this.add(katalogPanel);
+        this.add(ksiazkaInfoKatalogPanel);
+
         this.add(katalogKsiazekPanel);
         this.add(ksiazkaInfoPanel);
 
@@ -780,6 +809,285 @@ public class MyFrame extends JFrame{
         ksiazkaPanel.setVisible(false);
     }
 
+    private static void menuCzytelnikaButtons(MenuCzytelnikaPanel panel){
+        panel.getWylogujButton().addActionListener(e -> {
+            zalogowanyCzytelnik.setId(0); 
+            panel.setVisible(false);
+            startPanel.setVisible(true);
+        });
+
+        panel.getDaneButton().addActionListener(e -> {
+            panel.setVisible(false);
+            menuCzytelnikaPanel.setVisible(true);
+        });
+
+        panel.getWypozyczeniaButton().addActionListener(e -> {
+            wypozyczonePanelInit();
+            panel.setVisible(false);
+            wypozyczonePanel.setVisible(true);
+        });
+
+        panel.getRezerwacjeButton().addActionListener(e -> {
+            zarezerwowanePanelInit();
+            panel.setVisible(false);
+            zarezerwowanePanel.setVisible(true);
+
+        });
+
+        panel.getHistoriaButton().addActionListener(e -> {
+            historiaPanelInit();
+            panel.setVisible(false);
+            historiaPanel.setVisible(true);
+        });
+
+        panel.getKatalogButton().addActionListener(e -> {
+            katalogPanelInit();
+            panel.setVisible(false);
+            katalogPanel.setVisible(true);
+        });
+
+    }
+    
+    private static void menuCzytelnikaPanelInit(){
+        menuCzytelnikaPanel.restart();
+        menuCzytelnikaButtons(menuCzytelnikaPanel);
+
+        JLabel imieLabel = new JLabel("Imie ");
+        JTextField imie = new JTextField();
+        JLabel nazwiskoLabel = new JLabel("Nazwisko ");
+        JTextField nazwisko = new JTextField();
+        JLabel emailLabel = new JLabel("Email ");
+        JTextField email = new JTextField();
+        JLabel telefonLabel = new JLabel("Telefon ");
+        JTextField telefon= new JTextField();
+        JLabel loginLabel = new JLabel("Login ");
+        JLabel login= new JLabel();
+        JLabel karaLabel = new JLabel("<html>Kara<br />do zapłaty: </html>");
+        JLabel kara = new JLabel();
+        // JLabel haslo2Label = new JLabel("Hasło ");
+        // JPasswordField haslo2 = new JPasswordField();
+        JButton buttonZaplac = new JButton("Opłać karę");
+        
+        // Vector<JTextField> pola = new Vector<JTextField>();
+        // pola.add(imie);
+        // pola.add(nazwisko);
+        // pola.add()
+
+        imieLabel.setBounds(465, 150, 80, 25);
+        imie.setBounds(565, 150, 170, 25);
+        imie.setText(zalogowanyCzytelnik.getImie());
+
+        nazwiskoLabel.setBounds(465, 190, 80, 25);
+        nazwisko.setBounds(565, 190, 170, 25);
+        nazwisko.setText(zalogowanyCzytelnik.getNazwisko());
+        
+        emailLabel.setBounds(465, 230, 80, 25);
+        email.setBounds(565, 230, 170, 25);
+        email.setText(zalogowanyCzytelnik.getEmail());
+
+        telefonLabel.setBounds(465, 270, 80, 25);
+        telefon.setBounds(565, 270, 170, 25);
+        String telefonString = "";
+        if(zalogowanyCzytelnik.getTelefon() != 0)
+            telefonString += zalogowanyCzytelnik.getTelefon();
+        telefon.setText(telefonString);
+
+        loginLabel.setBounds(465, 310, 80, 25);
+        login.setBounds(565, 310, 170, 25);
+        login.setText(zalogowanyCzytelnik.getLogin());
+
+        karaLabel.setBounds(465, 350, 80, 30);
+        kara.setBounds(565, 350, 35, 25);
+        kara.setText("" + zalogowanyCzytelnik.getKara());
+
+        // haslo2Label.setBounds(465, 390, 90, 25);
+        // haslo2.setBounds(565, 390, 170, 25);
+
+        buttonZaplac.setBounds(600, 350 ,135, 30);
+        buttonZaplac.setFocusable(false);
+        buttonZaplac.addActionListener(e -> {
+            if(db.aktualizujKaraCzytelnik(zalogowanyCzytelnik))
+                kara.setText(""+ zalogowanyCzytelnik.getKara());
+        });
+
+        // infoZaplacLabel.setBounds(465, 470, 270, 30);
+
+        // buttonZaplac.setBounds(465, 430 ,270, 30);
+        // buttonZaplac.setFocusable(false);
+        // buttonZaplac.addActionListener(e -> infoZaplacLabel.setText(actionRejestracjaCzytelnik(imie.getText(), nazwisko.getText(), email.getText(), telefon.getText(), login.getText(), String.valueOf(haslo1.getPassword()), String.valueOf(haslo2.getPassword()))));
+
+        // infoZaplacLabel.setBounds(465, 470, 270, 30);
+
+        menuCzytelnikaPanel.add(imieLabel);
+        menuCzytelnikaPanel.add(imie);
+        menuCzytelnikaPanel.add(nazwiskoLabel);
+        menuCzytelnikaPanel.add(nazwisko);
+        menuCzytelnikaPanel.add(emailLabel);
+        menuCzytelnikaPanel.add(email);
+        menuCzytelnikaPanel.add(telefonLabel);
+        menuCzytelnikaPanel.add(telefon);
+        menuCzytelnikaPanel.add(loginLabel);
+        menuCzytelnikaPanel.add(login);
+        menuCzytelnikaPanel.add(karaLabel);
+        menuCzytelnikaPanel.add(kara);
+        // menuCzytelnikaPanel.add(haslo2Label);
+        // menuCzytelnikaPanel.add(haslo2);
+        menuCzytelnikaPanel.add(buttonZaplac);
+        // menuCzytelnikaPanel.add(infoLabel);
+
+        menuCzytelnikaPanel.setVisible(false);
+    }
+
+    private static void wypozyczonePanelInit(){
+        wypozyczonePanel.restart();
+
+        menuCzytelnikaButtons(wypozyczonePanel);
+
+        wypozyczonePanel.getHeader().setText("Wypożyczone książki");
+
+        JLabel info = new JLabel("Kliknij na książkę po więcej informacji.",SwingConstants.CENTER);
+        DefaultListModel<Egzemplarz> ksiazki = new DefaultListModel<>();
+        JList<Egzemplarz> listaKsiazek = new JList<>(ksiazki); 
+        JScrollPane scrollPane = new JScrollPane();
+
+        db.infoWypozyczone(ksiazki, zalogowanyCzytelnik.getId());    // pobranie danych
+        
+        if(ksiazki.size()==0)
+            info.setText("Brak wypożyczonych książek.");
+
+        info.setBounds(300,110,750,30);
+
+        listaKsiazek.setFixedCellHeight(40);
+        listaKsiazek.addListSelectionListener(e -> egzemplarzWyporzyczonyInfo(listaKsiazek.getSelectedValue(), wypozyczonePanel));
+        listaKsiazek.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        listaKsiazek.clearSelection();
+
+        DefaultListCellRenderer renderer = (DefaultListCellRenderer)listaKsiazek.getCellRenderer();
+        renderer.setHorizontalAlignment(JLabel.CENTER);
+        
+        scrollPane.setViewportView(listaKsiazek);
+        scrollPane.setBounds(300,150,750,400);
+
+        wypozyczonePanel.add(info);
+        wypozyczonePanel.add(scrollPane);
+
+        wypozyczonePanel.setVisible(false);
+    }
+
+    private static void zarezerwowanePanelInit(){
+        zarezerwowanePanel.restart();
+
+        menuCzytelnikaButtons(zarezerwowanePanel);
+
+        zarezerwowanePanel.getHeader().setText("Zarezerwowane książki");
+
+        JLabel info = new JLabel("Kliknij na książkę po więcej informacji.",SwingConstants.CENTER);
+        DefaultListModel<Ksiazka> ksiazki = new DefaultListModel<>();
+        JList<Ksiazka> listaKsiazek = new JList<>(ksiazki); 
+        JScrollPane scrollPane = new JScrollPane();
+
+        db.infoZarezerwowane(ksiazki, zalogowanyCzytelnik.getId());    // pobranie danych
+        
+        if(ksiazki.size()==0)
+            info.setText("Brak wypożyczonych książek.");
+
+        info.setBounds(300,110,750,30);
+
+        listaKsiazek.setFixedCellHeight(40);
+        listaKsiazek.addListSelectionListener(e -> ksiazkaZarezerwowanaInfo(listaKsiazek.getSelectedValue(), zarezerwowanePanel));
+        listaKsiazek.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        listaKsiazek.clearSelection();
+
+        DefaultListCellRenderer renderer = (DefaultListCellRenderer)listaKsiazek.getCellRenderer();
+        renderer.setHorizontalAlignment(JLabel.CENTER);
+        
+        scrollPane.setViewportView(listaKsiazek);
+        scrollPane.setBounds(300,150,750,400);
+
+        zarezerwowanePanel.add(info);
+        zarezerwowanePanel.add(scrollPane);
+
+        zarezerwowanePanel.setVisible(false);
+    }
+
+    private static void historiaPanelInit(){
+        historiaPanel.restart();
+
+        menuCzytelnikaButtons(historiaPanel);
+
+        historiaPanel.getHeader().setText("Historia wypożyczeń");
+
+        JLabel info = new JLabel("",SwingConstants.CENTER);
+        DefaultListModel<String> ksiazki = new DefaultListModel<>();
+        JList<String> listaKsiazek = new JList<>(ksiazki); 
+        JScrollPane scrollPane = new JScrollPane();
+
+        db.infoWypozyczoneOddane(ksiazki, zalogowanyCzytelnik.getId());    // pobranie danych
+        
+        if(ksiazki.size()==0)
+            info.setText("Historia wypożyczeń jest pusta.");
+
+        info.setBounds(300,110,750,30);
+
+        listaKsiazek.setFixedCellHeight(40);
+        // listaKsiazek.addListSelectionListener(e -> egzemplarzWyporzyczonyInfo(listaKsiazek.getSelectedValue(), wypozyczonePanel));
+        listaKsiazek.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        listaKsiazek.clearSelection();
+
+        DefaultListCellRenderer renderer = (DefaultListCellRenderer)listaKsiazek.getCellRenderer();
+        renderer.setHorizontalAlignment(JLabel.CENTER);
+        
+        scrollPane.setViewportView(listaKsiazek);
+        scrollPane.setBounds(300,150,750,400);
+
+        historiaPanel.add(info);
+        historiaPanel.add(scrollPane);
+
+        historiaPanel.setVisible(false);
+    }
+
+    private static void katalogPanelInit(){
+        katalogPanel.restart();
+
+        menuCzytelnikaButtons(katalogPanel);
+
+        katalogPanel.getHeader().setText("Książki");
+
+        //Wyszukiwanie
+
+        DefaultListModel<Ksiazka> ksiazki = new DefaultListModel<>();
+        JList<Ksiazka> listaKsiazek = new JList<>(ksiazki); 
+        JScrollPane scrollPane = new JScrollPane();
+        JLabel info = new JLabel("Kliknij na książkę po więcej informacji.",SwingConstants.CENTER);
+
+        db.infoKsiazka(ksiazki);    // pobranie danych
+    
+        // Wyszukiwanie
+
+        listaKsiazek.setFixedCellHeight(40);
+        listaKsiazek.addListSelectionListener(e -> ksiazkaKatalogInfo(listaKsiazek.getSelectedValue(), katalogPanel));
+        listaKsiazek.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        listaKsiazek.clearSelection();
+
+        DefaultListCellRenderer renderer = (DefaultListCellRenderer)listaKsiazek.getCellRenderer();
+        renderer.setHorizontalAlignment(JLabel.CENTER);
+        
+        scrollPane.setViewportView(listaKsiazek);
+        scrollPane.setBounds(300,150,750,400);
+
+        if(ksiazki.size()==0)
+            info.setText("Brak książek :o");
+        info.setBounds(300,560,750,30);
+
+
+        // Wyszukiwanie
+        katalogPanel.add(scrollPane);
+        katalogPanel.add(info);
+
+        katalogPanel.setVisible(false);
+    }
+
+
     private static void katalogKsiazekPanelInit(){
         katalogKsiazekPanel = new JPanel();
         katalogKsiazekPanel.setLayout(null);
@@ -824,6 +1132,7 @@ public class MyFrame extends JFrame{
         });
     }
 
+    
 
     // --------------------------------------------------------------------------------
     // Funkcje dla przycisków
@@ -831,18 +1140,29 @@ public class MyFrame extends JFrame{
     private static String actionZaloguj(boolean kto, String user, String password){
         // kto: false - czytelnik, true pracownik 
         String toReturn = "Logowanie nie powiodło się!";
-        if(db.logowanie(kto, user, password)){
+        int id = db.logowanie(kto, user, password);
+        if(id != 0){
             // bladLogowaniaCztyelnik.setText("Logowanie powiodło się!");
             toReturn = "";
             if(kto){
+                // dla pracownika id to 1, bo klucz główny to login
                 zalogowany_pracownik = true;
                 loginPracownikPanel.setVisible(false);
                 menuPracownikaPanel.setVisible(true);
             }
             else{
-                zalogowany_czytelnik = true;
-                // startPanel.setVisible(false);
-                // menuCzytelnikPanel.setVisible(true);
+                // dla czytelnika potrzebuje zapisanego id do wypożyczeń, rezerwacji itd.
+                zalogowanyCzytelnik.setId(id);
+                db.infoCzytelnik(zalogowanyCzytelnik);
+
+                menuCzytelnikaPanelInit();
+                wypozyczonePanelInit();
+                zarezerwowanePanelInit();
+                historiaPanelInit();
+                katalogPanelInit();
+
+                startPanel.setVisible(false);
+                menuCzytelnikaPanel.setVisible(true);
             }
         }
         return toReturn;
@@ -892,7 +1212,7 @@ public class MyFrame extends JFrame{
         }
         return toReturn;
     }
-
+    // Menu pracownika
     private static String actionRejestracjaPracownik(String imie, String nazwisko, String email, String login, String haslo1, String haslo2){
         String toReturn;
         String blad = "";
@@ -1066,7 +1386,174 @@ public class MyFrame extends JFrame{
         return toReturn;
     }
 
+
+    // Menu czytelnika
+    private static void egzemplarzWyporzyczonyInfo(Egzemplarz egzemplarz, MenuCzytelnikaPanel panel){
+        egzemplarzInfoWypozyczonePanel.restart();
+        menuCzytelnikaButtons(egzemplarzInfoWypozyczonePanel);
+
+        JLabel autor = new JLabel("Autor: " + egzemplarz.getAutorzy());
+        JLabel dziedziny = new JLabel("Kategorie: " + egzemplarz.getDziedziny());
+        JLabel rok = new JLabel("Rok wydania: " + egzemplarz.getRokwydania());
+        JLabel isbn = new JLabel("ISBN: " + egzemplarz.getIsbn());
+        JLabel data = new JLabel("Termin oddania: " + egzemplarz.getDataPlanowanegoOddania());
+        JButton buttonOddaj = new JButton("Oddaj");
+
+        egzemplarzInfoWypozyczonePanel.getHeader().setText(egzemplarz.getTytul());
+        autor.setBounds(465, 150 ,270, 30);
+        dziedziny.setBounds(465, 190 ,270, 30);
+        rok.setBounds(465, 230 ,270, 30);
+        isbn.setBounds(465, 270 ,270, 30);
+        data.setBounds(465, 340 ,270, 30);
+        buttonOddaj.setBounds(465, 380 ,270, 30);
+        buttonOddaj.setFocusable(false);
+        buttonOddaj.addActionListener(e -> {
+            if(db.oddajEgzemplarz(zalogowanyCzytelnik.getId(),egzemplarz.getIdE())){
+                data.setText("Oddane");
+                egzemplarzInfoWypozyczonePanel.setVisible(false);
+                wypozyczonePanelInit();
+                wypozyczonePanel.setVisible(true);
+                historiaPanelInit();
+            }
+        });
+
+
+        egzemplarzInfoWypozyczonePanel.add(autor);
+        egzemplarzInfoWypozyczonePanel.add(dziedziny);
+        egzemplarzInfoWypozyczonePanel.add(rok);
+        egzemplarzInfoWypozyczonePanel.add(isbn);
+        egzemplarzInfoWypozyczonePanel.add(data);
+        egzemplarzInfoWypozyczonePanel.add(buttonOddaj);
+
+        egzemplarzInfoWypozyczonePanel.setVisible(true); panel.setVisible(false);
+    }
+
+    private static void ksiazkaZarezerwowanaInfo(Ksiazka ksiazka, MenuCzytelnikaPanel panel){
+        ksiazkaInfoZarezerwowanaPanel.restart();
+        menuCzytelnikaButtons(ksiazkaInfoZarezerwowanaPanel);
+
+        int czyDostepna = db.dostepnoscZarezerwowanejKsiazki(ksiazka.getIdksiazka(), zalogowanyCzytelnik.getId());
+        // czyDostepna: 0 - niedostepna, idEgzemplarza dostępnego jeśli dostępna
+
+        JLabel autor = new JLabel("Autor: " + ksiazka.getAutorzy());
+        JLabel dziedziny = new JLabel("Kategorie: " + ksiazka.getDziedziny());
+        JLabel rok = new JLabel("Rok wydania: " + ksiazka.getRokwydania());
+        JLabel isbn = new JLabel("ISBN: " + ksiazka.getIsbn());
+        JLabel dostepnosc = new JLabel("Dostępność: ");
+        JButton wypozycz = new JButton("Wypozycz");
+        JButton usun = new JButton("Usuń rezerwację");
+
+        ksiazkaInfoZarezerwowanaPanel.getHeader().setText(ksiazka.getTytul());
+        autor.setBounds(465, 150 ,270, 30);
+        dziedziny.setBounds(465, 190 ,270, 30);
+        rok.setBounds(465, 230 ,270, 30);
+        isbn.setBounds(465, 270 ,270, 30);
+        dostepnosc.setBounds(465, 340 ,270, 30);
+        
+        wypozycz.setBounds(465, 380 ,270, 30);
+        wypozycz.setFocusable(false);
+        wypozycz.addActionListener(e -> {
+            if(db.wypozyczEgzemplarz(zalogowanyCzytelnik.getId(),czyDostepna)){
+                ksiazkaInfoZarezerwowanaPanel.setVisible(false);
+                zarezerwowanePanelInit();
+                zarezerwowanePanel.setVisible(true);
+            }
+        });
+
+        usun.setBounds(465, 420 ,270, 30);
+        usun.setFocusable(false);
+        usun.addActionListener(e -> {
+            if(db.usunRezerwacje(zalogowanyCzytelnik.getId(),ksiazka.getIdksiazka())){
+                ksiazkaInfoZarezerwowanaPanel.setVisible(false);
+                zarezerwowanePanelInit();
+                zarezerwowanePanel.setVisible(true);
+            }
+        });
+
+        if(czyDostepna != 0){
+            dostepnosc.setText("Dostępność: dostępna");
+        }
+        else{
+            dostepnosc.setText("Dostępność: niedostępna");
+            wypozycz.setEnabled(false);
+        }
+
+        ksiazkaInfoZarezerwowanaPanel.add(autor);
+        ksiazkaInfoZarezerwowanaPanel.add(dziedziny);
+        ksiazkaInfoZarezerwowanaPanel.add(rok);
+        ksiazkaInfoZarezerwowanaPanel.add(isbn);
+        ksiazkaInfoZarezerwowanaPanel.add(dostepnosc);
+        ksiazkaInfoZarezerwowanaPanel.add(wypozycz);
+        ksiazkaInfoZarezerwowanaPanel.add(usun);
+
+        ksiazkaInfoZarezerwowanaPanel.setVisible(true); panel.setVisible(false);
+    }
+
+    private static void ksiazkaKatalogInfo(Ksiazka ksiazka, MenuCzytelnikaPanel panel){
+        ksiazkaInfoKatalogPanel.restart();
+        menuCzytelnikaButtons(ksiazkaInfoKatalogPanel);
+
+        int czyDostepna = db.dostepnoscKsiazki(ksiazka.getIdksiazka());
+        // czyDostepna: 0 - niedostepna, idEgzemplarza dostępnego jeśli dostępna
+
+        JLabel autor = new JLabel("Autor: " + ksiazka.getAutorzy());
+        JLabel dziedziny = new JLabel("Kategorie: " + ksiazka.getDziedziny());
+        JLabel rok = new JLabel("Rok wydania: " + ksiazka.getRokwydania());
+        JLabel isbn = new JLabel("ISBN: " + ksiazka.getIsbn());
+        JLabel dostepnosc = new JLabel("Dostępność: ");
+        JButton wypozycz = new JButton("Wypozycz");
+        JButton zarezerwuj = new JButton("Zarezerwuj");
+
+        ksiazkaInfoKatalogPanel.getHeader().setText(ksiazka.getTytul());
+        autor.setBounds(465, 150 ,270, 30);
+        dziedziny.setBounds(465, 190 ,270, 30);
+        rok.setBounds(465, 230 ,270, 30);
+        isbn.setBounds(465, 270 ,270, 30);
+        dostepnosc.setBounds(465, 340 ,270, 30);
+        wypozycz.setBounds(465, 380 ,270, 30);
+        wypozycz.setFocusable(false);
+        wypozycz.addActionListener(e -> {
+            if(db.wypozyczEgzemplarz(zalogowanyCzytelnik.getId(),czyDostepna)){
+                dostepnosc.setText("Wypozyczono");
+                wypozycz.setEnabled(false);
+                zarezerwuj.setEnabled(false);
+            }
+        });
+        zarezerwuj.setBounds(465, 410, 270, 30);
+        zarezerwuj.setFocusable(false);
+        zarezerwuj.addActionListener(e -> {
+            if(db.rezerwujEgzemplarz(zalogowanyCzytelnik.getId(), ksiazka.getIdksiazka())){
+                dostepnosc.setText("Zarezerwowano");
+                zarezerwuj.setEnabled(false);
+            }
+        });
+
+
+        if(czyDostepna != 0){
+            dostepnosc.setText("Dostępność: dostępna");
+            wypozycz.setEnabled(true);
+            zarezerwuj.setEnabled(false);
+        }
+        else{
+            dostepnosc.setText("Dostępność: niedostępna");
+            wypozycz.setEnabled(false);
+            zarezerwuj.setEnabled(true);
+        }
+
+        ksiazkaInfoKatalogPanel.add(autor);
+        ksiazkaInfoKatalogPanel.add(dziedziny);
+        ksiazkaInfoKatalogPanel.add(rok);
+        ksiazkaInfoKatalogPanel.add(isbn);
+        ksiazkaInfoKatalogPanel.add(dostepnosc);
+        ksiazkaInfoKatalogPanel.add(wypozycz);
+        ksiazkaInfoKatalogPanel.add(zarezerwuj);
+
+        ksiazkaInfoKatalogPanel.setVisible(true); panel.setVisible(false);
+    }
+
+
     
+    // Bez logowania    
     private static String actionUsunKsiazka(Ksiazka ksiazka){
         String toReturn = "<html>Nie udało się usunąć książki.<br />Usuń najpierw jego egzemplarze.<html>";
         if(ksiazka == null){
@@ -1086,6 +1573,8 @@ public class MyFrame extends JFrame{
         ksiazkaInfoPanel.getIsbn().setText("ISBN: " + String.valueOf(k.getIsbn()));
         ksiazkaInfoPanel.getDziedziny().setText("Kategorie: " + k.getDziedziny());
     }
+
+
     public static void main(String[] args){
         new MyFrame();
     }
