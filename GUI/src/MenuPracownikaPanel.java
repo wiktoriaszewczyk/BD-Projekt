@@ -3,12 +3,12 @@ import java.awt.Font;
 public class MenuPracownikaPanel extends JPanel{
     private JLabel header;
     private JButton wylogujButton;
-    private JButton PracownikButton;
-    private JButton AutorButton;
-    private JButton dodajWydawnictwoButton;
-    private JButton dodajDziedzineButton;
-    private JButton dodajKsiazkeButton;
-    private JButton dodajEgzemplarzButton;
+    private JButton pracownikButton;
+    private JButton autorButton;
+    private JButton wydawnictwoButton;
+    private JButton dziedzinaButton;
+    private JButton ksiazkaButton;
+    private JButton egzemplarzButton;
 
     MenuPracownikaPanel(){
         setLayout(null);
@@ -16,44 +16,44 @@ public class MenuPracownikaPanel extends JPanel{
 
         header = new JLabel("Menu Pracownika",SwingConstants.CENTER);
         wylogujButton = new JButton("Wyloguj");
-        PracownikButton = new JButton("Pracownicy");
-        AutorButton = new JButton("Autor");
-        dodajWydawnictwoButton = new JButton("Dodaj Wydawnictwo");
-        dodajDziedzineButton = new JButton("Dodaj Dziedzinę");
-        dodajKsiazkeButton = new JButton("Dodaj Książkę");
-        dodajEgzemplarzButton = new JButton("Dodaj Egzemplarz");
+        pracownikButton = new JButton("Pracownicy");
+        autorButton = new JButton("Autor");
+        wydawnictwoButton = new JButton("Wydawnictwo");
+        dziedzinaButton = new JButton("Dziedzina");
+        ksiazkaButton = new JButton("Książka");
+        egzemplarzButton = new JButton("Egzemplarz");
 
         header.setBounds(0,20,1200,50);
         header.setFont(new Font("TimesRoman",Font.BOLD,40));
 
-        PracownikButton.setBounds(30,100,150,40);
-        PracownikButton.setFocusable(false);
+        pracownikButton.setBounds(30,100,150,40);
+        pracownikButton.setFocusable(false);
 
-        AutorButton.setBounds(30,150,150,40);
-        AutorButton.setFocusable(false);
+        autorButton.setBounds(30,150,150,40);
+        autorButton.setFocusable(false);
 
-        dodajWydawnictwoButton.setBounds(30,200,150,40);
-        dodajWydawnictwoButton.setFocusable(false);
+        wydawnictwoButton.setBounds(30,200,150,40);
+        wydawnictwoButton.setFocusable(false);
 
-        dodajDziedzineButton.setBounds(30,250,150,40);
-        dodajDziedzineButton.setFocusable(false);
+        dziedzinaButton.setBounds(30,250,150,40);
+        dziedzinaButton.setFocusable(false);
 
-        dodajKsiazkeButton.setBounds(30,300,150,40);
-        dodajKsiazkeButton.setFocusable(false);
+        ksiazkaButton.setBounds(30,300,150,40);
+        ksiazkaButton.setFocusable(false);
 
-        dodajEgzemplarzButton.setBounds(30,350,150,40);
-        dodajEgzemplarzButton.setFocusable(false);
+        egzemplarzButton.setBounds(30,350,150,40);
+        egzemplarzButton.setFocusable(false);
 
         wylogujButton.setBounds(30, 550, 150, 40);
         wylogujButton.setFocusable(false);
 
         add(header);
-        add(PracownikButton);
-        add(AutorButton);
-        add(dodajWydawnictwoButton);
-        add(dodajDziedzineButton);
-        add(dodajKsiazkeButton);
-        add(dodajEgzemplarzButton);
+        add(pracownikButton);
+        add(autorButton);
+        add(wydawnictwoButton);
+        add(dziedzinaButton);
+        add(ksiazkaButton);
+        add(egzemplarzButton);
 
         add(wylogujButton);
 
@@ -67,9 +67,18 @@ public class MenuPracownikaPanel extends JPanel{
         return wylogujButton;
     } 
     public JButton getPracownikButton(){
-        return PracownikButton;
+        return pracownikButton;
     }
     public JButton getAutorButton(){
-        return AutorButton;
+        return autorButton;
+    }
+    public JButton getWydawnictwoButton(){
+        return wydawnictwoButton;
+    }
+    public JButton getDziedzinaButton(){
+        return dziedzinaButton;
+    }
+    public JButton getKsiazkaButton(){
+        return ksiazkaButton;
     }
 }

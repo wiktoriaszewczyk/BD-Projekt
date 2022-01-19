@@ -1,6 +1,7 @@
 import javax.naming.AuthenticationNotSupportedException;
 import javax.swing.*;
 import java.awt.Font;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,9 +15,11 @@ public class MyFrame extends JFrame{
     private static JPanel startPanel;
     private static JPanel loginPracownikPanel;
     private static MenuPracownikaPanel menuPracownikaPanel;
-    private static MenuPracownikaPanel PracownikPanel;  // dodawanie usuwanie pracownika
-    private static MenuPracownikaPanel AutorPanel;  // dodawanie usuwanie autora
-
+    private static MenuPracownikaPanel pracownikPanel;  // dodawanie usuwanie pracownika
+    private static MenuPracownikaPanel autorPanel;  // dodawanie usuwanie autora
+    private static MenuPracownikaPanel wydawnictwoPanel;
+    private static MenuPracownikaPanel dziedzinaPanel;
+    private static MenuPracownikaPanel ksiazkaPanel;
 
     private static JPanel zarejestrujCzytelnikPanel;
     private static JPanel katalogKsiazekPanel;
@@ -33,9 +36,12 @@ public class MyFrame extends JFrame{
         startPanelInit();
 
         loginPracownikPanelInit();
-        zarejestrujPracownikPanelInit();
         menuPracownikaPanelInit();
-        dodajAutoraPanelInit();
+        pracownikPanelInit();
+        autorPanelInit();
+        wydawnictwoPanelInit();
+        dziedzinaPanelInit();
+        ksiazkaPanelInit();
 
         zarejestrujCzytelnikPanelInit();
         katalogKsiazekPanelInit();
@@ -44,8 +50,11 @@ public class MyFrame extends JFrame{
         this.add(startPanel);
         this.add(loginPracownikPanel);
         this.add(menuPracownikaPanel);
-        this.add(PracownikPanel);
-        this.add(AutorPanel);
+        this.add(pracownikPanel);
+        this.add(autorPanel);
+        this.add(wydawnictwoPanel);
+        this.add(dziedzinaPanel);
+        this.add(ksiazkaPanel);
 
         this.add(zarejestrujCzytelnikPanel);
         this.add(katalogKsiazekPanel);
@@ -253,12 +262,27 @@ public class MyFrame extends JFrame{
 
         panel.getPracownikButton().addActionListener(e -> {
             panel.setVisible(false);
-            PracownikPanel.setVisible(true);
+            pracownikPanel.setVisible(true);
         });
 
         panel.getAutorButton().addActionListener(e ->{
             panel.setVisible(false);
-            AutorPanel.setVisible(true);
+            autorPanel.setVisible(true);
+        });
+
+        panel.getWydawnictwoButton().addActionListener(e ->{
+            panel.setVisible(false);
+            wydawnictwoPanel.setVisible(true);
+        });
+
+        panel.getDziedzinaButton().addActionListener(e ->{
+            panel.setVisible(false);
+            dziedzinaPanel.setVisible(true);
+        });
+
+        panel.getKsiazkaButton().addActionListener(e ->{
+            panel.setVisible(false);
+            ksiazkaPanel.setVisible(true);
         });
     }
 
@@ -268,13 +292,13 @@ public class MyFrame extends JFrame{
 
     }
 
-    private static void zarejestrujPracownikPanelInit(){
-        PracownikPanel = new MenuPracownikaPanel();
-        PracownikPanel.setLayout(null);
-        PracownikPanel.setBounds(0, 0, 1200, 700);
+    private static void pracownikPanelInit(){
+        pracownikPanel = new MenuPracownikaPanel();
+        pracownikPanel.setLayout(null);
+        pracownikPanel.setBounds(0, 0, 1200, 700);
 
-        menuPracownikaButtons(PracownikPanel);
-        PracownikPanel.getHeader().setText("Dodaj Pracownika");
+        menuPracownikaButtons(pracownikPanel);
+        pracownikPanel.getHeader().setText("Dodaj Pracownika");
 
         JLabel imieLabel = new JLabel("Imie* ");
         JTextField imie = new JTextField();
@@ -315,32 +339,32 @@ public class MyFrame extends JFrame{
 
         infoLabel.setBounds(465, 430, 270, 30);
 
-        PracownikPanel.add(imieLabel);
-        PracownikPanel.add(imie);
-        PracownikPanel.add(nazwiskoLabel);
-        PracownikPanel.add(nazwisko);
-        PracownikPanel.add(emailLabel);
-        PracownikPanel.add(email);
-        PracownikPanel.add(loginLabel);
-        PracownikPanel.add(login);
-        PracownikPanel.add(haslo1Label);
-        PracownikPanel.add(haslo1);
-        PracownikPanel.add(haslo2Label);
-        PracownikPanel.add(haslo2);
-        PracownikPanel.add(buttonRejestracja);
-        PracownikPanel.add(infoLabel);
+        pracownikPanel.add(imieLabel);
+        pracownikPanel.add(imie);
+        pracownikPanel.add(nazwiskoLabel);
+        pracownikPanel.add(nazwisko);
+        pracownikPanel.add(emailLabel);
+        pracownikPanel.add(email);
+        pracownikPanel.add(loginLabel);
+        pracownikPanel.add(login);
+        pracownikPanel.add(haslo1Label);
+        pracownikPanel.add(haslo1);
+        pracownikPanel.add(haslo2Label);
+        pracownikPanel.add(haslo2);
+        pracownikPanel.add(buttonRejestracja);
+        pracownikPanel.add(infoLabel);
 
-        PracownikPanel.setVisible(false);
+        pracownikPanel.setVisible(false);
     }
 
-    private static void dodajAutoraPanelInit(){
-        AutorPanel = new MenuPracownikaPanel();
-        AutorPanel.setLayout(null);
-        AutorPanel.setBounds(0, 0, 1200, 700);
+    private static void autorPanelInit(){
+        autorPanel = new MenuPracownikaPanel();
+        autorPanel.setLayout(null);
+        autorPanel.setBounds(0, 0, 1200, 700);
 
-        menuPracownikaButtons(AutorPanel);
+        menuPracownikaButtons(autorPanel);
 
-        AutorPanel.getHeader().setText("Autorzy");
+        autorPanel.getHeader().setText("Autorzy");
 
         JLabel dodajAutoraLabel = new JLabel("Dodaj autora",SwingConstants.CENTER);
         JLabel imieLabel = new JLabel("Imie* ");
@@ -349,6 +373,14 @@ public class MyFrame extends JFrame{
         JTextField nazwisko = new JTextField();
         JButton buttonDodaj = new JButton("Dodaj");
         JLabel infoDodajLabel = new JLabel("* pole wymagane");
+
+        JLabel zmienAutoraLabel = new JLabel("Aktualizuj autora",SwingConstants.CENTER);
+        JLabel imieLabel2 = new JLabel("Imie* ");
+        JTextField imie2 = new JTextField();
+        JLabel nazwiskoLabel2 = new JLabel("Nazwisko* ");
+        JTextField nazwisko2 = new JTextField();
+        JButton buttonZmien = new JButton("Aktualizuj");
+        JLabel infoZmienLabel = new JLabel("Najpierw wybierz autora z listy.");
 
         JLabel usunAutoraLabel = new JLabel("Usuń autora",SwingConstants.CENTER);
         JTextField szukaj = new JTextField();
@@ -363,66 +395,389 @@ public class MyFrame extends JFrame{
 
         dodajAutoraLabel.setFont(new Font("TimesRoman",Font.BOLD,20));
         dodajAutoraLabel.setBounds(300, 150, 270, 25);
-        imieLabel.setBounds(300, 230, 80, 25);
-        imie.setBounds(400, 230, 170, 25);
+        imieLabel.setBounds(300, 200, 80, 25);
+        imie.setBounds(400, 200, 170, 25);
 
-        nazwiskoLabel.setBounds(300, 270, 80, 25);
-        nazwisko.setBounds(400, 270, 170, 25);
+        nazwiskoLabel.setBounds(300, 240, 80, 25);
+        nazwisko.setBounds(400, 240, 170, 25);
 
-        buttonDodaj.setBounds(300, 320 ,270, 30);
+        buttonDodaj.setBounds(300, 290 ,270, 30);
         buttonDodaj.setFocusable(false);
         buttonDodaj.addActionListener(e -> {
             infoDodajLabel.setText(actionDodajAutor(imie.getText(), nazwisko.getText())); 
             db.infoAutor(autorzy);
         });
 
-        infoDodajLabel.setBounds(300, 360, 270, 30);
+        infoDodajLabel.setBounds(300, 330, 270, 30);
 
+        zmienAutoraLabel.setFont(new Font("TimesRoman",Font.BOLD,20));
+        zmienAutoraLabel.setBounds(300, 380, 270, 25);
+        imieLabel2.setBounds(300, 430, 80, 25);
+        imie2.setBounds(400, 430, 170, 25);
+
+        nazwiskoLabel2.setBounds(300, 470, 80, 25);
+        nazwisko2.setBounds(400, 470, 170, 25);
+
+        buttonZmien.setBounds(300, 520 ,270, 30);
+        buttonZmien.setFocusable(false);
+        buttonZmien.addActionListener(e -> {
+            infoZmienLabel.setText(actionZmienAutor(listaAutor.getSelectedValue(), imie2.getText(), nazwisko2.getText())); 
+            db.infoAutor(autorzy);
+        });
+
+        infoZmienLabel.setBounds(300, 560, 270, 30);
 
         usunAutoraLabel.setFont(new Font("TimesRoman",Font.BOLD,20));
         usunAutoraLabel.setBounds(700, 150, 270, 25);
 
-        szukaj.setBounds(700,230,170,25);
-        buttonSzukaj.setBounds(890,230,80,25);
+        szukaj.setBounds(700,200,170,25);
+        buttonSzukaj.setBounds(890,200,80,25);
         buttonSzukaj.addActionListener(e -> {db.infoAutor(autorzy,szukaj.getText());});
 
         listaAutor.setFixedCellHeight(40);
-        // listaAutor.addListSelectionListener(e -> ksiazkaInfo(listaAutor.getSelectedValue()));
+        listaAutor.addListSelectionListener(e -> {
+            if(listaAutor.getSelectedValue() != null){
+            imie2.setText(listaAutor.getSelectedValue().getImie());
+            nazwisko2.setText(listaAutor.getSelectedValue().getNazwisko());
+            }
+        });
         listaAutor.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         scrollPane.setViewportView(listaAutor);
-        scrollPane.setBounds(700,270,270,250);
+        scrollPane.setBounds(700,240,270,250);
 
-        buttonUsun.setBounds(700, 540 ,270, 30);
+        buttonUsun.setBounds(700, 510 ,270, 30);
         buttonUsun.setFocusable(false);
         buttonUsun.addActionListener(e -> {
             infoUsunLabel.setText(actionUsunAutor(listaAutor.getSelectedValue()));
             db.infoAutor(autorzy);
         });
 
-        infoUsunLabel.setBounds(700, 580, 270, 50);
+        infoUsunLabel.setBounds(700, 550, 270, 50);
 
 
+        autorPanel.add(dodajAutoraLabel);
+        autorPanel.add(imieLabel);
+        autorPanel.add(imie);
+        autorPanel.add(nazwiskoLabel);
+        autorPanel.add(nazwisko);
+        autorPanel.add(buttonDodaj);
+        autorPanel.add(infoDodajLabel);
+        
+        autorPanel.add(zmienAutoraLabel);
+        autorPanel.add(imieLabel2);
+        autorPanel.add(imie2);
+        autorPanel.add(nazwiskoLabel2);
+        autorPanel.add(nazwisko2);
+        autorPanel.add(buttonZmien);
+        autorPanel.add(infoZmienLabel);
 
-        AutorPanel.add(dodajAutoraLabel);
-        AutorPanel.add(imieLabel);
-        AutorPanel.add(imie);
-        AutorPanel.add(nazwiskoLabel);
-        AutorPanel.add(nazwisko);
-        AutorPanel.add(buttonDodaj);
-        AutorPanel.add(infoDodajLabel);
+        autorPanel.add(usunAutoraLabel);
+        autorPanel.add(szukaj);
+        autorPanel.add(buttonSzukaj);
+        autorPanel.add(scrollPane);
+        autorPanel.add(buttonUsun);
+        autorPanel.add(infoUsunLabel);
 
-        AutorPanel.add(usunAutoraLabel);
-        AutorPanel.add(szukaj);
-        AutorPanel.add(buttonSzukaj);
-        AutorPanel.add(scrollPane);
+        autorPanel.setVisible(false);
+    }
 
-        AutorPanel.add(buttonUsun);
-        AutorPanel.add(infoUsunLabel);
+    private static void wydawnictwoPanelInit(){
+        wydawnictwoPanel = new MenuPracownikaPanel();
+        wydawnictwoPanel.setLayout(null);
+        wydawnictwoPanel.setBounds(0, 0, 1200, 700);
+
+        menuPracownikaButtons(wydawnictwoPanel);
+
+        wydawnictwoPanel.getHeader().setText("Wydawnictwa");
+
+        JLabel dodajWydawnictwoLabel = new JLabel("Dodaj wydawnictwo",SwingConstants.CENTER);
+        JLabel nazwaLabel = new JLabel("Nazwa* ");
+        JTextField nazwa = new JTextField();
+        JButton buttonDodaj = new JButton("Dodaj");
+        JLabel infoDodajLabel = new JLabel("* pole wymagane");
+
+        JLabel zmienWydawnictwoLabel = new JLabel("Aktualizuj wydawnictwo",SwingConstants.CENTER);
+        JLabel nazwaLabel2 = new JLabel("Nazwa* ");
+        JTextField nazwa2 = new JTextField();
+        JButton buttonZmien = new JButton("Aktualizuj");
+        JLabel infoZmienLabel = new JLabel("Najpierw wybierz wydawnictwo z listy.");
+
+        JLabel usunWydawnictwoLabel = new JLabel("Usuń wydawnictwo",SwingConstants.CENTER);
+        JTextField szukaj = new JTextField();
+        JButton buttonSzukaj = new JButton("Szukaj");
+        DefaultListModel<Wydawnictwo> wydawnictwa = new DefaultListModel<>();
+        db.infoWydawnictwo(wydawnictwa);
+        JList<Wydawnictwo> listaWydawnictwo = new JList<>(wydawnictwa); 
+        JScrollPane scrollPane = new JScrollPane();
+
+        JButton buttonUsun = new JButton("Usuń");
+        JLabel infoUsunLabel = new JLabel("");
+
+        dodajWydawnictwoLabel.setFont(new Font("TimesRoman",Font.BOLD,20));
+        dodajWydawnictwoLabel.setBounds(300, 150, 270, 25);
+
+        nazwaLabel.setBounds(300, 200, 80, 25);
+        nazwa.setBounds(400, 200, 170, 25);
+
+        buttonDodaj.setBounds(300, 250 ,270, 30);
+        buttonDodaj.setFocusable(false);
+        buttonDodaj.addActionListener(e -> {
+            infoDodajLabel.setText(actionDodajWydawnictwo(nazwa.getText())); 
+            db.infoWydawnictwo(wydawnictwa);
+        });
+
+        infoDodajLabel.setBounds(300, 290, 270, 30);
+
+        zmienWydawnictwoLabel.setFont(new Font("TimesRoman",Font.BOLD,20));
+        zmienWydawnictwoLabel.setBounds(300, 380, 270, 25);
+        nazwaLabel2.setBounds(300, 430, 80, 25);
+        nazwa2.setBounds(400, 430, 170, 25);
+
+        buttonZmien.setBounds(300, 480 ,270, 30);
+        buttonZmien.setFocusable(false);
+        buttonZmien.addActionListener(e -> {
+            infoZmienLabel.setText(actionZmienWydawnictwo(listaWydawnictwo.getSelectedValue(), nazwa2.getText())); 
+            db.infoWydawnictwo(wydawnictwa);
+        });
+
+        infoZmienLabel.setBounds(300, 520, 270, 30);
+        
+        usunWydawnictwoLabel.setFont(new Font("TimesRoman",Font.BOLD,20));
+        usunWydawnictwoLabel.setBounds(700, 150, 270, 25);
+
+        szukaj.setBounds(700,200,170,25);
+        buttonSzukaj.setBounds(890,200,80,25);
+        buttonSzukaj.addActionListener(e -> {db.infoWydawnictwo(wydawnictwa,szukaj.getText());});
+
+        listaWydawnictwo.setFixedCellHeight(40);
+        listaWydawnictwo.addListSelectionListener(e -> {
+            if(listaWydawnictwo.getSelectedValue() != null){
+                nazwa2.setText(listaWydawnictwo.getSelectedValue().getNazwa());
+            }
+        });
+        listaWydawnictwo.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        scrollPane.setViewportView(listaWydawnictwo);
+        scrollPane.setBounds(700,240,270,250);
+
+        buttonUsun.setBounds(700, 510 ,270, 30);
+        buttonUsun.setFocusable(false);
+        buttonUsun.addActionListener(e -> {
+            infoUsunLabel.setText(actionUsunWydawnictwo(listaWydawnictwo.getSelectedValue()));
+            db.infoWydawnictwo(wydawnictwa);
+        });
+
+        infoUsunLabel.setBounds(700, 550, 270, 50);
 
 
+        wydawnictwoPanel.add(dodajWydawnictwoLabel);
+        wydawnictwoPanel.add(nazwaLabel);
+        wydawnictwoPanel.add(nazwa);
+        wydawnictwoPanel.add(buttonDodaj);
+        wydawnictwoPanel.add(infoDodajLabel);
 
-        AutorPanel.setVisible(false);
+        wydawnictwoPanel.add(zmienWydawnictwoLabel);
+        wydawnictwoPanel.add(nazwaLabel2);
+        wydawnictwoPanel.add(nazwa2);
+        wydawnictwoPanel.add(buttonZmien);
+        wydawnictwoPanel.add(infoZmienLabel);
+
+        wydawnictwoPanel.add(usunWydawnictwoLabel);
+        wydawnictwoPanel.add(szukaj);
+        wydawnictwoPanel.add(buttonSzukaj);
+        wydawnictwoPanel.add(scrollPane);
+        wydawnictwoPanel.add(buttonUsun);
+        wydawnictwoPanel.add(infoUsunLabel);
+
+        wydawnictwoPanel.setVisible(false);
+
+
+    }
+
+    private static void dziedzinaPanelInit(){
+        dziedzinaPanel = new MenuPracownikaPanel();
+        dziedzinaPanel.setLayout(null);
+        dziedzinaPanel.setBounds(0, 0, 1200, 700);
+
+        menuPracownikaButtons(dziedzinaPanel);
+
+        dziedzinaPanel.getHeader().setText("Dziedziny");
+
+        JLabel dodajLabel = new JLabel("Dodaj dziedzinę",SwingConstants.CENTER);
+        JLabel nazwaLabel = new JLabel("Nazwa* ");
+        JTextField nazwa = new JTextField();
+        JLabel nadNazwaLabel = new JLabel("<html>Dziedzina<br />nadrzędna <html>");
+        Vector<Dziedzina> dziedziny = new Vector<>();
+        JComboBox<Dziedzina> nadNazwa = new JComboBox<>(dziedziny);
+        JButton buttonDodaj = new JButton("Dodaj");
+        JLabel infoDodajLabel = new JLabel("* pole wymagane");
+
+        JLabel zmienLabel = new JLabel("Aktualizuj dziedzinę",SwingConstants.CENTER);
+        JLabel nazwaLabel2 = new JLabel("Nazwa* ");
+        JTextField nazwa2 = new JTextField();
+        JLabel nadNazwaLabel2 = new JLabel("<html>Dziedzina<br />nadrzędna <html>");
+        JComboBox<Dziedzina> nadNazwa2 = new JComboBox<>(dziedziny);
+        JButton buttonZmien = new JButton("Aktualizuj");
+        JLabel infoZmienLabel = new JLabel("Najpierw wybierz autora z listy.");
+
+        JLabel usunLabel = new JLabel("Usuń dziedzinę",SwingConstants.CENTER);
+        JTextField szukaj = new JTextField();
+        JButton buttonSzukaj = new JButton("Szukaj");
+        DefaultListModel<Dziedzina> dziedziny2 = new DefaultListModel<>();
+        db.infoDziedzina(dziedziny, dziedziny2);
+        JList<Dziedzina> listaDziedzina = new JList<>(dziedziny2); 
+        JScrollPane scrollPane = new JScrollPane();
+
+        JButton buttonUsun = new JButton("Usuń");
+        JLabel infoUsunLabel = new JLabel("");
+
+        dodajLabel.setFont(new Font("TimesRoman",Font.BOLD,20));
+        dodajLabel.setBounds(300, 150, 270, 25);
+        nazwaLabel.setBounds(300, 200, 80, 25);
+        nazwa.setBounds(400, 200, 170, 25);
+
+        nadNazwaLabel.setBounds(300, 240, 80, 25);
+        nadNazwa.setBounds(400, 240, 170, 25);
+
+        buttonDodaj.setBounds(300, 290 ,270, 30);
+        buttonDodaj.setFocusable(false);
+        buttonDodaj.addActionListener(e -> {
+            infoDodajLabel.setText(actionDodajDziedzine(nazwa.getText(), (Dziedzina)nadNazwa.getSelectedItem())); 
+            db.infoDziedzina(dziedziny, dziedziny2);
+        });
+
+        infoDodajLabel.setBounds(300, 330, 270, 30);
+
+        zmienLabel.setFont(new Font("TimesRoman",Font.BOLD,20));
+        zmienLabel.setBounds(300, 380, 270, 25);
+        nazwaLabel2.setBounds(300, 430, 80, 25);
+        nazwa2.setBounds(400, 430, 170, 25);
+
+        nadNazwaLabel2.setBounds(300, 470, 80, 25);
+        nadNazwa2.setBounds(400, 470, 170, 25);
+
+        buttonZmien.setBounds(300, 520 ,270, 30);
+        buttonZmien.setFocusable(false);
+        buttonZmien.addActionListener(e -> {
+            infoZmienLabel.setText(actionZmienDziedzina(listaDziedzina.getSelectedValue(), nazwa2.getText(), (Dziedzina)nadNazwa2.getSelectedItem())); 
+            db.infoDziedzina(dziedziny, dziedziny2);
+        });
+
+        infoZmienLabel.setBounds(300, 560, 270, 30);
+
+        usunLabel.setFont(new Font("TimesRoman",Font.BOLD,20));
+        usunLabel.setBounds(700, 150, 270, 25);
+
+        szukaj.setBounds(700,200,170,25);
+        buttonSzukaj.setBounds(890,200,80,25);
+        buttonSzukaj.addActionListener(e -> {db.infoDziedzina(dziedziny, dziedziny2, szukaj.getText());});
+
+        listaDziedzina.setFixedCellHeight(40);
+        listaDziedzina.addListSelectionListener(e -> {
+            if(listaDziedzina.getSelectedValue() != null){
+                nazwa2.setText(listaDziedzina.getSelectedValue().getNazwa());
+                nadNazwa2.setSelectedIndex(listaDziedzina.getSelectedValue().getIdNad());
+            }
+        });
+        listaDziedzina.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        scrollPane.setViewportView(listaDziedzina);
+        scrollPane.setBounds(700,240,300,250);
+
+        buttonUsun.setBounds(700, 510 ,270, 30);
+        buttonUsun.setFocusable(false);
+        buttonUsun.addActionListener(e -> {
+            infoUsunLabel.setText(actionUsunDziedzina(listaDziedzina.getSelectedValue()));
+            db.infoDziedzina(dziedziny, dziedziny2);
+        });
+
+        infoUsunLabel.setBounds(700, 550, 270, 50);
+
+
+        dziedzinaPanel.add(dodajLabel);
+        dziedzinaPanel.add(nazwaLabel);
+        dziedzinaPanel.add(nazwa);
+        dziedzinaPanel.add(nadNazwaLabel);
+        dziedzinaPanel.add(nadNazwa);
+        dziedzinaPanel.add(buttonDodaj);
+        dziedzinaPanel.add(infoDodajLabel);
+        
+        dziedzinaPanel.add(zmienLabel);
+        dziedzinaPanel.add(nazwaLabel2);
+        dziedzinaPanel.add(nazwa2);
+        dziedzinaPanel.add(nadNazwaLabel2);
+        dziedzinaPanel.add(nadNazwa2);
+        dziedzinaPanel.add(buttonZmien);
+        dziedzinaPanel.add(infoZmienLabel);
+
+        dziedzinaPanel.add(usunLabel);
+        dziedzinaPanel.add(szukaj);
+        dziedzinaPanel.add(buttonSzukaj);
+        dziedzinaPanel.add(scrollPane);
+        dziedzinaPanel.add(buttonUsun);
+        dziedzinaPanel.add(infoUsunLabel);
+
+        dziedzinaPanel.setVisible(false);
+    }
+
+    private static void ksiazkaPanelInit(){
+        ksiazkaPanel = new MenuPracownikaPanel();
+        ksiazkaPanel.setLayout(null);
+        ksiazkaPanel.setBounds(0, 0, 1200, 700);
+
+        menuPracownikaButtons(ksiazkaPanel);
+
+        ksiazkaPanel.getHeader().setText("Książki");
+
+
+        JLabel usunLabel = new JLabel("Usuń ksiażkę",SwingConstants.CENTER);
+        JTextField szukaj = new JTextField();
+        JButton buttonSzukaj = new JButton("Szukaj");
+        DefaultListModel<Ksiazka> ksiazki = new DefaultListModel<>();
+        db.infoKsiazka(ksiazki);
+        JList<Ksiazka> listaKsiazka = new JList<>(ksiazki); 
+        JScrollPane scrollPane = new JScrollPane();
+
+        JButton buttonUsun = new JButton("Usuń");
+        JLabel infoUsunLabel = new JLabel("");
+
+        usunLabel.setFont(new Font("TimesRoman",Font.BOLD,20));
+        usunLabel.setBounds(700, 150, 270, 25);
+
+        szukaj.setBounds(700,200,170,25);
+        buttonSzukaj.setBounds(890,200,80,25);
+        buttonSzukaj.addActionListener(e -> {db.infoKsiazka(ksiazki, szukaj.getText());});
+
+        listaKsiazka.setFixedCellHeight(40);
+        listaKsiazka.addListSelectionListener(e -> {
+            if(listaKsiazka.getSelectedValue() != null){
+                // nazwa2.setText(listaKsiazka.getSelectedValue().getNazwa());
+                // nadNazwa2.setSelectedIndex(listaKsiazka.getSelectedValue().getIdNad());
+            }
+        });
+        listaKsiazka.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        scrollPane.setViewportView(listaKsiazka);
+        scrollPane.setBounds(700,240,300,250);
+
+        buttonUsun.setBounds(700, 510 ,270, 30);
+        buttonUsun.setFocusable(false);
+        buttonUsun.addActionListener(e -> {
+            infoUsunLabel.setText(actionUsunKsiazka(listaKsiazka.getSelectedValue()));
+            db.infoKsiazka(ksiazki);
+        });
+
+        infoUsunLabel.setBounds(700, 550, 270, 50);
+
+        ksiazkaPanel.add(usunLabel);
+        ksiazkaPanel.add(szukaj);
+        ksiazkaPanel.add(buttonSzukaj);
+        ksiazkaPanel.add(scrollPane);
+        ksiazkaPanel.add(buttonUsun);
+        ksiazkaPanel.add(infoUsunLabel);
+
+        ksiazkaPanel.setVisible(false);
     }
 
     private static void katalogKsiazekPanelInit(){
@@ -468,6 +823,7 @@ public class MyFrame extends JFrame{
             ksiazkaInfoPanel.setVisible(false);
         });
     }
+
 
     // --------------------------------------------------------------------------------
     // Funkcje dla przycisków
@@ -606,6 +962,122 @@ public class MyFrame extends JFrame{
     
         return toReturn;
     }
+
+    private static String actionZmienAutor(Autor autor, String imie, String nazwisko){
+        String toReturn = "Nie udało się zaktualizować danych autora.";
+        if(autor == null){
+            toReturn = "Najpierw wybierz autora."; 
+        }
+        else if(db.aktualizujAutor(autor.getId(), imie, nazwisko))
+            toReturn = "Autor zaktualizowany.";
+    
+        return toReturn;
+    }
+
+    private static String actionDodajWydawnictwo(String nazwa){
+        String toReturn;
+        String blad = "";
+        boolean valid = true;
+
+        if(nazwa.equals("")){
+            valid = false;
+            blad += "Wypełnij wszystkie wymagane pola. ";
+        }
+
+        if(valid){
+            if(db.dodajWydawnictwo(nazwa)){
+                toReturn = "Dodano wydawnictwo.";
+            }
+            else{
+                toReturn = "Dodanie wydawnictwa nie powiodło się." ;
+            }
+        }
+        else{
+            toReturn = blad;
+        }
+        return toReturn;
+    }
+
+    private static String actionUsunWydawnictwo(Wydawnictwo wydawnictwo){
+        String toReturn = "<html>Nie udało się usunąć wydawnictwa.<br />Usuń najpierw jego ksiażki.<html>";
+        if(wydawnictwo == null){
+            toReturn = "Wybierz wydawnictwo."; 
+        }
+        else if(db.usunWydawnictwo(wydawnictwo.getId()))
+            toReturn = "Wydawnictwo usunięte.";
+    
+        return toReturn;
+    }
+
+    private static String actionZmienWydawnictwo(Wydawnictwo wydawnictwo, String nazwa){
+        String toReturn = "Nie udało się zaktualizować danych wydawnictwa.";
+        if(wydawnictwo == null){
+            toReturn = "Najpierw wybierz wydawnictwo."; 
+        }
+        else if(db.aktualizujWydawnictwo(wydawnictwo.getId(), nazwa))
+            toReturn = "Wydawnictwo zaktualizowane.";
+    
+        return toReturn;
+    }
+    
+    private static String actionDodajDziedzine(String nazwa, Dziedzina nadDziedzina){
+        String toReturn;
+        String blad = "";
+        boolean valid = true;
+
+        if(nazwa.equals("")){
+            valid = false;
+            blad += "Wypełnij wszystkie wymagane pola. ";
+        }
+
+        if(valid){
+            if(db.dodajDziedzina(nazwa, nadDziedzina.getId())){
+                toReturn = "Dodano dziedzinę.";
+            }
+            else{
+                toReturn = "Dodanie dziedziny nie powiodło się." ;
+            }
+        }
+        else{
+            toReturn = blad;
+        }
+        return toReturn;
+    }
+
+    private static String actionUsunDziedzina(Dziedzina dziedzina){
+        String toReturn = "<html>Nie udało się usunąć dziedziny.<br />Usuń najpierw ksiażki o danej tematyce.<html>";
+        if(dziedzina == null){
+            toReturn = "Wybierz dziedzinę."; 
+        }
+        else if(db.usunDziedzina(dziedzina.getId()))
+            toReturn = "Dziedzina usunięte.";
+    
+        return toReturn;
+    }
+
+    private static String actionZmienDziedzina(Dziedzina dziedzina, String nazwa, Dziedzina nadDziedzina){
+        String toReturn = "Nie udało się zaktualizować danych wydawnictwa.";
+        if(dziedzina == null){
+            toReturn = "Najpierw wybierz wydawnictwo."; 
+        }
+        else if(db.aktualizujDziedzina(dziedzina.getId(), nazwa, nadDziedzina.getId()))
+            toReturn = "Wydawnictwo zaktualizowane.";
+    
+        return toReturn;
+    }
+
+    
+    private static String actionUsunKsiazka(Ksiazka ksiazka){
+        String toReturn = "<html>Nie udało się usunąć książki.<br />Usuń najpierw jego egzemplarze.<html>";
+        if(ksiazka == null){
+            toReturn = "Wybierz książkę."; 
+        }
+        // else if(db.usunKsiazka(wydawnictwo.getId()))
+            // toReturn = "Wydawnictwo usunięte.";
+    
+        return toReturn;
+    }
+
     private static void ksiazkaInfo(Ksiazka k){
         ksiazkaInfoPanel.setVisible(true); katalogKsiazekPanel.setVisible(false);
         ksiazkaInfoPanel.getTytul().setText(k.getTytul());
