@@ -105,34 +105,62 @@ RETURNS int AS
 $$
 DECLARE
     recEgzemplarz RECORD;
-    recAutor RECORD;
-    recDziedzina RECORD;
-    recRezerwacja RECORD;
+    -- recAutor RECORD;
+    -- recDziedzina RECORD;
+    -- recRezerwacja RECORD;
 BEGIN
     -- Usuwam informacje z tabel ksiazka_dziedzina, ksiazka_autor i rezerwacja tylko jesli nie ma egzemplarzy
     -- Jeśli chcemy usunąć książke trzeba najpierw usunąć wszystkie jej egzemplarze, nie usuwam kaskadowo wszystkich informacji o książce  
     SELECT COUNT(*) AS n INTO recEgzemplarz FROM egzemplarz WHERE ksiazka_idksiazka = idK;
-    SELECT COUNT(*) AS n INTO recAutor FROM ksiazka_autor WHERE ksiazka_idksiazka = idK;
-    SELECT COUNT(*) AS n INTO recDziedzina FROM ksiazka_dziedzina WHERE ksiazka_idksiazka = idK;
-    SELECT COUNT(*) AS n INTO recRezerwacja FROM rezerwacja WHERE ksiazka_idksiazka = idK;
+    -- SELECT COUNT(*) AS n INTO recAutor FROM ksiazka_autor WHERE ksiazka_idksiazka = idK;
+    -- SELECT COUNT(*) AS n INTO recDziedzina FROM ksiazka_dziedzina WHERE ksiazka_idksiazka = idK;
+    -- SELECT COUNT(*) AS n INTO recRezerwacja FROM rezerwacja WHERE ksiazka_idksiazka = idK;
     
     IF recEgzemplarz.n > 0 THEN
         RETURN 0;
     END IF;
 
-    IF recAutor.n > 0 THEN
+    -- IF recAutor.n > 0 THEN
         DELETE FROM ksiazka_autor WHERE ksiazka_idksiazka = idK;        
-    END IF;
+    -- END IF;
 
-    IF recDziedzina.n > 0 THEN
+    -- IF recDziedzina.n > 0 THEN
         DELETE FROM ksiazka_dziedzina WHERE ksiazka_idksiazka = idK;        
-    END IF;
+    -- END IF;
 
-    IF recRezerwacja.n > 0 THEN
+    -- IF recRezerwacja.n > 0 THEN
         DELETE FROM rezerwacja WHERE ksiazka_idksiazka = idK;        
-    END IF;
+    -- END IF;
 
     DELETE FROM ksiazka WHERE idksiazka = idK;    
+
+    RETURN 1;
+END;
+$$
+LANGUAGE plpgsql;
+
+-------------------------------------------------------------------------------------
+
+-- usuwanie ksiazki
+-- zwraca 
+-- 0 - nie udało się usunąć (są egzemplarze)
+-- 1 - udało się usunąć
+CREATE OR REPLACE FUNCTION usuwanie_egzemplarza(idE int)
+RETURNS int AS
+$$
+DECLARE
+    recEgzemplarz RECORD;
+BEGIN
+    -- Usuwam informacje z tabel ksiazka_dziedzina, ksiazka_autor i rezerwacja tylko jesli nie ma egzemplarzy
+    -- Jeśli chcemy usunąć książke trzeba najpierw usunąć wszystkie jej egzemplarze, nie usuwam kaskadowo wszystkich informacji o książce  
+    SELECT wypozyczona INTO recEgzemplarz FROM egzemplarz WHERE idegzemplarz = idE;
+    
+    IF recEgzemplarz.wypozyczona = true THEN
+        RETURN 0;
+    END IF;
+
+    DELETE FROM wypozyczenie WHERE egzemplarz_idEgzemplarz = idE;
+    DELETE FROM egzemplarz WHERE idegzemplarz = idE; 
 
     RETURN 1;
 END;

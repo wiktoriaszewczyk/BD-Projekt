@@ -51,3 +51,7 @@ CREATE VIEW zarezerwowane_ksiazki AS
 
 --  widok z HAVING dla czytelnika i egzemplarzy!
 
+CREATE VIEW egzemplarze_info_ilosc AS
+    SELECT e.idksiazka, COUNT(*) as ilosc, e.tytul, e.rok_wydania, e.isbn, e.autorzy, e.dziedziny
+    FROM egzemplarz_info e
+    GROUP BY e.idksiazka, e.tytul, e.rok_wydania, e.isbn, e.autorzy, e.dziedziny;

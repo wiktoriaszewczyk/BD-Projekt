@@ -81,4 +81,7 @@ public class MenuPracownikaPanel extends JPanel{
     public JButton getKsiazkaButton(){
         return ksiazkaButton;
     }
+    public JButton getEgzemplarzButton(){
+        return egzemplarzButton;
+    }
 }

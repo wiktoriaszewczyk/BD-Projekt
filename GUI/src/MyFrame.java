@@ -21,6 +21,7 @@ public class MyFrame extends JFrame{
     private static MenuPracownikaPanel wydawnictwoPanel;
     private static MenuPracownikaPanel dziedzinaPanel;
     private static MenuPracownikaPanel ksiazkaPanel;
+    private static MenuPracownikaPanel egzemplarzPanel;
 
     private static JPanel zarejestrujCzytelnikPanel;
     private static MenuCzytelnikaPanel menuCzytelnikaPanel;
@@ -53,6 +54,7 @@ public class MyFrame extends JFrame{
         wydawnictwoPanelInit();
         dziedzinaPanelInit();
         ksiazkaPanelInit();
+        egzemplarzPanelInit();
 
         menuCzytelnikaPanel = new MenuCzytelnikaPanel();    // init po poprawnym zalogowaniu
         wypozyczonePanel = new MenuCzytelnikaPanel();
@@ -76,6 +78,7 @@ public class MyFrame extends JFrame{
         this.add(wydawnictwoPanel);
         this.add(dziedzinaPanel);
         this.add(ksiazkaPanel);
+        this.add(egzemplarzPanel);
 
         this.add(menuCzytelnikaPanel);
         this.add(wypozyczonePanel);
@@ -312,6 +315,11 @@ public class MyFrame extends JFrame{
         panel.getKsiazkaButton().addActionListener(e ->{
             panel.setVisible(false);
             ksiazkaPanel.setVisible(true);
+        });
+
+        panel.getEgzemplarzButton().addActionListener(e ->{
+            panel.setVisible(false);
+            egzemplarzPanel.setVisible(true);
         });
     }
 
@@ -809,6 +817,66 @@ public class MyFrame extends JFrame{
         ksiazkaPanel.setVisible(false);
     }
 
+    private static void egzemplarzPanelInit(){
+        egzemplarzPanel = new MenuPracownikaPanel();
+        egzemplarzPanel.setLayout(null);
+        egzemplarzPanel.setBounds(0, 0, 1200, 700);
+
+        menuPracownikaButtons(egzemplarzPanel);
+
+        egzemplarzPanel.getHeader().setText("Egzemplarze");
+
+
+        // JLabel usunLabel = new JLabel("Usuń egzemplarz",SwingConstants.CENTER);
+        // JTextField szukaj = new JTextField();
+        // JButton buttonSzukaj = new JButton("Szukaj");
+        DefaultListModel<Ksiazka> ksiazki = new DefaultListModel<>();
+        db.infoKsiazka(ksiazki);
+        JList<Ksiazka> listaKsiazka = new JList<>(ksiazki); 
+        JScrollPane scrollPane = new JScrollPane();
+
+        // JButton buttonUsun = new JButton("Usuń");
+        // JLabel infoUsunLabel = new JLabel("");
+
+        // usunLabel.setFont(new Font("TimesRoman",Font.BOLD,20));
+        // usunLabel.setBounds(700, 150, 270, 25);
+
+        // szukaj.setBounds(700,200,170,25);
+        // buttonSzukaj.setBounds(890,200,80,25);
+        // buttonSzukaj.addActionListener(e -> {db.infoKsiazka(ksiazki, szukaj.getText());});
+
+        listaKsiazka.setFixedCellHeight(40);
+        listaKsiazka.addListSelectionListener(e -> {
+            if(listaKsiazka.getSelectedValue() != null){
+                // nazwa2.setText(listaKsiazka.getSelectedValue().getNazwa());
+                // nadNazwa2.setSelectedIndex(listaKsiazka.getSelectedValue().getIdNad());
+            }
+        });
+        listaKsiazka.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        scrollPane.setViewportView(listaKsiazka);
+        scrollPane.setBounds(700,240,300,250);
+
+        // buttonUsun.setBounds(700, 510 ,270, 30);
+        // buttonUsun.setFocusable(false);
+        // buttonUsun.addActionListener(e -> {
+        //     infoUsunLabel.setText(actionUsunKsiazka(listaKsiazka.getSelectedValue()));
+        //     db.infoKsiazka(ksiazki);
+        // });
+
+        // infoUsunLabel.setBounds(700, 550, 270, 50);
+
+        // egzemplarzPanel.add(usunLabel);
+        // egzemplarzPanel.add(szukaj);
+        // egzemplarzPanel.add(buttonSzukaj);
+        egzemplarzPanel.add(scrollPane);
+        // egzemplarzPanel.add(buttonUsun);
+        // egzemplarzPanel.add(infoUsunLabel);
+
+        egzemplarzPanel.setVisible(false);
+    }
+
+
     private static void menuCzytelnikaButtons(MenuCzytelnikaPanel panel){
         panel.getWylogujButton().addActionListener(e -> {
             zalogowanyCzytelnik.setId(0); 
@@ -822,26 +890,26 @@ public class MyFrame extends JFrame{
         });
 
         panel.getWypozyczeniaButton().addActionListener(e -> {
-            wypozyczonePanelInit();
+            // wypozyczonePanelInit();
             panel.setVisible(false);
             wypozyczonePanel.setVisible(true);
         });
 
         panel.getRezerwacjeButton().addActionListener(e -> {
-            zarezerwowanePanelInit();
+            // zarezerwowanePanelInit();
             panel.setVisible(false);
             zarezerwowanePanel.setVisible(true);
 
         });
 
         panel.getHistoriaButton().addActionListener(e -> {
-            historiaPanelInit();
+            // historiaPanelInit();
             panel.setVisible(false);
             historiaPanel.setVisible(true);
         });
 
         panel.getKatalogButton().addActionListener(e -> {
-            katalogPanelInit();
+            // katalogPanelInit();
             panel.setVisible(false);
             katalogPanel.setVisible(true);
         });
@@ -958,7 +1026,7 @@ public class MyFrame extends JFrame{
         info.setBounds(300,110,750,30);
 
         listaKsiazek.setFixedCellHeight(40);
-        listaKsiazek.addListSelectionListener(e -> egzemplarzWyporzyczonyInfo(listaKsiazek.getSelectedValue(), wypozyczonePanel));
+        listaKsiazek.addListSelectionListener(e -> egzemplarzWyporzyczonyInfo(listaKsiazek.getSelectedValue(), wypozyczonePanel/*, listaKsiazek*/));
         listaKsiazek.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listaKsiazek.clearSelection();
 
@@ -1388,7 +1456,7 @@ public class MyFrame extends JFrame{
 
 
     // Menu czytelnika
-    private static void egzemplarzWyporzyczonyInfo(Egzemplarz egzemplarz, MenuCzytelnikaPanel panel){
+    private static void egzemplarzWyporzyczonyInfo(Egzemplarz egzemplarz, MenuCzytelnikaPanel panel/*, JList<Egzemplarz> lista*/){
         egzemplarzInfoWypozyczonePanel.restart();
         menuCzytelnikaButtons(egzemplarzInfoWypozyczonePanel);
 
@@ -1426,6 +1494,7 @@ public class MyFrame extends JFrame{
         egzemplarzInfoWypozyczonePanel.add(buttonOddaj);
 
         egzemplarzInfoWypozyczonePanel.setVisible(true); panel.setVisible(false);
+        // lista.clearSelection();
     }
 
     private static void ksiazkaZarezerwowanaInfo(Ksiazka ksiazka, MenuCzytelnikaPanel panel){
@@ -1517,6 +1586,7 @@ public class MyFrame extends JFrame{
                 dostepnosc.setText("Wypozyczono");
                 wypozycz.setEnabled(false);
                 zarezerwuj.setEnabled(false);
+                wypozyczonePanelInit();
             }
         });
         zarezerwuj.setBounds(465, 410, 270, 30);
@@ -1525,6 +1595,7 @@ public class MyFrame extends JFrame{
             if(db.rezerwujEgzemplarz(zalogowanyCzytelnik.getId(), ksiazka.getIdksiazka())){
                 dostepnosc.setText("Zarezerwowano");
                 zarezerwuj.setEnabled(false);
+                zarezerwowanePanelInit();
             }
         });
 
