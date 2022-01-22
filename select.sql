@@ -21,5 +21,3 @@ ON d1.idDziedzina = d2.dziedzina_idDziedzina) d
 ON kd.dziedzina_idDziedzina = d.idDziedzina
 GROUP BY k.idKsiazka;
 
--- Książka, autorzy, dziedziny
-

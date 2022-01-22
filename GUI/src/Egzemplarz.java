@@ -34,9 +34,7 @@ public class Egzemplarz extends Ksiazka{
     }
 
     public String toString(){
-        //return idksiazka + ", " + tytul + ", " + rok_wydania + ", " + isbn + ", " + autorzy + ", " + dziedziny;
         return "Nr. " + idE + ": " + getTytul() + ", " + getAutorzy();
     }
 
 }
-

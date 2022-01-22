@@ -6,33 +6,30 @@ public class KsiazkaPanel extends JPanel{
     private JLabel autorLabel;
     private JLabel rokWydaniaLabel;
     private JLabel isbnLabel;
+    private JLabel wydawnictwoLabel;
     private JLabel dziedzinyLabel;
     private JButton powrotButton ;
-    /*
-        label ile egzemplarzy 
-        label ile dostepnych
-        button wypozycz
-        button zarezerwuj
-    */
 
     KsiazkaPanel(){
         setLayout(null);
         setBounds(0, 0, 1200, 700);
 
-        tytulLabel = new JLabel("tytuł",SwingConstants.CENTER);
-        autorLabel = new JLabel("autor");
-        rokWydaniaLabel = new JLabel("rok_wydania");
-        isbnLabel = new JLabel("isbn");
-        dziedzinyLabel = new JLabel("dziedziny");
+        tytulLabel = new JLabel("Tytuł: ",SwingConstants.CENTER);
+        autorLabel = new JLabel("Autor: ",SwingConstants.CENTER);
+        rokWydaniaLabel = new JLabel("Rok wydania: ",SwingConstants.CENTER);
+        isbnLabel = new JLabel("isbn",SwingConstants.CENTER);
+        wydawnictwoLabel = new JLabel("Wydawnictwo: ",SwingConstants.CENTER);
+        dziedzinyLabel = new JLabel("dziedziny",SwingConstants.CENTER);
         powrotButton = new JButton("Powrót do katalogu");
 
         tytulLabel.setBounds(0,20,1200,50);
         tytulLabel.setFont(new Font("TimesRoman",Font.BOLD,40));
 
-        autorLabel.setBounds(0,60,1200,30);
-        dziedzinyLabel.setBounds(0,100,1200,30);
-        rokWydaniaLabel.setBounds(0,140,1200,30);
-        isbnLabel.setBounds(0,180,1200,30);
+        autorLabel.setBounds(0,140,1200,30);
+        dziedzinyLabel.setBounds(0,180,1200,30);
+        rokWydaniaLabel.setBounds(0,220,1200,30);
+        isbnLabel.setBounds(0,260,1200,30);
+        wydawnictwoLabel.setBounds(0,300,1200,30);
 
         powrotButton.setBounds(465, 500, 270, 30);
         powrotButton.setFocusable(false);
@@ -41,6 +38,7 @@ public class KsiazkaPanel extends JPanel{
         add(autorLabel);
         add(rokWydaniaLabel);
         add(isbnLabel);
+        add(wydawnictwoLabel);
         add(dziedzinyLabel);
         add(powrotButton);
 
@@ -58,6 +56,9 @@ public class KsiazkaPanel extends JPanel{
     }
     public JLabel getIsbn(){
         return isbnLabel;
+    }
+    public JLabel getWydawnictwo(){
+        return wydawnictwoLabel;
     }
     public JLabel getDziedziny(){
         return dziedzinyLabel;

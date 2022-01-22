@@ -43,21 +43,17 @@ FOR EACH ROW EXECUTE PROCEDURE nowe_wypozyczenie();
 
 ---------------------------------------------------------------------------
 
-
 -- Oddanie książki
 CREATE OR REPLACE FUNCTION oddanie_ksiazki()
 RETURNS TRIGGER AS
 $$
 BEGIN
     IF NEW.data_oddania IS NOT NULL THEN
+        -- Zmiana flagi wypozyczenia na false
         UPDATE Egzemplarz SET wypozyczona = false WHERE idEgzemplarz = NEW.Egzemplarz_idEgzemplarz;
+        -- Dodawanie kary za przetrzymanie
         PERFORM dodaj_kara(NEW.Czytelnik_idCzytelnik, NEW.Egzemplarz_idEgzemplarz);
     END IF;
-
-    -- IF NEW.data_planowanego_oddania IS NOT NULL THEN
-    --     RAISE NOTICE 'AAa'; 
-    --     -- działa mimo że nie zmieniamy daty_oddania
-    -- END IF;
 
     RETURN NEW;
 END;
@@ -66,36 +62,4 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER wypozyczenie_update_oddanie AFTER UPDATE ON Wypozyczenie
 FOR EACH ROW EXECUTE PROCEDURE oddanie_ksiazki();
 
-
--- Prolongata 
--- $$
--- DECLARE 
---     k RECORD;
---     r RECORD;
---     e RECORD;
--- BEGIN
---     IF NEW.data_planowanego_oddania = 
---         -- czy ksiązka jest oddana
---         IF NEW.data_oddania IS NOT NULL THEN
---             RAISE NOTICE 'Książka już oddana.';
---             RETURN NULL;
---         END IF;
-
---         -- czy nie za długo przetrzymana 4 miesiące
---         IF NEW.data_planowanego_oddania - NEW.data_wypozyczenia  > 4*30 THEN
---             RAISE NOTICE 'Przetrzymana za długo.';
---             RETURN NULL;
---         END IF;
-
---         -- czy ksiązka jest zarezerwowana
---         SELECT Ksiazka_idKsiazka as id INTO k FROM Egzemplarz WHERE idEgzemplarz = NEW.Egzemplarz_idEgzemplarz;
-        
---         SELECT COUNT(*) AS n INTO r FROM Rezerwacja WHERE ksiazka_idksiazka = k.id;
-
---         IF r.n > 0 THEN
---             RAISE NOTICE 'Nie można przedłużyć terminu oddania';
---             RETURN NULL;
---         END IF;
-
---         RETURN NEW;
 

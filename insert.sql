@@ -105,6 +105,8 @@ VALUES ('Neil','Gaiman'); -- 9
 
 -- Czytelnik
 INSERT INTO Czytelnik (imie, nazwisko, email, telefon, login, haslo)
+VALUES ('Test', 'Testowy', 'test@test.com', '451886435', 'test', 'test');
+INSERT INTO Czytelnik (imie, nazwisko, email, telefon, login, haslo)
 VALUES ('Marcin', 'Wiśniewski', 'mwisniewski@wp.pl', '434754654', 'mwisniewski', 'marcin123');
 INSERT INTO Czytelnik (imie, nazwisko, email, telefon, login, haslo)
 VALUES ('Edyta', 'Laskowska', 'elaskowska@gmail.pl', '932847284', 'elaskowska', 'edyta123');
@@ -216,22 +218,13 @@ INSERT INTO Egzemplarz (Ksiazka_idKsiazka) VALUES (9); -- 18
 -- Wypozyczenie
 INSERT INTO Wypozyczenie (Czytelnik_idCzytelnik, Egzemplarz_idEgzemplarz, data_wypozyczenia, data_planowanego_oddania)
 VALUES (1,4,'2021-09-19 11:37:44.361709','2021-10-19 11:37:44.361709');
-    UPDATE Wypozyczenie SET data_oddania = '2021-11-19 11:37:44.361709' WHERE Egzemplarz_idEgzemplarz = 4 AND czytelnik_idCzytelnik = 1;
-INSERT INTO Wypozyczenie (Czytelnik_idCzytelnik, Egzemplarz_idEgzemplarz) --, data_wypozyczenia, data_planowanego_oddania, data_oddania
+    UPDATE Wypozyczenie SET data_oddania = '2021-11-19 11:37:44.361709' WHERE Egzemplarz_idEgzemplarz = 4 AND czytelnik_idCzytelnik = 1;    -- Zadziała trigger z karą
+INSERT INTO Wypozyczenie (Czytelnik_idCzytelnik, Egzemplarz_idEgzemplarz)
 VALUES (3,1);
 
 INSERT INTO Wypozyczenie (Czytelnik_idCzytelnik, Egzemplarz_idEgzemplarz, data_wypozyczenia, data_planowanego_oddania, data_oddania)
 VALUES (2,5,'2021-10-19 11:37:44.361709','2021-11-19 11:37:44.361709',NULL);
     UPDATE Wypozyczenie SET data_oddania = '2022-01-19 11:37:44.361709' WHERE Egzemplarz_idEgzemplarz = 5 AND czytelnik_idCzytelnik = 2;
-
--- \/ to robi trigger
--- UPDATE Egzemplarz SET wypozyczona = true WHERE idEgzemplarz = 1;
-
-
--- Oddawanie ksiazki (trigger zmienia wypozyczona na false)
--- UPDATE Wypozyczenie SET data_oddania = NOW() WHERE Egzemplarz_idEgzemplarz = 1 AND czytelnik_idCzytelnik = 3;
-
-
 
 -- INSERT INTO x ()
 -- VALUES ();

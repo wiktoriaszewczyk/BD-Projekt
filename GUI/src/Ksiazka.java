@@ -44,7 +44,6 @@ public class Ksiazka {
     }
 
     public String toString(){
-        //return idksiazka + ", " + tytul + ", " + rok_wydania + ", " + isbn + ", " + autorzy + ", " + dziedziny;
         return tytul + ", " + autorzy;
     }
 

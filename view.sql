@@ -57,10 +57,3 @@ CREATE VIEW zarezerwowane_ksiazki AS
     JOIN ksiazka_info k
     ON r.ksiazka_idksiazka = k.idksiazka;
 
-
---  widok z HAVING dla czytelnika i egzemplarzy!
-
-CREATE VIEW egzemplarze_info_ilosc AS
-    SELECT e.idksiazka, COUNT(*) as ilosc, e.tytul, e.rok_wydania, e.isbn, e.autorzy, e.dziedziny, e.idwydawnictwo, e.wydawnictwo
-    FROM egzemplarz_info e
-    GROUP BY e.idksiazka, e.tytul, e.rok_wydania, e.isbn, e.autorzy, e.dziedziny;

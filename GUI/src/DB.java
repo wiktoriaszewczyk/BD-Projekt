@@ -265,7 +265,6 @@ public class DB {
     }
 
     void infoWydawnictwo(DefaultListModel<Wydawnictwo> wydawnictwo, String tekst){
-        // popbiera autorów których imie lub nazwisko zawiera tekst
         if(tekst.equals(""))
             infoWydawnictwo(wydawnictwo);
             else{
@@ -490,6 +489,51 @@ public class DB {
                 PreparedStatement pst = c.prepareCall( "SELECT idksiazka, tytul, rok_wydania, isbn, autorzy, dziedziny, idwydawnictwo, wydawnictwo FROM ksiazka_info WHERE tytul LIKE ? OR autorzy LIKE ?;" );
                 pst.setString(1, tekst);
                 pst.setString(2, tekst);
+
+                ResultSet rs;
+                rs = pst.executeQuery();
+                while (rs.next())  {
+                    int idksiazka = rs.getInt(1);
+                    String tytul = rs.getString(2);
+                    int rok_wydania = rs.getInt(3);
+                    BigDecimal isbn = rs.getBigDecimal(4);
+                    String autorzy = rs.getString(5);
+                    String dziedziny = rs.getString(6);
+                    Wydawnictwo wydawnictwo = new Wydawnictwo(rs.getInt(7),rs.getString(8));
+                    ksiazki.addElement(new Ksiazka(idksiazka, tytul, rok_wydania, isbn, wydawnictwo, autorzy, dziedziny));
+
+                }
+                rs.close();      
+                pst.close(); 
+            }
+            catch(SQLException e){
+                System.out.println("Blad podczas przetwarzania danych:"+e);
+            }
+        }
+
+    }
+
+    void infoKsiazka(DefaultListModel<Ksiazka> ksiazki, String tekst, Dziedzina dziedzina){
+        if(tekst == ""){
+            infoKsiazka(ksiazki);
+        }
+        else{
+            ksiazki.clear();
+            try{       
+                tekst = "%" + tekst + "%";
+                String dziedzina2 = "%" + dziedzina.getNazwa() + "%";
+                PreparedStatement pst;
+                if(dziedzina.getId() == 0){
+                    pst = c.prepareCall( "SELECT idksiazka, tytul, rok_wydania, isbn, autorzy, dziedziny, idwydawnictwo, wydawnictwo FROM ksiazka_info WHERE tytul LIKE ? OR autorzy LIKE ?;" );
+                    pst.setString(1, tekst);
+                    pst.setString(2, tekst);
+                }
+                else{
+                    pst = c.prepareCall( "SELECT idksiazka, tytul, rok_wydania, isbn, autorzy, dziedziny, idwydawnictwo, wydawnictwo FROM ksiazka_info WHERE (tytul LIKE ? OR autorzy LIKE ?) AND dziedziny LIKE ? ;" );
+                    pst.setString(1, tekst);
+                    pst.setString(2, tekst);
+                    pst.setString(3, dziedzina2);
+                }
 
                 ResultSet rs;
                 rs = pst.executeQuery();
@@ -759,7 +803,6 @@ public class DB {
             PreparedStatement pst = c.prepareCall( "SELECT * FROM wypozyczone_egzemplarze_nieoddane WHERE czytelnik_idczytelnik = ? ORDER BY data_wypozyczenia DESC;" );
 
             pst.setInt(1,idCzytelnik);
-            //  w.czytelnik_idczytelnik, w.data_wypozyczenia, w.data_planowanego_oddania, e.idegzemplarz, e.idksiazka, e.wypozyczona, e.tytul, e.rok_wydania, e.isbn, e.autorzy, e.dziedziny
             ResultSet rs;
             rs = pst.executeQuery();
             while (rs.next())  {
@@ -807,7 +850,6 @@ public class DB {
         try{       
             PreparedStatement pst = c.prepareCall( "SELECT * FROM zarezerwowane_ksiazki WHERE czytelnik_idczytelnik = ?;" );
             pst.setInt(1,idCzytelnik);
-            //  czytelnik_idczytelnik, idksiazka, tytul, rok_wydania, isbn, autorzy, dziedziny
             ResultSet rs;
             rs = pst.executeQuery();
             while (rs.next())  {
@@ -857,7 +899,6 @@ public class DB {
             PreparedStatement pst = c.prepareCall( "SELECT * FROM wypozyczone_egzemplarze_oddane WHERE czytelnik_idczytelnik = ? ORDER BY data_wypozyczenia DESC;" );
 
             pst.setInt(1,idCzytelnik);
-            //  w.czytelnik_idczytelnik, w.data_wypozyczenia, w.data_planowanego_oddania, e.idegzemplarz, e.idksiazka, e.wypozyczona, e.tytul, e.rok_wydania, e.isbn, e.autorzy, e.dziedziny
             ResultSet rs;
             rs = pst.executeQuery();
             while (rs.next())  {
@@ -874,7 +915,6 @@ public class DB {
                 // String dziedziny = rs.getString(12);
                 list.addElement(tytul + ", " + autorzy + ". Data wypożyczenia: " +data_wypozyczenia);
                 
-                // System.out.println(list.lastElement());
             }
             rs.close();      
             pst.close(); 
@@ -960,7 +1000,6 @@ public class DB {
             PreparedStatement pst = c.prepareCall( "SELECT * FROM egzemplarz_info WHERE idksiazka = ? ORDER BY idegzemplarz;" );
 
             pst.setInt(1,idKsiazka);
-            //   idegzemplarz | idksiazka | wypozyczona |    tytul    | rok_wydania |     isbn      |     autorzy     |               dziedziny
             ResultSet rs;
             rs = pst.executeQuery();
             while (rs.next())  {

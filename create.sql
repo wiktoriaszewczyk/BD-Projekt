@@ -156,4 +156,3 @@ CREATE INDEX Czytelnik_has_Egzemplarz_FKIndex2 ON Wypozyczenie (Egzemplarz_idEgz
 
 CREATE INDEX IFK_Rel_10 ON Wypozyczenie (Czytelnik_idCzytelnik);
 CREATE INDEX IFK_Rel_11 ON Wypozyczenie (Egzemplarz_idEgzemplarz);
-

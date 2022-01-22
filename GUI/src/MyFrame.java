@@ -10,9 +10,8 @@ public class MyFrame extends JFrame{
 
     private static DB db = new DB(); 
 
-    // private static int zalogowany_czytelnik = 0;
     private static Czytelnik zalogowanyCzytelnik = new Czytelnik();
-    private static boolean zalogowany_pracownik = false;
+    // private static boolean zalogowany_pracownik = false;
 
     private static JPanel startPanel;
     private static JPanel loginPracownikPanel;
@@ -111,7 +110,6 @@ public class MyFrame extends JFrame{
         startPanel = new JPanel();
         startPanel.setBounds(0, 0, 1200, 700);
         startPanel.setLayout(null);
-        // startPanel.setBackground(new Color(0x031926));
 
         JLabel header = new JLabel("BIBLIOTEKA", SwingConstants.CENTER);
         JLabel loginLabel = new JLabel("Login: ");
@@ -125,7 +123,6 @@ public class MyFrame extends JFrame{
         JButton buttonPracownik = new JButton("Dla pracowników");
 
         header.setBounds(0,20,1200,50);
-        // header.setBorder(BorderFactory.createLineBorder(Color.black));
         header.setFont(new Font("TimesRoman",Font.BOLD,40));
 
         loginLabel.setBounds(465, 200, 80, 25);
@@ -156,10 +153,6 @@ public class MyFrame extends JFrame{
         buttonPracownik.setFocusable(false);
         buttonPracownik.addActionListener(e -> {startPanel.setVisible(false); loginPracownikPanel.setVisible(true);});
 
-        // JButton test = new JButton("test");
-        // test.setBounds(0,0,100,30);
-        // test.addActionListener(e -> db.infoKsiazki());
-
         startPanel.add(header);
         startPanel.add(loginLabel);
         startPanel.add(login);
@@ -171,7 +164,6 @@ public class MyFrame extends JFrame{
         startPanel.add(ksiegozbiorButton);
         startPanel.add(buttonPracownik);
         
-        // startPanel.add(test);
     }
 
     // Pracownik
@@ -180,7 +172,6 @@ public class MyFrame extends JFrame{
         loginPracownikPanel = new JPanel();
         loginPracownikPanel.setBounds(0, 0, 1200, 700);
         loginPracownikPanel.setLayout(null);
-        // startPanel.setBackground(new Color(0x031926));
 
         JLabel header = new JLabel("Zaloguj się jako pracownik",SwingConstants.CENTER);
         JLabel loginLabel = new JLabel("Login: ");
@@ -213,7 +204,6 @@ public class MyFrame extends JFrame{
         powrotButton.setBounds(465, 500, 270, 30);
         powrotButton.setFocusable(false);
         powrotButton.addActionListener(e -> {startPanel.setVisible(true); loginPracownikPanel.setVisible(false);});
-
 
         loginPracownikPanel.add(header);
         loginPracownikPanel.add(loginLabel);
@@ -309,7 +299,7 @@ public class MyFrame extends JFrame{
 
     private static void menuPracownikaButtons(MenuPracownikaPanel panel){
         panel.getWylogujButton().addActionListener(e -> {
-            zalogowany_pracownik = false; 
+            // zalogowany_pracownik = false; 
             panel.setVisible(false);
             startPanel.setVisible(true);
         });
@@ -629,7 +619,6 @@ public class MyFrame extends JFrame{
 
         infoUsunLabel.setBounds(700, 550, 270, 50);
 
-
         wydawnictwoPanel.add(dodajWydawnictwoLabel);
         wydawnictwoPanel.add(nazwaLabel);
         wydawnictwoPanel.add(nazwa);
@@ -650,8 +639,6 @@ public class MyFrame extends JFrame{
         wydawnictwoPanel.add(infoUsunLabel);
 
         wydawnictwoPanel.setVisible(false);
-
-
     }
 
     private static void dziedzinaPanelInit(){
@@ -752,7 +739,6 @@ public class MyFrame extends JFrame{
         });
 
         infoUsunLabel.setBounds(700, 550, 270, 50);
-
 
         dziedzinaPanel.add(dodajLabel);
         dziedzinaPanel.add(nazwaLabel);
@@ -952,7 +938,15 @@ public class MyFrame extends JFrame{
         ksiazkaDodajUsunAutoraPanel.setLayout(null);
         ksiazkaDodajUsunAutoraPanel.setBounds(0, 0, 1200, 700);
 
-        menuPracownikaButtons(ksiazkaDodajUsunAutoraPanel);
+        // menuPracownikaButtons(ksiazkaDodajUsunAutoraPanel);
+        ksiazkaDodajUsunAutoraPanel.getWylogujButton().setEnabled(false);
+        ksiazkaDodajUsunAutoraPanel.getPracownikButton().setEnabled(false);
+        ksiazkaDodajUsunAutoraPanel.getAutorButton().setEnabled(false);
+        ksiazkaDodajUsunAutoraPanel.getWydawnictwoButton().setEnabled(false);
+        ksiazkaDodajUsunAutoraPanel.getDziedzinaButton().setEnabled(false);
+        ksiazkaDodajUsunAutoraPanel.getKsiazkaButton().setEnabled(false);
+        ksiazkaDodajUsunAutoraPanel.getEgzemplarzButton().setEnabled(false);
+
 
         ksiazkaDodajUsunAutoraPanel.getHeader().setText("Autor książki");
         ksiazkaDodajUsunAutoraPanel.getHeader().setBounds(180,20,1020,50);
@@ -1052,7 +1046,14 @@ public class MyFrame extends JFrame{
         ksiazkaDodajUsunDziedzinePanel.setLayout(null);
         ksiazkaDodajUsunDziedzinePanel.setBounds(0, 0, 1200, 700);
 
-        menuPracownikaButtons(ksiazkaDodajUsunDziedzinePanel);
+        // menuPracownikaButtons(ksiazkaDodajUsunDziedzinePanel);
+        ksiazkaDodajUsunDziedzinePanel.getWylogujButton().setEnabled(false);
+        ksiazkaDodajUsunDziedzinePanel.getPracownikButton().setEnabled(false);
+        ksiazkaDodajUsunDziedzinePanel.getAutorButton().setEnabled(false);
+        ksiazkaDodajUsunDziedzinePanel.getWydawnictwoButton().setEnabled(false);
+        ksiazkaDodajUsunDziedzinePanel.getDziedzinaButton().setEnabled(false);
+        ksiazkaDodajUsunDziedzinePanel.getKsiazkaButton().setEnabled(false);
+        ksiazkaDodajUsunDziedzinePanel.getEgzemplarzButton().setEnabled(false);
 
         ksiazkaDodajUsunDziedzinePanel.getHeader().setText("Wydawnictwo książki");
         ksiazkaDodajUsunDziedzinePanel.getHeader().setBounds(180,20,1020,50);
@@ -1190,7 +1191,6 @@ public class MyFrame extends JFrame{
             Ksiazka tmp = listaKsiazek.getSelectedValue();
             Ksiazka book = new Ksiazka(tmp.getIdksiazka(), tmp.getTytul(), tmp.getRokwydania(), tmp.getIsbn(), tmp.getWydawnictwo(), tmp.getAutorzy(), tmp.getDziedziny());
             EgzemplarzDodajUsun(book, egzemplarzPanel);
-            // listaKsiazek.clearSelection();
         });
         listaKsiazek.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listaKsiazek.clearSelection();
@@ -1226,26 +1226,22 @@ public class MyFrame extends JFrame{
         });
 
         panel.getWypozyczeniaButton().addActionListener(e -> {
-            // wypozyczonePanelInit();
             panel.setVisible(false);
             wypozyczonePanel.setVisible(true);
         });
 
         panel.getRezerwacjeButton().addActionListener(e -> {
-            // zarezerwowanePanelInit();
             panel.setVisible(false);
             zarezerwowanePanel.setVisible(true);
 
         });
 
         panel.getHistoriaButton().addActionListener(e -> {
-            // historiaPanelInit();
             panel.setVisible(false);
             historiaPanel.setVisible(true);
         });
 
         panel.getKatalogButton().addActionListener(e -> {
-            // katalogPanelInit();
             panel.setVisible(false);
             katalogPanel.setVisible(true);
         });
@@ -1257,26 +1253,19 @@ public class MyFrame extends JFrame{
         menuCzytelnikaButtons(menuCzytelnikaPanel);
 
         JLabel imieLabel = new JLabel("Imie ");
-        JTextField imie = new JTextField();
+        JLabel imie = new JLabel();
         JLabel nazwiskoLabel = new JLabel("Nazwisko ");
-        JTextField nazwisko = new JTextField();
+        JLabel nazwisko = new JLabel();
         JLabel emailLabel = new JLabel("Email ");
-        JTextField email = new JTextField();
+        JLabel email = new JLabel();
         JLabel telefonLabel = new JLabel("Telefon ");
-        JTextField telefon= new JTextField();
+        JLabel telefon= new JLabel();
         JLabel loginLabel = new JLabel("Login ");
         JLabel login= new JLabel();
         JLabel karaLabel = new JLabel("<html>Kara<br />do zapłaty: </html>");
         JLabel kara = new JLabel();
-        // JLabel haslo2Label = new JLabel("Hasło ");
-        // JPasswordField haslo2 = new JPasswordField();
         JButton buttonZaplac = new JButton("Opłać karę");
         
-        // Vector<JTextField> pola = new Vector<JTextField>();
-        // pola.add(imie);
-        // pola.add(nazwisko);
-        // pola.add()
-
         imieLabel.setBounds(465, 150, 80, 25);
         imie.setBounds(565, 150, 170, 25);
         imie.setText(zalogowanyCzytelnik.getImie());
@@ -1304,23 +1293,12 @@ public class MyFrame extends JFrame{
         kara.setBounds(565, 350, 35, 25);
         kara.setText("" + zalogowanyCzytelnik.getKara());
 
-        // haslo2Label.setBounds(465, 390, 90, 25);
-        // haslo2.setBounds(565, 390, 170, 25);
-
         buttonZaplac.setBounds(600, 350 ,135, 30);
         buttonZaplac.setFocusable(false);
         buttonZaplac.addActionListener(e -> {
             if(db.aktualizujKaraCzytelnik(zalogowanyCzytelnik))
                 kara.setText(""+ zalogowanyCzytelnik.getKara());
         });
-
-        // infoZaplacLabel.setBounds(465, 470, 270, 30);
-
-        // buttonZaplac.setBounds(465, 430 ,270, 30);
-        // buttonZaplac.setFocusable(false);
-        // buttonZaplac.addActionListener(e -> infoZaplacLabel.setText(actionRejestracjaCzytelnik(imie.getText(), nazwisko.getText(), email.getText(), telefon.getText(), login.getText(), String.valueOf(haslo1.getPassword()), String.valueOf(haslo2.getPassword()))));
-
-        // infoZaplacLabel.setBounds(465, 470, 270, 30);
 
         menuCzytelnikaPanel.add(imieLabel);
         menuCzytelnikaPanel.add(imie);
@@ -1334,10 +1312,7 @@ public class MyFrame extends JFrame{
         menuCzytelnikaPanel.add(login);
         menuCzytelnikaPanel.add(karaLabel);
         menuCzytelnikaPanel.add(kara);
-        // menuCzytelnikaPanel.add(haslo2Label);
-        // menuCzytelnikaPanel.add(haslo2);
         menuCzytelnikaPanel.add(buttonZaplac);
-        // menuCzytelnikaPanel.add(infoLabel);
 
         menuCzytelnikaPanel.setVisible(false);
     }
@@ -1434,7 +1409,6 @@ public class MyFrame extends JFrame{
         info.setBounds(300,110,750,30);
 
         listaKsiazek.setFixedCellHeight(40);
-        // listaKsiazek.addListSelectionListener(e -> egzemplarzWyporzyczonyInfo(listaKsiazek.getSelectedValue(), wypozyczonePanel));
         listaKsiazek.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listaKsiazek.clearSelection();
 
@@ -1457,16 +1431,27 @@ public class MyFrame extends JFrame{
 
         katalogPanel.getHeader().setText("Książki");
 
-        //Wyszukiwanie
-
         DefaultListModel<Ksiazka> ksiazki = new DefaultListModel<>();
         JList<Ksiazka> listaKsiazek = new JList<>(ksiazki); 
         JScrollPane scrollPane = new JScrollPane();
         JLabel info = new JLabel("Kliknij na książkę po więcej informacji.",SwingConstants.CENTER);
-
-        db.infoKsiazka(ksiazki);    // pobranie danych
-    
-        // Wyszukiwanie
+        db.infoKsiazka(ksiazki);
+        JLabel szukajLabel = new JLabel("<html>Wpisz autora/tytuł i/lub<br />wybierz kategorię: <html>");
+        JTextArea szukaj = new JTextArea();
+        Vector<Dziedzina> dziedziny = new Vector<>();
+        JComboBox<Dziedzina> dziedzina = new JComboBox<>(dziedziny);
+        JButton buttonSzukaj = new JButton("Szukaj");
+        
+        szukajLabel.setBounds(300, 105, 250, 30);
+        szukaj.setBounds(450, 110, 225, 25);
+        db.infoDziedzina(dziedziny, new DefaultListModel<Dziedzina>());
+        dziedzina.setBounds(685, 110, 225, 25);
+        dziedzina.setSelectedIndex(0);
+        buttonSzukaj.setBounds(920, 110, 130, 25);
+        buttonSzukaj.setFocusable(false);
+        buttonSzukaj.addActionListener(e -> {
+            db.infoKsiazka(ksiazki, szukaj.getText(), (Dziedzina)dziedzina.getSelectedItem());
+        });
 
         listaKsiazek.setFixedCellHeight(40);
         listaKsiazek.addListSelectionListener(e -> ksiazkaKatalogInfo(listaKsiazek.getSelectedValue(), katalogPanel));
@@ -1483,8 +1468,11 @@ public class MyFrame extends JFrame{
             info.setText("Brak książek :o");
         info.setBounds(300,560,750,30);
 
-
-        // Wyszukiwanie
+        katalogPanel.add(szukajLabel);
+        katalogPanel.add(szukajLabel);
+        katalogPanel.add(szukaj);
+        katalogPanel.add(dziedzina);
+        katalogPanel.add(buttonSzukaj);
         katalogPanel.add(scrollPane);
         katalogPanel.add(info);
 
@@ -1501,13 +1489,30 @@ public class MyFrame extends JFrame{
         JLabel header = new JLabel("Katalog ksiażek",SwingConstants.CENTER);
         JButton powrotButton = new JButton("Powrót do startu");
         DefaultListModel<Ksiazka> ksiazki = new DefaultListModel<>();
-        db.infoKsiazka(ksiazki);    // pobranie danych
+        db.infoKsiazka(ksiazki);
         JList<Ksiazka> listaKsiazek = new JList<>(ksiazki); 
         JScrollPane scrollPane = new JScrollPane();
+
+        JLabel szukajLabel = new JLabel("Wpisz autora/tytuł i/lub wybierz kategorię: ");
+        JTextArea szukaj = new JTextArea();
+        Vector<Dziedzina> dziedziny = new Vector<>();
+        JComboBox<Dziedzina> dziedzina = new JComboBox<>(dziedziny);
+        JButton buttonSzukaj = new JButton("Szukaj");
 
         header.setBounds(0,20,1200,50);
         header.setFont(new Font("TimesRoman",Font.BOLD,40));
         
+        szukajLabel.setBounds(200, 120, 250, 25);
+        szukaj.setBounds(450, 120, 200, 25);
+        db.infoDziedzina(dziedziny, new DefaultListModel<Dziedzina>());
+        dziedzina.setBounds(660, 120, 200, 25);
+        dziedzina.setSelectedIndex(0);
+        buttonSzukaj.setBounds(870, 120, 130, 25);
+        buttonSzukaj.setFocusable(false);
+        buttonSzukaj.addActionListener(e -> {
+            db.infoKsiazka(ksiazki, szukaj.getText(), (Dziedzina)dziedzina.getSelectedItem());
+        });
+
         listaKsiazek.setFixedCellHeight(40);
         listaKsiazek.addListSelectionListener(e -> ksiazkaInfo(listaKsiazek.getSelectedValue()));
         listaKsiazek.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -1516,13 +1521,17 @@ public class MyFrame extends JFrame{
         renderer.setHorizontalAlignment(JLabel.CENTER);
         
         scrollPane.setViewportView(listaKsiazek);
-        scrollPane.setBounds(200,150,800,300);
+        scrollPane.setBounds(200,160,800,350);
 
-        powrotButton.setBounds(465, 500, 270, 30);
+        powrotButton.setBounds(465, 530, 270, 30);
         powrotButton.setFocusable(false);
         powrotButton.addActionListener(e -> {startPanel.setVisible(true); katalogKsiazekPanel.setVisible(false);});
 
         katalogKsiazekPanel.add(header);
+        katalogKsiazekPanel.add(szukajLabel);
+        katalogKsiazekPanel.add(szukaj);
+        katalogKsiazekPanel.add(dziedzina);
+        katalogKsiazekPanel.add(buttonSzukaj);
         katalogKsiazekPanel.add(powrotButton);
         katalogKsiazekPanel.add(scrollPane);
 
@@ -1547,11 +1556,10 @@ public class MyFrame extends JFrame{
         String toReturn = "Logowanie nie powiodło się!";
         int id = db.logowanie(kto, user, password);
         if(id != 0){
-            // bladLogowaniaCztyelnik.setText("Logowanie powiodło się!");
             toReturn = "";
             if(kto){
                 // dla pracownika id to 1, bo klucz główny to login
-                zalogowany_pracownik = true;
+                // zalogowany_pracownik = true;
                 loginPracownikPanel.setVisible(false);
                 menuPracownikaPanel.setVisible(true);
             }
@@ -1574,7 +1582,6 @@ public class MyFrame extends JFrame{
     }
 
     private static String actionRejestracjaCzytelnik(String imie, String nazwisko, String email, String telefon, String login, String haslo1, String haslo2){
-        // imieRejestracja.getText(), nazwiskoRejestracja.getText(), emailRejestracja.getText(), telefonRejestracja.getText(), loginRejestracja.getText(), String.valueOf(haslo1Rejestracja.getPassword()), String.valueOf(haslo2Rejestracja.getPassword());
         String toReturn;
         String blad = "";
         boolean valid = true;
@@ -1795,8 +1802,6 @@ public class MyFrame extends JFrame{
         String blad = "";
         boolean valid = true;
 
-        // Pattern patternEmail = Pattern.compile("^.+@.+\\..+$");
-        // Matcher matcherEmail = patternEmail.matcher(email);
         Pattern patternRok = Pattern.compile("^\\d{4}$");
         Matcher matcherRok = patternRok.matcher(rok);
         Pattern patternISBN = Pattern.compile("^\\d{13}$");
@@ -1835,8 +1840,6 @@ public class MyFrame extends JFrame{
         String blad = "";
         boolean valid = true;
 
-        // Pattern patternEmail = Pattern.compile("^.+@.+\\..+$");
-        // Matcher matcherEmail = patternEmail.matcher(email);
         Pattern patternRok = Pattern.compile("^\\d{4}$");
         Matcher matcherRok = patternRok.matcher(rok);
         Pattern patternISBN = Pattern.compile("^\\d{13}$");
@@ -1883,7 +1886,8 @@ public class MyFrame extends JFrame{
 
 
     // Menu czytelnika
-    private static void egzemplarzWyporzyczonyInfo(Egzemplarz egzemplarz, MenuCzytelnikaPanel panel/*, JList<Egzemplarz> lista*/){
+    
+    private static void egzemplarzWyporzyczonyInfo(Egzemplarz egzemplarz, MenuCzytelnikaPanel panel){
         egzemplarzInfoWypozyczonePanel.restart();
         menuCzytelnikaButtons(egzemplarzInfoWypozyczonePanel);
 
@@ -1891,16 +1895,19 @@ public class MyFrame extends JFrame{
         JLabel dziedziny = new JLabel("Kategorie: " + egzemplarz.getDziedziny());
         JLabel rok = new JLabel("Rok wydania: " + egzemplarz.getRokwydania());
         JLabel isbn = new JLabel("ISBN: " + egzemplarz.getIsbn());
+        JLabel wydawnictwo = new JLabel("Wydawnictwo: " + egzemplarz.getWydawnictwo());
         JLabel data = new JLabel("Termin oddania: " + egzemplarz.getDataPlanowanegoOddania());
         JButton buttonOddaj = new JButton("Oddaj");
 
         egzemplarzInfoWypozyczonePanel.getHeader().setText(egzemplarz.getTytul());
-        autor.setBounds(465, 150 ,270, 30);
-        dziedziny.setBounds(465, 190 ,270, 30);
+        autor.setBounds(465, 150 ,670, 30);
+        dziedziny.setBounds(465, 190 ,670, 30);
         rok.setBounds(465, 230 ,270, 30);
         isbn.setBounds(465, 270 ,270, 30);
-        data.setBounds(465, 340 ,270, 30);
-        buttonOddaj.setBounds(465, 380 ,270, 30);
+        wydawnictwo.setBounds(465,310, 670, 30);
+
+        data.setBounds(465, 370 ,270, 30);
+        buttonOddaj.setBounds(465, 410 ,270, 30);
         buttonOddaj.setFocusable(false);
         buttonOddaj.addActionListener(e -> {
             if(db.oddajEgzemplarz(zalogowanyCzytelnik.getId(),egzemplarz.getIdE())){
@@ -1912,16 +1919,15 @@ public class MyFrame extends JFrame{
             }
         });
 
-
         egzemplarzInfoWypozyczonePanel.add(autor);
         egzemplarzInfoWypozyczonePanel.add(dziedziny);
         egzemplarzInfoWypozyczonePanel.add(rok);
         egzemplarzInfoWypozyczonePanel.add(isbn);
+        egzemplarzInfoWypozyczonePanel.add(wydawnictwo);
         egzemplarzInfoWypozyczonePanel.add(data);
         egzemplarzInfoWypozyczonePanel.add(buttonOddaj);
 
         egzemplarzInfoWypozyczonePanel.setVisible(true); panel.setVisible(false);
-        // lista.clearSelection();
     }
 
     private static void ksiazkaZarezerwowanaInfo(Ksiazka ksiazka, MenuCzytelnikaPanel panel){
@@ -1935,18 +1941,20 @@ public class MyFrame extends JFrame{
         JLabel dziedziny = new JLabel("Kategorie: " + ksiazka.getDziedziny());
         JLabel rok = new JLabel("Rok wydania: " + ksiazka.getRokwydania());
         JLabel isbn = new JLabel("ISBN: " + ksiazka.getIsbn());
+        JLabel wydawnictwo = new JLabel("Wydawnictwo: " + ksiazka.getWydawnictwo());
         JLabel dostepnosc = new JLabel("Dostępność: ");
         JButton wypozycz = new JButton("Wypozycz");
         JButton usun = new JButton("Usuń rezerwację");
 
         ksiazkaInfoZarezerwowanaPanel.getHeader().setText(ksiazka.getTytul());
-        autor.setBounds(465, 150 ,270, 30);
-        dziedziny.setBounds(465, 190 ,270, 30);
+        autor.setBounds(465, 150 ,670, 30);
+        dziedziny.setBounds(465, 190 ,670, 30);
         rok.setBounds(465, 230 ,270, 30);
         isbn.setBounds(465, 270 ,270, 30);
-        dostepnosc.setBounds(465, 340 ,270, 30);
+        wydawnictwo.setBounds(465, 310 ,670, 30);
+        dostepnosc.setBounds(465, 370 ,270, 30);
         
-        wypozycz.setBounds(465, 380 ,270, 30);
+        wypozycz.setBounds(465, 420 ,270, 30);
         wypozycz.setFocusable(false);
         wypozycz.addActionListener(e -> {
             if(db.wypozyczEgzemplarz(zalogowanyCzytelnik.getId(),czyDostepna)){
@@ -1956,7 +1964,7 @@ public class MyFrame extends JFrame{
             }
         });
 
-        usun.setBounds(465, 420 ,270, 30);
+        usun.setBounds(465, 460 ,270, 30);
         usun.setFocusable(false);
         usun.addActionListener(e -> {
             if(db.usunRezerwacje(zalogowanyCzytelnik.getId(),ksiazka.getIdksiazka())){
@@ -1978,6 +1986,7 @@ public class MyFrame extends JFrame{
         ksiazkaInfoZarezerwowanaPanel.add(dziedziny);
         ksiazkaInfoZarezerwowanaPanel.add(rok);
         ksiazkaInfoZarezerwowanaPanel.add(isbn);
+        ksiazkaInfoZarezerwowanaPanel.add(wydawnictwo);
         ksiazkaInfoZarezerwowanaPanel.add(dostepnosc);
         ksiazkaInfoZarezerwowanaPanel.add(wypozycz);
         ksiazkaInfoZarezerwowanaPanel.add(usun);
@@ -2002,12 +2011,13 @@ public class MyFrame extends JFrame{
         JButton zarezerwuj = new JButton("Zarezerwuj");
 
         ksiazkaInfoKatalogPanel.getHeader().setText(ksiazka.getTytul());
-        autor.setBounds(465, 150 ,270, 30);
-        dziedziny.setBounds(465, 190 ,270, 30);
+        autor.setBounds(465, 150 ,670, 30);
+        dziedziny.setBounds(465, 190 ,670, 30);
         rok.setBounds(465, 230 ,270, 30);
         isbn.setBounds(465, 270 ,270, 30);
-        dostepnosc.setBounds(465, 340 ,270, 30);
-        wypozycz.setBounds(465, 380 ,270, 30);
+        wydawnictwo.setBounds(465, 310 ,670, 30);
+        dostepnosc.setBounds(465, 370 ,270, 30);
+        wypozycz.setBounds(465, 410 ,270, 30);
         wypozycz.setFocusable(false);
         wypozycz.addActionListener(e -> {
             if(db.wypozyczEgzemplarz(zalogowanyCzytelnik.getId(),czyDostepna)){
@@ -2017,7 +2027,7 @@ public class MyFrame extends JFrame{
                 wypozyczonePanelInit();
             }
         });
-        zarezerwuj.setBounds(465, 410, 270, 30);
+        zarezerwuj.setBounds(465, 450, 270, 30);
         zarezerwuj.setFocusable(false);
         zarezerwuj.addActionListener(e -> {
             if(db.rezerwujEgzemplarz(zalogowanyCzytelnik.getId(), ksiazka.getIdksiazka())){
@@ -2026,7 +2036,6 @@ public class MyFrame extends JFrame{
                 zarezerwowanePanelInit();
             }
         });
-
 
         if(czyDostepna != 0){
             dostepnosc.setText("Dostępność: dostępna");
@@ -2043,6 +2052,7 @@ public class MyFrame extends JFrame{
         ksiazkaInfoKatalogPanel.add(dziedziny);
         ksiazkaInfoKatalogPanel.add(rok);
         ksiazkaInfoKatalogPanel.add(isbn);
+        ksiazkaInfoKatalogPanel.add(wydawnictwo);
         ksiazkaInfoKatalogPanel.add(dostepnosc);
         ksiazkaInfoKatalogPanel.add(wypozycz);
         ksiazkaInfoKatalogPanel.add(zarezerwuj);
@@ -2077,11 +2087,6 @@ public class MyFrame extends JFrame{
         info.setFont(new Font("Dialog",Font.BOLD,14));
 
         listaKsiazek.setFixedCellHeight(40);
-        // listaKsiazek.addListSelectionListener(e -> {
-        //     Ksiazka tmp = listaKsiazek.getSelectedValue();
-        //     EgzemplarzDodajUsun(tmp, egzemplarzPanel);
-        //     // listaKsiazek.clearSelection();
-        // });
         listaKsiazek.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listaKsiazek.clearSelection();
 
@@ -2138,7 +2143,7 @@ public class MyFrame extends JFrame{
         ksiazkaInfoPanel.getRokWydania().setText("Rok wydania: " + String.valueOf(k.getRokwydania()));
         ksiazkaInfoPanel.getIsbn().setText("ISBN: " + String.valueOf(k.getIsbn()));
         ksiazkaInfoPanel.getDziedziny().setText("Kategorie: " + k.getDziedziny());
-        // Wydawnictwo !!
+        ksiazkaInfoPanel.getWydawnictwo().setText("Wydawnictwo: " + k.getWydawnictwo());
     }
 
 

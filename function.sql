@@ -105,32 +105,18 @@ RETURNS int AS
 $$
 DECLARE
     recEgzemplarz RECORD;
-    -- recAutor RECORD;
-    -- recDziedzina RECORD;
-    -- recRezerwacja RECORD;
 BEGIN
     -- Usuwam informacje z tabel ksiazka_dziedzina, ksiazka_autor i rezerwacja tylko jesli nie ma egzemplarzy
     -- Jeśli chcemy usunąć książke trzeba najpierw usunąć wszystkie jej egzemplarze, nie usuwam kaskadowo wszystkich informacji o książce  
     SELECT COUNT(*) AS n INTO recEgzemplarz FROM egzemplarz WHERE ksiazka_idksiazka = idK;
-    -- SELECT COUNT(*) AS n INTO recAutor FROM ksiazka_autor WHERE ksiazka_idksiazka = idK;
-    -- SELECT COUNT(*) AS n INTO recDziedzina FROM ksiazka_dziedzina WHERE ksiazka_idksiazka = idK;
-    -- SELECT COUNT(*) AS n INTO recRezerwacja FROM rezerwacja WHERE ksiazka_idksiazka = idK;
     
     IF recEgzemplarz.n > 0 THEN
         RETURN 0;
     END IF;
 
-    -- IF recAutor.n > 0 THEN
-        DELETE FROM ksiazka_autor WHERE ksiazka_idksiazka = idK;        
-    -- END IF;
-
-    -- IF recDziedzina.n > 0 THEN
-        DELETE FROM ksiazka_dziedzina WHERE ksiazka_idksiazka = idK;        
-    -- END IF;
-
-    -- IF recRezerwacja.n > 0 THEN
-        DELETE FROM rezerwacja WHERE ksiazka_idksiazka = idK;        
-    -- END IF;
+    DELETE FROM ksiazka_autor WHERE ksiazka_idksiazka = idK
+    DELETE FROM ksiazka_dziedzina WHERE ksiazka_idksiazka = idK;
+    DELETE FROM rezerwacja WHERE ksiazka_idksiazka = idK;
 
     DELETE FROM ksiazka WHERE idksiazka = idK;    
 
@@ -188,32 +174,3 @@ END;
 $$
 LANGUAGE plpgsql;
 
-
-
--- -- wypożyczanie książki przez czytelnika
-
--- CREATE OR REPLACE FUNCTION wypozyczanie_egzemplarza(idC int, idE int)
--- RETURNS VOID AS
--- $$
--- DECLARE
--- BEGIN
---     INSERT INTO Wypozyczenie (Czytelnik_idCzytelnik, Egzemplarz_idEgzemplarz) VALUES (idC,idE);
---     -- RETURN 1;
--- END;
--- $$
--- LANGUAGE plpgsql;
-
--- ------------------------------------------------------------------------------------------------------------
-
--- -- oddawanie książki przez czytelnika
-
--- CREATE OR REPLACE FUNCTION oddawanie_egzemplarza(idC int, idE int)
--- RETURNS int AS
--- $$
--- DECLARE
--- BEGIN
---     UPDATE Wypozyczenie SET data_oddania = NOW() WHERE Egzemplarz_idEgzemplarz = idE AND czytelnik_idCzytelnik = idC;
---     RETURN 1;
--- END;
--- $$
--- LANGUAGE plpgsql;

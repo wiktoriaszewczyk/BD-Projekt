@@ -59,6 +59,5 @@ public class Czytelnik {
     String getHaslo(){
         return haslo;
     }
-
-
+    
 }
