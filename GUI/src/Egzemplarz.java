@@ -8,8 +8,8 @@ public class Egzemplarz extends Ksiazka{
     private String data_oddania;
     
     Egzemplarz(){}
-    Egzemplarz(String data_w, String data_po, String data_o, int iE, boolean wyp, int id, String t, int rok, BigDecimal i, String a, String d){
-        super(id, t, rok, i, a, d);
+    Egzemplarz(String data_w, String data_po, String data_o, int iE, boolean wyp, int id, String t, int rok, BigDecimal i, Wydawnictwo wyd, String a, String d){
+        super(id, t, rok, i, wyd, a, d);
         idE = iE;
         wypozyczona = wyp;
         data_wypozyczenia = data_w;
@@ -33,5 +33,10 @@ public class Egzemplarz extends Ksiazka{
         return data_oddania;
     }
 
+    public String toString(){
+        //return idksiazka + ", " + tytul + ", " + rok_wydania + ", " + isbn + ", " + autorzy + ", " + dziedziny;
+        return "Nr. " + idE + ": " + getTytul() + ", " + getAutorzy();
+    }
 
 }
+

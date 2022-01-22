@@ -60,6 +60,24 @@ public class MenuPracownikaPanel extends JPanel{
         setVisible(false);
     }
 
+    public void restart(){
+        removeAll();
+        revalidate();
+        repaint();
+
+        add(header);
+        add(pracownikButton);
+        add(autorButton);
+        add(wydawnictwoButton);
+        add(dziedzinaButton);
+        add(ksiazkaButton);
+        add(egzemplarzButton);
+
+        add(wylogujButton);
+
+        setVisible(false);
+    }
+
     public JLabel getHeader(){
         return header;
     }

@@ -5,16 +5,18 @@ public class Ksiazka {
     private String tytul;
     private int rok_wydania;
     private BigDecimal isbn;
+    private Wydawnictwo wydawnictwo;
     private String autorzy;
     private String dziedziny;
 
     Ksiazka(){}
 
-    Ksiazka(int id, String t, int rok, BigDecimal i, String a, String d){
+    Ksiazka(int id, String t, int rok, BigDecimal i,Wydawnictwo w, String a, String d){
         idksiazka = id;
         tytul = t;
         rok_wydania = rok;
         isbn = i;
+        wydawnictwo = w;
         autorzy = a;
         dziedziny = d;
     }
@@ -30,6 +32,9 @@ public class Ksiazka {
     }
     BigDecimal getIsbn(){
         return isbn;
+    }
+    Wydawnictwo getWydawnictwo(){
+        return wydawnictwo;
     }
     String getAutorzy(){
         return autorzy;

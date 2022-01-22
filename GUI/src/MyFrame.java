@@ -1,6 +1,7 @@
-import javax.naming.AuthenticationNotSupportedException;
+import javax.lang.model.util.ElementScanner14;
 import javax.swing.*;
 import java.awt.Font;
+import java.math.BigDecimal;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,7 +22,11 @@ public class MyFrame extends JFrame{
     private static MenuPracownikaPanel wydawnictwoPanel;
     private static MenuPracownikaPanel dziedzinaPanel;
     private static MenuPracownikaPanel ksiazkaPanel;
+    private static MenuPracownikaPanel ksiazkaDodajUsunAutoraPanel;
+    private static MenuPracownikaPanel ksiazkaDodajUsunDziedzinePanel;
+
     private static MenuPracownikaPanel egzemplarzPanel;
+    private static MenuPracownikaPanel egzemplarzDodajUsunPanel;
 
     private static JPanel zarejestrujCzytelnikPanel;
     private static MenuCzytelnikaPanel menuCzytelnikaPanel;
@@ -53,8 +58,12 @@ public class MyFrame extends JFrame{
         autorPanelInit();
         wydawnictwoPanelInit();
         dziedzinaPanelInit();
+        ksiazkaPanel = new MenuPracownikaPanel();
         ksiazkaPanelInit();
+        ksiazkaDodajUsunAutoraPanel = new MenuPracownikaPanel();
+        ksiazkaDodajUsunDziedzinePanel = new MenuPracownikaPanel();
         egzemplarzPanelInit();
+        egzemplarzDodajUsunPanel = new MenuPracownikaPanel();
 
         menuCzytelnikaPanel = new MenuCzytelnikaPanel();    // init po poprawnym zalogowaniu
         wypozyczonePanel = new MenuCzytelnikaPanel();
@@ -78,7 +87,10 @@ public class MyFrame extends JFrame{
         this.add(wydawnictwoPanel);
         this.add(dziedzinaPanel);
         this.add(ksiazkaPanel);
+        this.add(ksiazkaDodajUsunAutoraPanel);
+        this.add(ksiazkaDodajUsunDziedzinePanel);
         this.add(egzemplarzPanel);
+        this.add(egzemplarzDodajUsunPanel);
 
         this.add(menuCzytelnikaPanel);
         this.add(wypozyczonePanel);
@@ -124,7 +136,11 @@ public class MyFrame extends JFrame{
 
         buttonLogin.setBounds(465, 280 ,130, 30);
         buttonLogin.setFocusable(false);
-        buttonLogin.addActionListener(e -> bladLogowania.setText(actionZaloguj(false,login.getText(), String.valueOf(haslo.getPassword()))));
+        buttonLogin.addActionListener(e -> {
+            bladLogowania.setText(actionZaloguj(false,login.getText(), String.valueOf(haslo.getPassword())));
+            login.setText("");
+            haslo.setText("");
+        });
 
         buttonZarejestruj.setBounds(605, 280, 130, 30);
         buttonZarejestruj.setFocusable(false);
@@ -158,6 +174,8 @@ public class MyFrame extends JFrame{
         // startPanel.add(test);
     }
 
+    // Pracownik
+
     private static void loginPracownikPanelInit(){
         loginPracownikPanel = new JPanel();
         loginPracownikPanel.setBounds(0, 0, 1200, 700);
@@ -184,7 +202,11 @@ public class MyFrame extends JFrame{
 
         buttonLogin.setBounds(465, 280 ,270, 30);
         buttonLogin.setFocusable(false);
-        buttonLogin.addActionListener(e -> bladLogowania.setText(actionZaloguj(true,login.getText(), String.valueOf(haslo.getPassword()))));
+        buttonLogin.addActionListener(e -> {
+            bladLogowania.setText(actionZaloguj(true,login.getText(), String.valueOf(haslo.getPassword())));
+            login.setText("");
+            haslo.setText("");
+        });
 
         bladLogowania.setBounds(465, 320, 270, 30);
 
@@ -707,7 +729,7 @@ public class MyFrame extends JFrame{
         usunLabel.setBounds(700, 150, 270, 25);
 
         szukaj.setBounds(700,200,170,25);
-        buttonSzukaj.setBounds(890,200,80,25);
+        buttonSzukaj.setBounds(890,200,110,25);
         buttonSzukaj.addActionListener(e -> {db.infoDziedzina(dziedziny, dziedziny2, szukaj.getText());});
 
         listaDziedzina.setFixedCellHeight(40);
@@ -722,7 +744,7 @@ public class MyFrame extends JFrame{
         scrollPane.setViewportView(listaDziedzina);
         scrollPane.setBounds(700,240,300,250);
 
-        buttonUsun.setBounds(700, 510 ,270, 30);
+        buttonUsun.setBounds(700, 510 ,300, 30);
         buttonUsun.setFocusable(false);
         buttonUsun.addActionListener(e -> {
             infoUsunLabel.setText(actionUsunDziedzina(listaDziedzina.getSelectedValue()));
@@ -759,7 +781,7 @@ public class MyFrame extends JFrame{
     }
 
     private static void ksiazkaPanelInit(){
-        ksiazkaPanel = new MenuPracownikaPanel();
+        ksiazkaPanel.restart();
         ksiazkaPanel.setLayout(null);
         ksiazkaPanel.setBounds(0, 0, 1200, 700);
 
@@ -767,30 +789,113 @@ public class MyFrame extends JFrame{
 
         ksiazkaPanel.getHeader().setText("Książki");
 
+        JLabel dodajLabel = new JLabel("Dodaj książkę",SwingConstants.CENTER);
+        JLabel nazwaLabel = new JLabel("Nazwa* ");
+        JTextField nazwa = new JTextField();
+        JLabel rokLabel = new JLabel("Rok wydania* ");
+        JTextField rok = new JTextField();
+        JLabel isbnLabel = new JLabel("ISBN* ");
+        JTextField isbn = new JTextField();
+        JLabel wydawnictwoLabel = new JLabel("Wydawnictwo* ");
+        Vector<Wydawnictwo> wydawnictwa = new Vector<>();
+        JComboBox<Wydawnictwo> wydawnictwo = new JComboBox<>(wydawnictwa);
+        JButton buttonDodaj = new JButton("Dodaj");
+        JLabel infoDodajLabel = new JLabel("* pole wymagane");
+
+        JLabel dodajLabel2 = new JLabel("Aktualizuj książkę",SwingConstants.CENTER);
+        JLabel nazwaLabel2 = new JLabel("Nazwa* ");
+        JTextField nazwa2 = new JTextField();
+        JLabel rokLabel2 = new JLabel("Rok wydania* ");
+        JTextField rok2 = new JTextField();
+        JLabel isbnLabel2 = new JLabel("ISBN* ");
+        JTextField isbn2 = new JTextField();
+        JLabel wydawnictwoLabel2 = new JLabel("Wydawnictwo* ");
+        Vector<Wydawnictwo> wydawnictwa2 = new Vector<>();
+        JComboBox<Wydawnictwo> wydawnictwo2 = new JComboBox<>(wydawnictwa);
+        JButton buttonAktualizuj2 = new JButton("Aktualizuj");
+        JLabel infoAktualizujLabel2 = new JLabel("* pole wymagane");
 
         JLabel usunLabel = new JLabel("Usuń ksiażkę",SwingConstants.CENTER);
         JTextField szukaj = new JTextField();
         JButton buttonSzukaj = new JButton("Szukaj");
         DefaultListModel<Ksiazka> ksiazki = new DefaultListModel<>();
-        db.infoKsiazka(ksiazki);
         JList<Ksiazka> listaKsiazka = new JList<>(ksiazki); 
         JScrollPane scrollPane = new JScrollPane();
 
         JButton buttonUsun = new JButton("Usuń");
         JLabel infoUsunLabel = new JLabel("");
 
+        db.infoWydawnictwo(wydawnictwa);
+
+        dodajLabel.setFont(new Font("TimesRoman",Font.BOLD,20));
+        dodajLabel.setBounds(300, 90, 270, 25);
+
+        nazwaLabel.setBounds(300, 140, 80, 25);
+        nazwa.setBounds(400, 140, 170, 25);
+
+        rokLabel.setBounds(300, 180, 80, 25);
+        rok.setBounds(400, 180, 170, 25);
+
+        isbnLabel.setBounds(300, 220, 80, 25);
+        isbn.setBounds(400, 220, 170, 25);
+
+        wydawnictwoLabel.setBounds(300, 260, 85, 25);
+        wydawnictwo.setBounds(400, 260, 170, 25);
+        wydawnictwo.setSelectedIndex(0);
+
+        buttonDodaj.setBounds(300, 300 ,270, 30);
+        buttonDodaj.setFocusable(false);
+        buttonDodaj.addActionListener(e -> {
+            actionDodajKsiazke(nazwa.getText(), rok.getText(), isbn.getText(), (Wydawnictwo)wydawnictwo.getSelectedItem(), infoDodajLabel);
+        });
+
+        infoDodajLabel.setBounds(300, 330, 270, 30);
+
+        // modyfikacja
+
+        db.infoWydawnictwo(wydawnictwa2);
+
+        dodajLabel2.setFont(new Font("TimesRoman",Font.BOLD,20));
+        dodajLabel2.setBounds(300, 370, 270, 25);
+
+        nazwaLabel2.setBounds(300, 420, 80, 25);
+        nazwa2.setBounds(400, 420, 170, 25);
+
+        rokLabel2.setBounds(300, 460, 80, 25);
+        rok2.setBounds(400, 460, 170, 25);
+
+        isbnLabel2.setBounds(300, 500, 80, 25);
+        isbn2.setBounds(400, 500, 170, 25);
+
+        wydawnictwoLabel2.setBounds(300, 540, 85, 25);
+        wydawnictwo2.setBounds(400, 540, 170, 25);
+        wydawnictwo2.setSelectedIndex(0);
+
+        buttonAktualizuj2.setBounds(300, 580 ,270, 30);
+        buttonAktualizuj2.setFocusable(false);
+        buttonAktualizuj2.addActionListener(e -> {
+            actionAutualizujKsiazke(listaKsiazka.getSelectedValue().getIdksiazka(), nazwa2.getText(), rok2.getText(), isbn2.getText(), (Wydawnictwo)wydawnictwo2.getSelectedItem(), infoAktualizujLabel2);
+        });
+
+        infoAktualizujLabel2.setBounds(300, 610, 270, 30);
+
+
+        db.infoKsiazka(ksiazki);
         usunLabel.setFont(new Font("TimesRoman",Font.BOLD,20));
         usunLabel.setBounds(700, 150, 270, 25);
 
         szukaj.setBounds(700,200,170,25);
-        buttonSzukaj.setBounds(890,200,80,25);
+        buttonSzukaj.setBounds(890,200,110,25);
         buttonSzukaj.addActionListener(e -> {db.infoKsiazka(ksiazki, szukaj.getText());});
 
         listaKsiazka.setFixedCellHeight(40);
         listaKsiazka.addListSelectionListener(e -> {
             if(listaKsiazka.getSelectedValue() != null){
-                // nazwa2.setText(listaKsiazka.getSelectedValue().getNazwa());
-                // nadNazwa2.setSelectedIndex(listaKsiazka.getSelectedValue().getIdNad());
+                Ksiazka tmp = listaKsiazka.getSelectedValue();
+                nazwa2.setText(tmp.getTytul());
+                rok2.setText("" + tmp.getRokwydania());
+                isbn2.setText("" + tmp.getIsbn());
+                wydawnictwo2.setSelectedIndex(tmp.getWydawnictwo().getId()+1);
             }
         });
         listaKsiazka.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -798,7 +903,7 @@ public class MyFrame extends JFrame{
         scrollPane.setViewportView(listaKsiazka);
         scrollPane.setBounds(700,240,300,250);
 
-        buttonUsun.setBounds(700, 510 ,270, 30);
+        buttonUsun.setBounds(700, 510 ,300, 30);
         buttonUsun.setFocusable(false);
         buttonUsun.addActionListener(e -> {
             infoUsunLabel.setText(actionUsunKsiazka(listaKsiazka.getSelectedValue()));
@@ -806,6 +911,31 @@ public class MyFrame extends JFrame{
         });
 
         infoUsunLabel.setBounds(700, 550, 270, 50);
+
+
+        ksiazkaPanel.add(dodajLabel);
+        ksiazkaPanel.add(nazwaLabel);
+        ksiazkaPanel.add(nazwa);
+        ksiazkaPanel.add(rokLabel);
+        ksiazkaPanel.add(rok);
+        ksiazkaPanel.add(isbnLabel);
+        ksiazkaPanel.add(isbn);
+        ksiazkaPanel.add(wydawnictwoLabel);
+        ksiazkaPanel.add(wydawnictwo);
+        ksiazkaPanel.add(buttonDodaj);
+        ksiazkaPanel.add(infoDodajLabel);
+
+        ksiazkaPanel.add(dodajLabel2);
+        ksiazkaPanel.add(nazwaLabel2);
+        ksiazkaPanel.add(nazwa2);
+        ksiazkaPanel.add(rokLabel2);
+        ksiazkaPanel.add(rok2);
+        ksiazkaPanel.add(isbnLabel2);
+        ksiazkaPanel.add(isbn2);
+        ksiazkaPanel.add(wydawnictwoLabel2);
+        ksiazkaPanel.add(wydawnictwo2);
+        ksiazkaPanel.add(buttonAktualizuj2);
+        ksiazkaPanel.add(infoAktualizujLabel2);
 
         ksiazkaPanel.add(usunLabel);
         ksiazkaPanel.add(szukaj);
@@ -817,6 +947,211 @@ public class MyFrame extends JFrame{
         ksiazkaPanel.setVisible(false);
     }
 
+    private static void ksiazkaDodajUsunAutoraPanelInit(int idKsiazka, String nazwa, String rok, String isbn, String wydawnictwo){
+        ksiazkaDodajUsunAutoraPanel.restart();
+        ksiazkaDodajUsunAutoraPanel.setLayout(null);
+        ksiazkaDodajUsunAutoraPanel.setBounds(0, 0, 1200, 700);
+
+        menuPracownikaButtons(ksiazkaDodajUsunAutoraPanel);
+
+        ksiazkaDodajUsunAutoraPanel.getHeader().setText("Autor książki");
+        ksiazkaDodajUsunAutoraPanel.getHeader().setBounds(180,20,1020,50);
+
+        ksiazkaPanel.getHeader().setText("Książki");
+
+        JLabel infoK = new JLabel("Tytuł: " + nazwa + ", Rok: " + rok + ", ISBN: " + isbn + ", Wydawnictwo: "+ wydawnictwo,SwingConstants.CENTER);
+
+        JLabel dodajLabel = new JLabel("Dodaj autora",SwingConstants.CENTER);
+        JLabel autorLabel = new JLabel("Autor* ");
+        Vector<Autor> autorzy = new Vector<>();
+        JComboBox<Autor> autor = new JComboBox<>(autorzy);
+        JButton buttonDodaj = new JButton("Dodaj");
+        JLabel infoDodajLabel = new JLabel("* pole wymagane");
+        JButton buttonDalej = new JButton("Dalej");
+
+        JLabel usunLabel = new JLabel("Usuń autora",SwingConstants.CENTER);
+        DefaultListModel<Autor> autorzy2 = new DefaultListModel<>();
+        db.infoAutorKsiazka(autorzy2, idKsiazka);
+        JList<Autor> listaAutor = new JList<>(autorzy2); 
+        JScrollPane scrollPane = new JScrollPane();
+
+        JButton buttonUsun = new JButton("Usuń");
+        JLabel infoUsunLabel = new JLabel("");
+
+        db.infoAutor(autorzy);
+
+        infoK.setBounds(180,90,1020,50);
+
+        dodajLabel.setFont(new Font("TimesRoman",Font.BOLD,20));
+        dodajLabel.setBounds(300, 150, 270, 25);
+
+        autorLabel.setBounds(300, 200, 85, 25);
+        autor.setBounds(400, 200, 170, 25);
+        autor.setSelectedIndex(0);
+
+        buttonDodaj.setBounds(300, 240 ,270, 30);
+        buttonDodaj.setFocusable(false);
+        buttonDodaj.addActionListener(e -> {
+            if(db.dodajAutorKsiazka(idKsiazka, ((Autor)(autor.getSelectedItem())).getId())){
+                db.infoAutorKsiazka(autorzy2, idKsiazka);
+                infoDodajLabel.setText("Autor dodany do książki. Dodaj kolejnego autora lub kliknij przycisk dalej.");
+            }
+            else
+                infoDodajLabel.setText("Nie udało się dodać autora do książki.");
+        });
+
+        infoDodajLabel.setBounds(300, 270, 270, 30);
+
+        buttonDalej.setBounds(300, 310, 270, 30);
+        buttonDalej.setFocusable(false);
+        buttonDalej.addActionListener(e -> {
+            ksiazkaDodajUsunDziedzinePanelInit(idKsiazka, nazwa, rok, isbn, wydawnictwo);
+            infoDodajLabel.setText("Dalej");
+        });
+
+        usunLabel.setFont(new Font("TimesRoman",Font.BOLD,20));
+        usunLabel.setBounds(700, 150, 270, 25);
+
+        listaAutor.setFixedCellHeight(40);
+        listaAutor.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        scrollPane.setViewportView(listaAutor);
+        scrollPane.setBounds(700,240,300,250);
+
+        buttonUsun.setBounds(700, 510 ,300, 30);
+        buttonUsun.setFocusable(false);
+        buttonUsun.addActionListener(e -> {
+            if(db.usunAutorKsiazka(idKsiazka, listaAutor.getSelectedValue().getId())){
+                infoUsunLabel.setText("Autor usunięty.");
+                db.infoAutorKsiazka(autorzy2, idKsiazka);
+            }
+            else    
+                infoUsunLabel.setText("Nie udało się usunąć autora.");
+        });
+
+        infoUsunLabel.setBounds(700, 550, 270, 50);
+
+        ksiazkaDodajUsunAutoraPanel.add(infoK);
+        ksiazkaDodajUsunAutoraPanel.add(dodajLabel);
+        ksiazkaDodajUsunAutoraPanel.add(autorLabel);
+        ksiazkaDodajUsunAutoraPanel.add(autor);
+        ksiazkaDodajUsunAutoraPanel.add(buttonDodaj);
+        ksiazkaDodajUsunAutoraPanel.add(infoDodajLabel);
+        ksiazkaDodajUsunAutoraPanel.add(buttonDalej);
+
+        ksiazkaDodajUsunAutoraPanel.add(usunLabel);
+        ksiazkaDodajUsunAutoraPanel.add(buttonUsun);
+        ksiazkaDodajUsunAutoraPanel.add(scrollPane);
+
+        ksiazkaDodajUsunAutoraPanel.setVisible(true);
+        ksiazkaPanel.setVisible(false);
+    }
+
+    private static void ksiazkaDodajUsunDziedzinePanelInit(int idKsiazka, String nazwa, String rok, String isbn, String wydawnictwo){
+        ksiazkaDodajUsunDziedzinePanel.restart();
+        ksiazkaDodajUsunDziedzinePanel.setLayout(null);
+        ksiazkaDodajUsunDziedzinePanel.setBounds(0, 0, 1200, 700);
+
+        menuPracownikaButtons(ksiazkaDodajUsunDziedzinePanel);
+
+        ksiazkaDodajUsunDziedzinePanel.getHeader().setText("Wydawnictwo książki");
+        ksiazkaDodajUsunDziedzinePanel.getHeader().setBounds(180,20,1020,50);
+
+        ksiazkaPanel.getHeader().setText("Książki");
+
+        JLabel infoK = new JLabel("Tytuł: " + nazwa + ", Rok: " + rok + ", ISBN: " + isbn + ", Wydawnictwo: "+ wydawnictwo,SwingConstants.CENTER);
+
+        JLabel dodajLabel = new JLabel("Dodaj dziedzinę",SwingConstants.CENTER);
+        JLabel dziedzinaLabel = new JLabel("Dziedzina* ");
+        Vector<Dziedzina> dziedziny = new Vector<>();
+        JComboBox<Dziedzina> dziedzina = new JComboBox<>(dziedziny);
+        JButton buttonDodaj = new JButton("Dodaj");
+        JLabel infoDodajLabel = new JLabel("* pole wymagane");
+        JButton buttonZakoncz = new JButton("Zakończ");
+
+        JLabel usunLabel = new JLabel("Usuń autora",SwingConstants.CENTER);
+        DefaultListModel<Dziedzina> dziedziny2 = new DefaultListModel<>();
+        db.infoDziedzinaKsiazka(dziedziny2, idKsiazka);
+        JList<Dziedzina> listaDziedzina = new JList<>(dziedziny2); 
+        JScrollPane scrollPane = new JScrollPane();
+
+        JButton buttonUsun = new JButton("Usuń");
+        JLabel infoUsunLabel = new JLabel("");
+
+        db.infoDziedzina(dziedziny, new DefaultListModel<Dziedzina>());
+
+        infoK.setBounds(180,90,1020,50);
+
+        dodajLabel.setFont(new Font("TimesRoman",Font.BOLD,20));
+        dodajLabel.setBounds(300, 150, 270, 25);
+
+        dziedzinaLabel.setBounds(300, 200, 85, 25);
+        dziedzina.setBounds(400, 200, 170, 25);
+        dziedzina.setSelectedIndex(0);
+
+        buttonDodaj.setBounds(300, 240 ,270, 30);
+        buttonDodaj.setFocusable(false);
+        buttonDodaj.addActionListener(e -> {
+            if(db.dodajDziedzinaKsiazka(idKsiazka, ((Dziedzina)(dziedzina.getSelectedItem())).getId())){
+                db.infoDziedzinaKsiazka(dziedziny2, idKsiazka);
+                infoDodajLabel.setText("Dziedzina dodana do książki. Możesz dodać kolejną dziedzinę.");
+            }
+            else
+                infoDodajLabel.setText("Nie udało się dodać autora do książki.");
+        });
+
+        infoDodajLabel.setBounds(300, 270, 270, 30);
+
+        buttonZakoncz.setBounds(300, 310 ,270, 30);
+        buttonZakoncz.setFocusable(false);
+        buttonZakoncz.addActionListener(e -> {
+            ksiazkaDodajUsunDziedzinePanel.setVisible(false);
+            ksiazkaPanelInit();
+            ksiazkaPanel.setVisible(true);
+
+        });
+
+
+        usunLabel.setFont(new Font("TimesRoman",Font.BOLD,20));
+        usunLabel.setBounds(700, 150, 270, 25);
+
+
+        listaDziedzina.setFixedCellHeight(40);
+        listaDziedzina.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        scrollPane.setViewportView(listaDziedzina);
+        scrollPane.setBounds(700,240,300,250);
+
+        buttonUsun.setBounds(700, 510 ,300, 30);
+        buttonUsun.setFocusable(false);
+        buttonUsun.addActionListener(e -> {
+            if(db.usunDziedzinaKsiazka(idKsiazka, listaDziedzina.getSelectedValue().getId())){
+                infoUsunLabel.setText("Dziedzina usunięta.");
+                db.infoDziedzinaKsiazka(dziedziny2, idKsiazka);
+            }
+            else    
+                infoUsunLabel.setText("Nie udało się usunąć dziedziny.");
+        });
+
+
+        infoUsunLabel.setBounds(700, 550, 270, 50);
+
+        ksiazkaDodajUsunDziedzinePanel.add(infoK);
+        ksiazkaDodajUsunDziedzinePanel.add(dodajLabel);
+        ksiazkaDodajUsunDziedzinePanel.add(dziedzinaLabel);
+        ksiazkaDodajUsunDziedzinePanel.add(dziedzina);
+        ksiazkaDodajUsunDziedzinePanel.add(buttonDodaj);
+        ksiazkaDodajUsunDziedzinePanel.add(infoDodajLabel);
+        ksiazkaDodajUsunDziedzinePanel.add(buttonZakoncz);
+
+        ksiazkaDodajUsunDziedzinePanel.add(usunLabel);
+        ksiazkaDodajUsunDziedzinePanel.add(buttonUsun);
+        ksiazkaDodajUsunDziedzinePanel.add(scrollPane);
+
+        ksiazkaDodajUsunDziedzinePanel.setVisible(true);
+        ksiazkaDodajUsunAutoraPanel.setVisible(false);
+    }
+
     private static void egzemplarzPanelInit(){
         egzemplarzPanel = new MenuPracownikaPanel();
         egzemplarzPanel.setLayout(null);
@@ -825,57 +1160,58 @@ public class MyFrame extends JFrame{
         menuPracownikaButtons(egzemplarzPanel);
 
         egzemplarzPanel.getHeader().setText("Egzemplarze");
+        egzemplarzPanel.getHeader().setBounds(180,20,1020,50);
 
-
-        // JLabel usunLabel = new JLabel("Usuń egzemplarz",SwingConstants.CENTER);
-        // JTextField szukaj = new JTextField();
-        // JButton buttonSzukaj = new JButton("Szukaj");
+        JLabel info = new JLabel("Kliknij na książkę aby dodać lub usunąć jej egzemplarz.",SwingConstants.CENTER);
         DefaultListModel<Ksiazka> ksiazki = new DefaultListModel<>();
-        db.infoKsiazka(ksiazki);
-        JList<Ksiazka> listaKsiazka = new JList<>(ksiazki); 
+        JList<Ksiazka> listaKsiazek = new JList<>(ksiazki); 
         JScrollPane scrollPane = new JScrollPane();
+        JLabel szukajInfo = new JLabel("Wpisz autora lub tytuł: ");
+        JTextField szukaj = new JTextField();
+        JButton buttonSzukaj = new JButton("Szukaj");
 
-        // JButton buttonUsun = new JButton("Usuń");
-        // JLabel infoUsunLabel = new JLabel("");
+        db.infoKsiazka(ksiazki);    // pobranie danych
+        
+        if(ksiazki.size()==0)
+            info.setText("Brak książek.");
 
-        // usunLabel.setFont(new Font("TimesRoman",Font.BOLD,20));
-        // usunLabel.setBounds(700, 150, 270, 25);
+        info.setBounds(180,90,1020,50);
+        info.setFont(new Font("Dialog",Font.BOLD,14));
 
-        // szukaj.setBounds(700,200,170,25);
-        // buttonSzukaj.setBounds(890,200,80,25);
-        // buttonSzukaj.addActionListener(e -> {db.infoKsiazka(ksiazki, szukaj.getText());});
+        szukajInfo.setBounds(300,150,170,25);
+        szukaj.setBounds(450,150,490,25);
+        buttonSzukaj.setBounds(950,150,100,25);
+        buttonSzukaj.setFocusable(false);
+        buttonSzukaj.addActionListener(e -> {db.infoKsiazka(ksiazki,szukaj.getText());});
 
-        listaKsiazka.setFixedCellHeight(40);
-        listaKsiazka.addListSelectionListener(e -> {
-            if(listaKsiazka.getSelectedValue() != null){
-                // nazwa2.setText(listaKsiazka.getSelectedValue().getNazwa());
-                // nadNazwa2.setSelectedIndex(listaKsiazka.getSelectedValue().getIdNad());
-            }
+
+        listaKsiazek.setFixedCellHeight(40);
+        listaKsiazek.addListSelectionListener(e -> {
+            Ksiazka tmp = listaKsiazek.getSelectedValue();
+            Ksiazka book = new Ksiazka(tmp.getIdksiazka(), tmp.getTytul(), tmp.getRokwydania(), tmp.getIsbn(), tmp.getWydawnictwo(), tmp.getAutorzy(), tmp.getDziedziny());
+            EgzemplarzDodajUsun(book, egzemplarzPanel);
+            // listaKsiazek.clearSelection();
         });
-        listaKsiazka.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        listaKsiazek.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        listaKsiazek.clearSelection();
 
-        scrollPane.setViewportView(listaKsiazka);
-        scrollPane.setBounds(700,240,300,250);
+        DefaultListCellRenderer renderer = (DefaultListCellRenderer)listaKsiazek.getCellRenderer();
+        renderer.setHorizontalAlignment(JLabel.CENTER);
+        
+        scrollPane.setViewportView(listaKsiazek);
+        scrollPane.setBounds(300,180,750,400);
 
-        // buttonUsun.setBounds(700, 510 ,270, 30);
-        // buttonUsun.setFocusable(false);
-        // buttonUsun.addActionListener(e -> {
-        //     infoUsunLabel.setText(actionUsunKsiazka(listaKsiazka.getSelectedValue()));
-        //     db.infoKsiazka(ksiazki);
-        // });
-
-        // infoUsunLabel.setBounds(700, 550, 270, 50);
-
-        // egzemplarzPanel.add(usunLabel);
-        // egzemplarzPanel.add(szukaj);
-        // egzemplarzPanel.add(buttonSzukaj);
+        egzemplarzPanel.add(info);
+        egzemplarzPanel.add(szukajInfo);
+        egzemplarzPanel.add(szukaj);
+        egzemplarzPanel.add(buttonSzukaj);
         egzemplarzPanel.add(scrollPane);
-        // egzemplarzPanel.add(buttonUsun);
-        // egzemplarzPanel.add(infoUsunLabel);
+        
 
         egzemplarzPanel.setVisible(false);
     }
 
+    // Czytelnik
 
     private static void menuCzytelnikaButtons(MenuCzytelnikaPanel panel){
         panel.getWylogujButton().addActionListener(e -> {
@@ -1014,13 +1350,13 @@ public class MyFrame extends JFrame{
         wypozyczonePanel.getHeader().setText("Wypożyczone książki");
 
         JLabel info = new JLabel("Kliknij na książkę po więcej informacji.",SwingConstants.CENTER);
-        DefaultListModel<Egzemplarz> ksiazki = new DefaultListModel<>();
-        JList<Egzemplarz> listaKsiazek = new JList<>(ksiazki); 
+        DefaultListModel<Egzemplarz> egzemplarzeWypozyczone = new DefaultListModel<>();
+        JList<Egzemplarz> listaKsiazek = new JList<>(egzemplarzeWypozyczone); 
         JScrollPane scrollPane = new JScrollPane();
 
-        db.infoWypozyczone(ksiazki, zalogowanyCzytelnik.getId());    // pobranie danych
+        db.infoWypozyczone(egzemplarzeWypozyczone, zalogowanyCzytelnik.getId());    // pobranie danych
         
-        if(ksiazki.size()==0)
+        if(egzemplarzeWypozyczone.size()==0)
             info.setText("Brak wypożyczonych książek.");
 
         info.setBounds(300,110,750,30);
@@ -1155,6 +1491,7 @@ public class MyFrame extends JFrame{
         katalogPanel.setVisible(false);
     }
 
+    
 
     private static void katalogKsiazekPanelInit(){
         katalogKsiazekPanel = new JPanel();
@@ -1454,6 +1791,96 @@ public class MyFrame extends JFrame{
         return toReturn;
     }
 
+    private static void actionDodajKsiazke(String nazwa, String rok, String isbn, Wydawnictwo wydawnictwo, JLabel label){
+        String blad = "";
+        boolean valid = true;
+
+        // Pattern patternEmail = Pattern.compile("^.+@.+\\..+$");
+        // Matcher matcherEmail = patternEmail.matcher(email);
+        Pattern patternRok = Pattern.compile("^\\d{4}$");
+        Matcher matcherRok = patternRok.matcher(rok);
+        Pattern patternISBN = Pattern.compile("^\\d{13}$");
+        Matcher matcherISBN = patternISBN.matcher(isbn);
+        
+        int rok_i = Integer.valueOf(rok);
+        BigDecimal isbn_i = new BigDecimal(isbn);
+
+        if(nazwa.equals("") || rok.equals("") || isbn.equals("") || wydawnictwo.getId() == 0){
+            valid = false;
+            blad = "Wypełnij wszystkie wymagane pola. ";
+        }
+        else if(!matcherRok.matches()){
+            valid = false;
+            blad = "Błędny rok. ";
+        }
+        else if(!matcherISBN.matches()){
+            valid = false;
+            blad = "Błędny ISBN. ";
+        }
+        if(valid){
+            int id = db.dodajKsiazka(nazwa, rok_i, isbn_i, wydawnictwo.getId());
+            if(id == 0){
+                label.setText("Nie udało się dodać książki. Nieprawidłowy rok lub ISBN.");
+            }
+            else
+                ksiazkaDodajUsunAutoraPanelInit(id, nazwa, rok, isbn, wydawnictwo.getNazwa());
+        }
+        else{
+            label.setText(blad);
+        }
+    }
+
+    
+    private static void actionAutualizujKsiazke(int idKsiazka, String nazwa, String rok, String isbn, Wydawnictwo wydawnictwo, JLabel label){
+        String blad = "";
+        boolean valid = true;
+
+        // Pattern patternEmail = Pattern.compile("^.+@.+\\..+$");
+        // Matcher matcherEmail = patternEmail.matcher(email);
+        Pattern patternRok = Pattern.compile("^\\d{4}$");
+        Matcher matcherRok = patternRok.matcher(rok);
+        Pattern patternISBN = Pattern.compile("^\\d{13}$");
+        Matcher matcherISBN = patternISBN.matcher(isbn);
+        
+        int rok_i = Integer.valueOf(rok);
+        BigDecimal isbn_i = new BigDecimal(isbn);
+
+        if(nazwa.equals("") || rok.equals("") || isbn.equals("") || wydawnictwo.getId() == 0){
+            valid = false;
+            blad = "Wypełnij wszystkie wymagane pola. ";
+        }
+        else if(!matcherRok.matches()){
+            valid = false;
+            blad = "Błędny rok. ";
+        }
+        else if(!matcherISBN.matches()){
+            valid = false;
+            blad = "Błędny ISBN. ";
+        }
+        if(valid){
+            int id = db.autualizujKsiazka(idKsiazka, nazwa, rok_i, isbn_i, wydawnictwo.getId());
+            if(id == 0){
+                label.setText("Nie udało się dodać książki. Nieprawidłowy rok lub ISBN.");
+            }
+            else
+                ksiazkaDodajUsunAutoraPanelInit(id, nazwa, rok, isbn, wydawnictwo.getNazwa());
+        }
+        else{
+            label.setText(blad);
+        }
+    }
+
+    private static String actionUsunKsiazka(Ksiazka ksiazka){
+        String toReturn = "<html>Nie udało się usunąć książki.<br />Usuń najpierw jego egzemplarze.<html>";
+        if(ksiazka == null){
+            toReturn = "Wybierz książkę."; 
+        }
+        else if(db.usunKsiazka(ksiazka.getIdksiazka()))
+            toReturn = "Książka usunięta.";
+    
+        return toReturn;
+    }
+
 
     // Menu czytelnika
     private static void egzemplarzWyporzyczonyInfo(Egzemplarz egzemplarz, MenuCzytelnikaPanel panel/*, JList<Egzemplarz> lista*/){
@@ -1569,6 +1996,7 @@ public class MyFrame extends JFrame{
         JLabel dziedziny = new JLabel("Kategorie: " + ksiazka.getDziedziny());
         JLabel rok = new JLabel("Rok wydania: " + ksiazka.getRokwydania());
         JLabel isbn = new JLabel("ISBN: " + ksiazka.getIsbn());
+        JLabel wydawnictwo = new JLabel("Wydawnictwo: " + ksiazka.getWydawnictwo());    ////!!!!!!!!!!
         JLabel dostepnosc = new JLabel("Dostępność: ");
         JButton wypozycz = new JButton("Wypozycz");
         JButton zarezerwuj = new JButton("Zarezerwuj");
@@ -1622,19 +2050,86 @@ public class MyFrame extends JFrame{
         ksiazkaInfoKatalogPanel.setVisible(true); panel.setVisible(false);
     }
 
+    private static void EgzemplarzDodajUsun(Ksiazka ksiazka, MenuPracownikaPanel panel){
+        egzemplarzDodajUsunPanel.restart();
+        egzemplarzDodajUsunPanel.setLayout(null);
+        egzemplarzDodajUsunPanel.setBounds(0, 0, 1200, 700);
 
+        menuPracownikaButtons(egzemplarzDodajUsunPanel);
+
+        egzemplarzDodajUsunPanel.getHeader().setText("Egzemplarze");
+        egzemplarzDodajUsunPanel.getHeader().setBounds(180,20,1020,50);
+
+        JLabel info = new JLabel("",SwingConstants.CENTER);
+        DefaultListModel<Egzemplarz> egzemplarze = new DefaultListModel<>();
+        JList<Egzemplarz> listaKsiazek = new JList<>(egzemplarze); 
+        JScrollPane scrollPane = new JScrollPane();
+        JLabel infoDodajUsun = new JLabel("",SwingConstants.CENTER);
+        JButton buttonDodaj = new JButton("Dodaj egzemplarz");
+        JButton buttonUsun = new JButton("Usuń wybrany egzemplarz");
+
+        db.infoEgzemplarze(egzemplarze,ksiazka.getIdksiazka());    // pobranie danych
+        
+        if(egzemplarze.size()==0)
+            info.setText("Brak książek.");
+
+        info.setBounds(180,80,1020,50);
+        info.setFont(new Font("Dialog",Font.BOLD,14));
+
+        listaKsiazek.setFixedCellHeight(40);
+        // listaKsiazek.addListSelectionListener(e -> {
+        //     Ksiazka tmp = listaKsiazek.getSelectedValue();
+        //     EgzemplarzDodajUsun(tmp, egzemplarzPanel);
+        //     // listaKsiazek.clearSelection();
+        // });
+        listaKsiazek.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        listaKsiazek.clearSelection();
+
+        DefaultListCellRenderer renderer = (DefaultListCellRenderer)listaKsiazek.getCellRenderer();
+        renderer.setHorizontalAlignment(JLabel.CENTER);
+        
+        scrollPane.setViewportView(listaKsiazek);
+        scrollPane.setBounds(300,120,750,400);
+
+        infoDodajUsun.setBounds(180,560,1020,50);
+
+        buttonDodaj.setBounds(300,530,370,25);
+        buttonDodaj.setFocusable(false);
+        buttonDodaj.addActionListener(e -> {
+            if(db.dodajEgzemplarz(ksiazka.getIdksiazka())){
+                infoDodajUsun.setText("Egzemplarz dodany.");
+                db.infoEgzemplarze(egzemplarze, ksiazka.getIdksiazka());
+            }
+            else
+                infoDodajUsun.setText("Nie udało się dodać egzemplarza.");
+        });
+
+        buttonUsun.setBounds(680,530,370,25);
+        buttonUsun.setFocusable(false);
+        buttonUsun.addActionListener(e -> {
+            if(listaKsiazek.getSelectedValue() == null){
+                infoDodajUsun.setText("Najpierw wybierz egzemplarz z listy.");
+            }
+            else{
+                if(db.usunEgzemplarz(listaKsiazek.getSelectedValue().getIdE())){
+                    infoDodajUsun.setText("Egzemplarz usunięty.");
+                    db.infoEgzemplarze(egzemplarze, ksiazka.getIdksiazka());
+                }
+                else
+                    infoDodajUsun.setText("Nie udało się usunąć egzemplarza. Jest wypozyczony.");
+            }
+        });
+
+        egzemplarzDodajUsunPanel.add(info);
+        egzemplarzDodajUsunPanel.add(infoDodajUsun);
+        egzemplarzDodajUsunPanel.add(buttonDodaj);
+        egzemplarzDodajUsunPanel.add(buttonUsun);
+        egzemplarzDodajUsunPanel.add(scrollPane);
+
+        egzemplarzDodajUsunPanel.setVisible(true); panel.setVisible(false);
+    }
     
     // Bez logowania    
-    private static String actionUsunKsiazka(Ksiazka ksiazka){
-        String toReturn = "<html>Nie udało się usunąć książki.<br />Usuń najpierw jego egzemplarze.<html>";
-        if(ksiazka == null){
-            toReturn = "Wybierz książkę."; 
-        }
-        // else if(db.usunKsiazka(wydawnictwo.getId()))
-            // toReturn = "Wydawnictwo usunięte.";
-    
-        return toReturn;
-    }
 
     private static void ksiazkaInfo(Ksiazka k){
         ksiazkaInfoPanel.setVisible(true); katalogKsiazekPanel.setVisible(false);
@@ -1643,6 +2138,7 @@ public class MyFrame extends JFrame{
         ksiazkaInfoPanel.getRokWydania().setText("Rok wydania: " + String.valueOf(k.getRokwydania()));
         ksiazkaInfoPanel.getIsbn().setText("ISBN: " + String.valueOf(k.getIsbn()));
         ksiazkaInfoPanel.getDziedziny().setText("Kategorie: " + k.getDziedziny());
+        // Wydawnictwo !!
     }
 
 

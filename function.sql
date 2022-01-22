@@ -141,9 +141,9 @@ LANGUAGE plpgsql;
 
 -------------------------------------------------------------------------------------
 
--- usuwanie ksiazki
+-- usuwanie egzemplarza
 -- zwraca 
--- 0 - nie udało się usunąć (są egzemplarze)
+-- 0 - nie udało się usunąć (wypozyczona)
 -- 1 - udało się usunąć
 CREATE OR REPLACE FUNCTION usuwanie_egzemplarza(idE int)
 RETURNS int AS
@@ -151,8 +151,7 @@ $$
 DECLARE
     recEgzemplarz RECORD;
 BEGIN
-    -- Usuwam informacje z tabel ksiazka_dziedzina, ksiazka_autor i rezerwacja tylko jesli nie ma egzemplarzy
-    -- Jeśli chcemy usunąć książke trzeba najpierw usunąć wszystkie jej egzemplarze, nie usuwam kaskadowo wszystkich informacji o książce  
+    -- Usuwam egzemplarz tylko jesli nie jest wypozyczony
     SELECT wypozyczona INTO recEgzemplarz FROM egzemplarz WHERE idegzemplarz = idE;
     
     IF recEgzemplarz.wypozyczona = true THEN

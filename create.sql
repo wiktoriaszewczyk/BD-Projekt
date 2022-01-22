@@ -56,7 +56,7 @@ CREATE TABLE Ksiazka (
   Wydawnictwo_idWydawnictwo INTEGER   NOT NULL ,
   tytul VARCHAR(255)   NOT NULL ,
   rok_wydania INTEGER   NOT NULL ,
-  ISBN BIGINT     ,
+  ISBN BIGINT UNIQUE,
 CHECK(rok_wydania > 1800 AND rok_wydania <= EXTRACT(YEAR FROM CURRENT_DATE) AND ISBN >= 1000000000000 AND ISBN < 10000000000000),
 PRIMARY KEY(idKsiazka)  ,
   FOREIGN KEY(Wydawnictwo_idWydawnictwo)

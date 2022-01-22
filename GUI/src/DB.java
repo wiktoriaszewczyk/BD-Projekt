@@ -99,7 +99,29 @@ public class DB {
     void infoAutor(DefaultListModel<Autor> autorzy){
         autorzy.clear();
         try{       
-            PreparedStatement pst = c.prepareCall( "SELECT idautor, imie, nazwisko dziedziny FROM autor;" );
+            PreparedStatement pst = c.prepareCall( "SELECT idautor, imie, nazwisko dziedziny FROM autor ORDER BY nazwisko;" );
+ 
+            ResultSet rs;
+            rs = pst.executeQuery();
+            while (rs.next())  {
+                int idautor = rs.getInt(1);
+                String imie = rs.getString(2);
+                String nazwisko = rs.getString(3);
+                autorzy.addElement(new Autor(idautor, imie, nazwisko));
+
+            }
+            rs.close();      
+            pst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+    }
+
+    void infoAutor(Vector<Autor> autorzy){
+        autorzy.clear();
+        try{       
+            PreparedStatement pst = c.prepareCall( "SELECT idautor, imie, nazwisko dziedziny FROM autor ORDER BY nazwisko;" );
  
             ResultSet rs;
             rs = pst.executeQuery();
@@ -126,7 +148,7 @@ public class DB {
             autorzy.clear();
             try{       
                 tekst = "%"+tekst+"%";
-                PreparedStatement pst = c.prepareCall( "SELECT idautor, imie, nazwisko dziedziny FROM autor WHERE imie LIKE ? OR nazwisko LIKE ?;" );
+                PreparedStatement pst = c.prepareCall( "SELECT idautor, imie, nazwisko dziedziny FROM autor WHERE imie LIKE ? OR nazwisko LIKE ? ORDER BY nazwisko;" );
                 pst.setString(1,tekst);
                 pst.setString(2,tekst);
 
@@ -202,7 +224,29 @@ public class DB {
     void infoWydawnictwo(DefaultListModel<Wydawnictwo> wydawnictwa){
         wydawnictwa.clear();
         try{       
-            PreparedStatement pst = c.prepareCall( "SELECT idwydawnictwo, nazwa FROM wydawnictwo;" );
+            PreparedStatement pst = c.prepareCall( "SELECT idwydawnictwo, nazwa FROM wydawnictwo ORDER BY nazwa;" );
+ 
+            ResultSet rs;
+            rs = pst.executeQuery();
+            while (rs.next())  {
+                int id = rs.getInt(1);
+                String nazwa = rs.getString(2);
+                wydawnictwa.addElement(new Wydawnictwo(id, nazwa));
+
+            }
+            rs.close();      
+            pst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+    }
+
+    void infoWydawnictwo(Vector<Wydawnictwo> wydawnictwa){
+        wydawnictwa.clear();
+        wydawnictwa.add(new Wydawnictwo(0,""));
+        try{       
+            PreparedStatement pst = c.prepareCall( "SELECT idwydawnictwo, nazwa FROM wydawnictwo ORDER BY nazwa;" );
  
             ResultSet rs;
             rs = pst.executeQuery();
@@ -228,7 +272,7 @@ public class DB {
             wydawnictwo.clear();
             try{       
                 tekst = "%"+tekst+"%";
-                PreparedStatement pst = c.prepareCall( "SELECT idwydawnictwo, nazwa FROM wydawnictwo WHERE nazwa LIKE ?;" );
+                PreparedStatement pst = c.prepareCall( "SELECT idwydawnictwo, nazwa FROM wydawnictwo WHERE nazwa LIKE ? ORDER BY nazwa;" );
                 pst.setString(1,tekst);
 
                 ResultSet rs;
@@ -411,7 +455,7 @@ public class DB {
     void infoKsiazka(DefaultListModel<Ksiazka> ksiazki){
         ksiazki.clear();
         try{       
-            PreparedStatement pst = c.prepareCall( "SELECT idksiazka, tytul, rok_wydania, isbn, autorzy, dziedziny FROM ksiazka_info;" );
+            PreparedStatement pst = c.prepareCall( "SELECT idksiazka, tytul, rok_wydania, isbn, autorzy, dziedziny, idwydawnictwo, wydawnictwo FROM ksiazka_info;" );
  
             ResultSet rs;
             rs = pst.executeQuery();
@@ -422,7 +466,8 @@ public class DB {
                 BigDecimal isbn = rs.getBigDecimal(4);
                 String autorzy = rs.getString(5);
                 String dziedziny = rs.getString(6);
-                ksiazki.addElement(new Ksiazka(idksiazka, tytul, rok_wydania, isbn, autorzy, dziedziny));
+                Wydawnictwo wydawnictwo = new Wydawnictwo(rs.getInt(7),rs.getString(8));
+                ksiazki.addElement(new Ksiazka(idksiazka, tytul, rok_wydania, isbn, wydawnictwo, autorzy, dziedziny));
 
             }
             rs.close();      
@@ -442,7 +487,7 @@ public class DB {
             ksiazki.clear();
             try{       
                 tekst = "%" + tekst + "%";
-                PreparedStatement pst = c.prepareCall( "SELECT idksiazka, tytul, rok_wydania, isbn, autorzy, dziedziny FROM ksiazka_info WHERE tytul LIKE ? OR autorzy LIKE ?;" );
+                PreparedStatement pst = c.prepareCall( "SELECT idksiazka, tytul, rok_wydania, isbn, autorzy, dziedziny, idwydawnictwo, wydawnictwo FROM ksiazka_info WHERE tytul LIKE ? OR autorzy LIKE ?;" );
                 pst.setString(1, tekst);
                 pst.setString(2, tekst);
 
@@ -455,7 +500,8 @@ public class DB {
                     BigDecimal isbn = rs.getBigDecimal(4);
                     String autorzy = rs.getString(5);
                     String dziedziny = rs.getString(6);
-                    ksiazki.addElement(new Ksiazka(idksiazka, tytul, rok_wydania, isbn, autorzy, dziedziny));
+                    Wydawnictwo wydawnictwo = new Wydawnictwo(rs.getInt(7),rs.getString(8));
+                    ksiazki.addElement(new Ksiazka(idksiazka, tytul, rok_wydania, isbn, wydawnictwo, autorzy, dziedziny));
 
                 }
                 rs.close();      
@@ -467,6 +513,201 @@ public class DB {
         }
 
     }
+
+    boolean usunKsiazka(int idKsiazki){
+        boolean toReturn = false;
+        try{       
+            CallableStatement cst = c.prepareCall( "{call usuwanie_ksiazki(?)}" );
+            cst.setInt(1,idKsiazki);
+            ResultSet rs;
+            rs = cst.executeQuery();
+            while (rs.next())  {
+                int result = rs.getInt(1);
+                toReturn = (result != 0);
+            }
+            cst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+        return toReturn;
+    }
+
+    int dodajKsiazka(String nazwa, int rok, BigDecimal isbn, int idWydawnictwo){
+        // zwraca id ksiazki
+        int toReturn = 0;
+        try{       
+            PreparedStatement pst = c.prepareCall( "INSERT INTO Ksiazka (Wydawnictwo_idWydawnictwo, tytul, rok_wydania, ISBN) VALUES (?, ?, ?, ?);" );
+            pst.setInt(1,idWydawnictwo);
+            pst.setString(2,nazwa);
+            pst.setInt(3,rok);
+            pst.setBigDecimal(4,isbn);
+ 
+
+            if(pst.executeUpdate() != 0){
+                try{       
+                    PreparedStatement pst2 = c.prepareCall( "SELECT idksiazka FROM Ksiazka ORDER BY idksiazka DESC LIMIT 1;" );
+    
+                    ResultSet rs;
+                    rs = pst2.executeQuery();
+                    while (rs.next()){
+                        toReturn = rs.getInt(1);
+                    }
+                    rs.close();      
+                    pst2.close(); 
+                }
+                catch(SQLException e){
+                    System.out.println("Blad podczas przetwarzania danych:"+e);
+                }
+            }
+
+            pst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+        return toReturn;
+    }
+
+    int autualizujKsiazka(int idKsiazka, String nazwa, int rok, BigDecimal isbn, int idWydawnictwo){
+        // zwraca id ksiazki
+        int toReturn = 0;
+        try{       
+            PreparedStatement pst = c.prepareCall( "UPDATE Ksiazka SET Wydawnictwo_idWydawnictwo = ?, tytul = ?, rok_wydania = ?, ISBN = ? WHERE idksiazka = ?;" );
+            pst.setInt(1,idWydawnictwo);
+            pst.setString(2,nazwa);
+            pst.setInt(3,rok);
+            pst.setBigDecimal(4,isbn);
+            pst.setInt(5,idKsiazka);
+
+            if(pst.executeUpdate() != 0){
+                toReturn = idKsiazka;
+            }
+
+            pst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+        return toReturn;
+    }
+
+    void infoAutorKsiazka(DefaultListModel<Autor> autorzy, int idKsiazka){
+        autorzy.clear();
+        try{       
+            PreparedStatement pst = c.prepareCall( "SELECT idautor, imie, nazwisko FROM ksiazka_autor ka JOIN autor a ON ka.autor_idautor = a.idautor WHERE ka.ksiazka_idksiazka = ? ORDER BY nazwisko;" );
+            pst.setInt(1, idKsiazka);
+
+            ResultSet rs;
+            rs = pst.executeQuery();
+            while (rs.next())  {
+                int idautor = rs.getInt(1);
+                String imie = rs.getString(2);
+                String nazwisko = rs.getString(3);
+                autorzy.addElement(new Autor(idautor, imie, nazwisko));
+
+            }
+            rs.close();      
+            pst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+    }
+
+    boolean usunAutorKsiazka(int idKsiazka, int idAutor){
+        boolean toReturn = false;
+        try{       
+            PreparedStatement pst = c.prepareCall( "DELETE FROM ksiazka_autor WHERE ksiazka_idksiazka = ? AND autor_idautor = ?;" );
+            pst.setInt(1,idKsiazka);
+            pst.setInt(2, idAutor);
+ 
+            toReturn = (pst.executeUpdate() != 0);
+
+            pst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+        return toReturn;
+    }
+
+    boolean dodajAutorKsiazka(int idKsiazka, int idAutor){
+        boolean toReturn = false;
+        try{       
+            PreparedStatement pst = c.prepareCall( "INSERT INTO Ksiazka_Autor (Ksiazka_idKsiazka, Autor_idAutor) VALUES (?, ?);" );
+            pst.setInt(1,idKsiazka);
+            pst.setInt(2,idAutor);
+ 
+            toReturn = (pst.executeUpdate() != 0);
+
+            pst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+        return toReturn;
+    }
+
+    void infoDziedzinaKsiazka(DefaultListModel<Dziedzina> dziedziny, int idKsiazka){
+        dziedziny.clear();
+        try{       
+            PreparedStatement pst = c.prepareCall( "SELECT iddziedzina, iddziedzina_nad, dziedzina_nad, nazwa FROM ksiazka_dziedzina kd JOIN dziedziny_naddziedziny dn ON kd.dziedzina_iddziedzina = dn.iddziedzina WHERE ksiazka_idksiazka = ?;" );
+            pst.setInt(1, idKsiazka);
+
+            ResultSet rs;
+            rs = pst.executeQuery();
+            while (rs.next())  {
+                int id = rs.getInt(1);
+                int idNad = rs.getInt(2);
+                String nazwaNad = rs.getString(3);
+                String nazwa = rs.getString(4);
+                dziedziny.addElement(new Dziedzina(id, idNad, nazwa, nazwaNad));
+
+            }
+            rs.close();      
+            pst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+    }
+
+    boolean usunDziedzinaKsiazka(int idKsiazka, int idAutor){
+        boolean toReturn = false;
+        try{       
+            PreparedStatement pst = c.prepareCall( "DELETE FROM ksiazka_dziedzina WHERE ksiazka_idksiazka = ? AND dziedzina_iddziedzina = ?;" );
+            pst.setInt(1,idKsiazka);
+            pst.setInt(2, idAutor);
+ 
+            toReturn = (pst.executeUpdate() != 0);
+
+            pst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+        return toReturn;
+    }
+
+    boolean dodajDziedzinaKsiazka(int idKsiazka, int idDziedzina){
+        boolean toReturn = false;
+        try{       
+            PreparedStatement pst = c.prepareCall( "INSERT INTO Ksiazka_Dziedzina (Ksiazka_idKsiazka, Dziedzina_idDziedzina) VALUES (?, ?);" );
+            pst.setInt(1,idKsiazka);
+            pst.setInt(2,idDziedzina);
+ 
+            toReturn = (pst.executeUpdate() != 0);
+
+            pst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+        return toReturn;
+    }
+
+
 
     void infoCzytelnik(Czytelnik czytelnik){
         try{       
@@ -515,7 +756,7 @@ public class DB {
     void infoWypozyczone(DefaultListModel<Egzemplarz> list, int idCzytelnik){
         list.clear();
         try{       
-            PreparedStatement pst = c.prepareCall( "SELECT * FROM wypozyczone_egzemplarze_nieoddane WHERE czytelnik_idczytelnik = ?;" );
+            PreparedStatement pst = c.prepareCall( "SELECT * FROM wypozyczone_egzemplarze_nieoddane WHERE czytelnik_idczytelnik = ? ORDER BY data_wypozyczenia DESC;" );
 
             pst.setInt(1,idCzytelnik);
             //  w.czytelnik_idczytelnik, w.data_wypozyczenia, w.data_planowanego_oddania, e.idegzemplarz, e.idksiazka, e.wypozyczona, e.tytul, e.rok_wydania, e.isbn, e.autorzy, e.dziedziny
@@ -533,7 +774,8 @@ public class DB {
                 BigDecimal isbn = rs.getBigDecimal(9);
                 String autorzy = rs.getString(10);
                 String dziedziny = rs.getString(11);
-                list.addElement(new Egzemplarz(data_wypozyczenia, data_planowanego_oddania, data_oddania, idegzemplarz, wypozyczona , idksiazka, tytul, rok_wydania, isbn, autorzy, dziedziny));
+                Wydawnictwo wydawnictwo = new Wydawnictwo(rs.getInt(12),rs.getString(13));
+                list.addElement(new Egzemplarz(data_wypozyczenia, data_planowanego_oddania, data_oddania, idegzemplarz, wypozyczona, idksiazka, tytul, rok_wydania, isbn, wydawnictwo, autorzy, dziedziny));
 
             }
             rs.close();      
@@ -575,7 +817,8 @@ public class DB {
                 BigDecimal isbn = rs.getBigDecimal(5);
                 String autorzy = rs.getString(6);
                 String dziedziny = rs.getString(7);
-                list.addElement(new Ksiazka(idksiazka, tytul, rok_wydania, isbn, autorzy, dziedziny));
+                Wydawnictwo wydawnictwo = new Wydawnictwo(rs.getInt(8),rs.getString(9));
+                list.addElement(new Ksiazka(idksiazka, tytul, rok_wydania, isbn, wydawnictwo, autorzy, dziedziny));
 
             }
             rs.close();      
@@ -611,7 +854,7 @@ public class DB {
     void infoWypozyczoneOddane(DefaultListModel<String> list, int idCzytelnik){
         list.clear();
         try{       
-            PreparedStatement pst = c.prepareCall( "SELECT * FROM wypozyczone_egzemplarze_oddane WHERE czytelnik_idczytelnik = ?;" );
+            PreparedStatement pst = c.prepareCall( "SELECT * FROM wypozyczone_egzemplarze_oddane WHERE czytelnik_idczytelnik = ? ORDER BY data_wypozyczenia DESC;" );
 
             pst.setInt(1,idCzytelnik);
             //  w.czytelnik_idczytelnik, w.data_wypozyczenia, w.data_planowanego_oddania, e.idegzemplarz, e.idksiazka, e.wypozyczona, e.tytul, e.rok_wydania, e.isbn, e.autorzy, e.dziedziny
@@ -704,6 +947,70 @@ public class DB {
             toReturn = (pst.executeUpdate() != 0);
 
             pst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+        return toReturn;
+    }
+
+    void infoEgzemplarze(DefaultListModel<Egzemplarz> list, int idKsiazka){
+        list.clear();
+        try{       
+            PreparedStatement pst = c.prepareCall( "SELECT * FROM egzemplarz_info WHERE idksiazka = ? ORDER BY idegzemplarz;" );
+
+            pst.setInt(1,idKsiazka);
+            //   idegzemplarz | idksiazka | wypozyczona |    tytul    | rok_wydania |     isbn      |     autorzy     |               dziedziny
+            ResultSet rs;
+            rs = pst.executeQuery();
+            while (rs.next())  {
+                int idegzemplarz = rs.getInt(1);
+                int idksiazka = rs.getInt(2);
+                boolean wypozyczona = rs.getBoolean(3);
+                String tytul = rs.getString(4);
+                int rok_wydania = rs.getInt(5);
+                BigDecimal isbn = rs.getBigDecimal(6);
+                String autorzy = rs.getString(7);
+                String dziedziny = rs.getString(8);
+                Wydawnictwo wydawnictwo = new Wydawnictwo(rs.getInt(9),rs.getString(10));
+                list.addElement(new Egzemplarz("","","",idegzemplarz, wypozyczona, idksiazka, tytul, rok_wydania, isbn, wydawnictwo, autorzy, dziedziny));
+
+            }
+            rs.close();      
+            pst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+    }
+
+    boolean dodajEgzemplarz(int idKsiazka){
+        boolean toReturn = false;
+        try{       
+            PreparedStatement pst = c.prepareCall( "INSERT INTO Egzemplarz (Ksiazka_idKsiazka) VALUES (?);" );
+            pst.setInt(1,idKsiazka);
+ 
+            toReturn = (pst.executeUpdate() != 0);
+            pst.close(); 
+        }
+        catch(SQLException e){
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+        return toReturn;
+    }
+
+    boolean usunEgzemplarz(int idEgzemplarz){
+        boolean toReturn = false;
+        try{       
+            CallableStatement cst = c.prepareCall( "{call usuwanie_egzemplarza(?)}" );
+            cst.setInt(1,idEgzemplarz);
+            ResultSet rs;
+            rs = cst.executeQuery();
+            while (rs.next())  {
+                int result = rs.getInt(1);
+                toReturn = (result != 0);
+            }
+            cst.close(); 
         }
         catch(SQLException e){
             System.out.println("Blad podczas przetwarzania danych:"+e);
