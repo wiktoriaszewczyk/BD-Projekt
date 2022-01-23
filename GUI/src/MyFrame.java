@@ -166,8 +166,6 @@ public class MyFrame extends JFrame{
         
     }
 
-    // Pracownik
-
     private static void loginPracownikPanelInit(){
         loginPracownikPanel = new JPanel();
         loginPracownikPanel.setBounds(0, 0, 1200, 700);
@@ -297,6 +295,8 @@ public class MyFrame extends JFrame{
         zarejestrujCzytelnikPanel.setVisible(false);
     }
 
+    // Pracownik
+
     private static void menuPracownikaButtons(MenuPracownikaPanel panel){
         panel.getWylogujButton().addActionListener(e -> {
             // zalogowany_pracownik = false; 
@@ -361,7 +361,7 @@ public class MyFrame extends JFrame{
         JPasswordField haslo1 = new JPasswordField();
         JLabel haslo2Label = new JLabel("Powtórz hasło* ");
         JPasswordField haslo2 = new JPasswordField();
-        JButton buttonRejestracja = new JButton("Zarejestruj się");
+        JButton buttonRejestracja = new JButton("Dodaj");
         JLabel infoLabel = new JLabel("* pole wymagane");
 
         imieLabel.setBounds(465, 150, 80, 25);
@@ -2147,7 +2147,7 @@ public class MyFrame extends JFrame{
     }
 
 
-    public static void main(String[] args){
-        new MyFrame();
-    }
+    // public static void main(String[] args){
+    //     new MyFrame();
+    // }
 }
