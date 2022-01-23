@@ -144,7 +144,7 @@ CREATE TABLE Wypozyczenie (
   data_wypozyczenia timestamp   NOT NULL DEFAULT NOW(),
   data_planowanego_oddania timestamp   NOT NULL DEFAULT NOW() + INTERVAL '1 MONTH',
   data_oddania timestamp  DEFAULT NULL    ,
-CHECK(data_wypozyczenia < data_planowanego_oddania AND data_wypozyczenia <= data_oddania),
+CHECK(data_wypozyczenia <= now() AND data_wypozyczenia < data_planowanego_oddania AND data_wypozyczenia <= data_oddania AND data_oddania <= now()),
 PRIMARY KEY(Czytelnik_idCzytelnik, Egzemplarz_idEgzemplarz, data_wypozyczenia) ,
   FOREIGN KEY(Czytelnik_idCzytelnik)
     REFERENCES Czytelnik(idCzytelnik),

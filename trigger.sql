@@ -63,3 +63,27 @@ CREATE TRIGGER wypozyczenie_update_oddanie AFTER UPDATE ON Wypozyczenie
 FOR EACH ROW EXECUTE PROCEDURE oddanie_ksiazki();
 
 
+---------------------------------------------------------------------------
+-- Nowa rezerwacja -> niemożliwa jeśli już wypożyczamy książkę
+
+CREATE OR REPLACE FUNCTION nowa_rezerwacja()
+RETURNS TRIGGER AS
+$$
+DECLARE 
+    czy_wypozyczona RECORD;   -- wypozyczona
+BEGIN
+
+    -- Czy czytelnik nie wypożycza już tej książki
+    SELECT COUNT(*) AS n INTO czy_wypozyczona FROM wypozyczone_egzemplarze_nieoddane WHERE Czytelnik_idCzytelnik = NEW.Czytelnik_idCzytelnik AND idKsiazka = NEW.Ksiazka_idKsiazka;
+    IF czy_wypozyczona.n > 0 THEN
+        RAISE NOTICE 'Nie możesz zarezerwowac ksiazki, ktora wypozyczasz';
+        RETURN NULL;
+    END IF;
+
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;  
+
+CREATE TRIGGER rezerwacja_insert BEFORE INSERT ON Rezerwacja
+FOR EACH ROW EXECUTE PROCEDURE nowa_rezerwacja();

@@ -2026,6 +2026,9 @@ public class MyFrame extends JFrame{
                 zarezerwuj.setEnabled(false);
                 wypozyczonePanelInit();
             }
+            else{
+                dostepnosc.setText("Nie udało się wypożyczyć.");
+            }
         });
         zarezerwuj.setBounds(465, 450, 270, 30);
         zarezerwuj.setFocusable(false);
@@ -2034,6 +2037,9 @@ public class MyFrame extends JFrame{
                 dostepnosc.setText("Zarezerwowano");
                 zarezerwuj.setEnabled(false);
                 zarezerwowanePanelInit();
+            }
+            else{
+                dostepnosc.setText("<html>Nie udało się zarezerwować.<br />Książka wypożyczona lub już zarezerwowana.<html>");
             }
         });
 
@@ -2059,6 +2065,8 @@ public class MyFrame extends JFrame{
 
         ksiazkaInfoKatalogPanel.setVisible(true); panel.setVisible(false);
     }
+
+    // Menu pracownika
 
     private static void EgzemplarzDodajUsun(Ksiazka ksiazka, MenuPracownikaPanel panel){
         egzemplarzDodajUsunPanel.restart();
