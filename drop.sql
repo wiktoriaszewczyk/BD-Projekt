@@ -1,11 +1,4 @@
---  Usuwanie wszystkich widoków
-DROP VIEW dziedziny_naddziedziny CASCADE;
-DROP VIEW dziedziny_ksiazki CASCADE;
-
--- Usuwanie 
-DROP FUNCTION logowanie_pracownik(text, text);
-
--- Usuwanie tabel
+-- Usuwanie tabel i wszystkiego z nimi związanego
 DROP TABLE Wypozyczenie CASCADE;
 DROP TABLE Egzemplarz CASCADE;
 DROP TABLE Ksiazka_Dziedzina CASCADE;
@@ -18,3 +11,5 @@ DROP TABLE Dziedzina CASCADE;
 DROP TABLE Wydawnictwo CASCADE;
 DROP TABLE Pracownik CASCADE;
 
+-- Restart bazy:
+-- Wywołanie kolejno plików -> drop, create, view, function, trigger, insert

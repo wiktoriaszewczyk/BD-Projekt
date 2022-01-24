@@ -453,6 +453,7 @@ public class DB {
 
     void infoKsiazka(DefaultListModel<Ksiazka> ksiazki){
         ksiazki.clear();
+        ksiazki.addElement(null);
         try{       
             PreparedStatement pst = c.prepareCall( "SELECT idksiazka, tytul, rok_wydania, isbn, autorzy, dziedziny, idwydawnictwo, wydawnictwo FROM ksiazka_info;" );
  
@@ -484,6 +485,7 @@ public class DB {
         }
         else{
             ksiazki.clear();
+            ksiazki.addElement(null);
             try{       
                 tekst = "%" + tekst + "%";
                 PreparedStatement pst = c.prepareCall( "SELECT idksiazka, tytul, rok_wydania, isbn, autorzy, dziedziny, idwydawnictwo, wydawnictwo FROM ksiazka_info WHERE tytul LIKE ? OR autorzy LIKE ?;" );
@@ -519,6 +521,7 @@ public class DB {
         }
         else{
             ksiazki.clear();
+            ksiazki.addElement(null);
             try{       
                 tekst = "%" + tekst + "%";
                 String dziedzina2 = "%" + dziedzina.getNazwa() + "%";
@@ -799,6 +802,7 @@ public class DB {
 
     void infoWypozyczone(DefaultListModel<Egzemplarz> list, int idCzytelnik){
         list.clear();
+        list.addElement(null);
         try{       
             PreparedStatement pst = c.prepareCall( "SELECT * FROM wypozyczone_egzemplarze_nieoddane WHERE czytelnik_idczytelnik = ? ORDER BY data_wypozyczenia DESC;" );
 
@@ -847,6 +851,7 @@ public class DB {
 
     void infoZarezerwowane(DefaultListModel<Ksiazka> list, int idCzytelnik){
         list.clear();
+        list.addElement(null);
         try{       
             PreparedStatement pst = c.prepareCall( "SELECT * FROM zarezerwowane_ksiazki WHERE czytelnik_idczytelnik = ?;" );
             pst.setInt(1,idCzytelnik);

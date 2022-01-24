@@ -429,7 +429,7 @@ public class MyFrame extends JFrame{
         JLabel nazwiskoLabel2 = new JLabel("Nazwisko* ");
         JTextField nazwisko2 = new JTextField();
         JButton buttonZmien = new JButton("Aktualizuj");
-        JLabel infoZmienLabel = new JLabel("Najpierw wybierz autora z listy.");
+        JLabel infoZmienLabel = new JLabel("Najpierw wybierz autora z listy po prawej.");
 
         JLabel usunAutoraLabel = new JLabel("Usuń autora",SwingConstants.CENTER);
         JTextField szukaj = new JTextField();
@@ -550,7 +550,7 @@ public class MyFrame extends JFrame{
         JLabel nazwaLabel2 = new JLabel("Nazwa* ");
         JTextField nazwa2 = new JTextField();
         JButton buttonZmien = new JButton("Aktualizuj");
-        JLabel infoZmienLabel = new JLabel("Najpierw wybierz wydawnictwo z listy.");
+        JLabel infoZmienLabel = new JLabel("Najpierw wybierz wydawnictwo z listy po prawej.");
 
         JLabel usunWydawnictwoLabel = new JLabel("Usuń wydawnictwo",SwingConstants.CENTER);
         JTextField szukaj = new JTextField();
@@ -665,7 +665,7 @@ public class MyFrame extends JFrame{
         JLabel nadNazwaLabel2 = new JLabel("<html>Dziedzina<br />nadrzędna <html>");
         JComboBox<Dziedzina> nadNazwa2 = new JComboBox<>(dziedziny);
         JButton buttonZmien = new JButton("Aktualizuj");
-        JLabel infoZmienLabel = new JLabel("Najpierw wybierz autora z listy.");
+        JLabel infoZmienLabel = new JLabel("Najpierw wybierz autora z listy po prawej.");
 
         JLabel usunLabel = new JLabel("Usuń dziedzinę",SwingConstants.CENTER);
         JTextField szukaj = new JTextField();
@@ -860,7 +860,11 @@ public class MyFrame extends JFrame{
         buttonAktualizuj2.setBounds(300, 580 ,270, 30);
         buttonAktualizuj2.setFocusable(false);
         buttonAktualizuj2.addActionListener(e -> {
-            actionAutualizujKsiazke(listaKsiazka.getSelectedValue().getIdksiazka(), nazwa2.getText(), rok2.getText(), isbn2.getText(), (Wydawnictwo)wydawnictwo2.getSelectedItem(), infoAktualizujLabel2);
+            if(listaKsiazka.getSelectedValue() != null){
+                actionAutualizujKsiazke(listaKsiazka.getSelectedValue().getIdksiazka(), nazwa2.getText(), rok2.getText(), isbn2.getText(), (Wydawnictwo)wydawnictwo2.getSelectedItem(), infoAktualizujLabel2);
+            }
+            else
+                infoAktualizujLabel2.setText("Wybierz książkę z listy po prawej.");
         });
 
         infoAktualizujLabel2.setBounds(300, 610, 270, 30);
@@ -891,9 +895,15 @@ public class MyFrame extends JFrame{
 
         buttonUsun.setBounds(700, 510 ,300, 30);
         buttonUsun.setFocusable(false);
-        buttonUsun.addActionListener(e -> {
-            infoUsunLabel.setText(actionUsunKsiazka(listaKsiazka.getSelectedValue()));
-            db.infoKsiazka(ksiazki);
+        buttonUsun.addActionListener(e -> { 
+            if(listaKsiazka.getSelectedValue() != null){
+                infoUsunLabel.setText(actionUsunKsiazka(listaKsiazka.getSelectedValue()));
+                db.infoKsiazka(ksiazki);
+                nazwa2.setText("");
+                rok2.setText("");
+                isbn2.setText("");
+                wydawnictwo2.setSelectedIndex(0);
+            }
         });
 
         infoUsunLabel.setBounds(700, 550, 270, 50);
@@ -964,6 +974,7 @@ public class MyFrame extends JFrame{
         JButton buttonDalej = new JButton("Dalej");
 
         JLabel usunLabel = new JLabel("Usuń autora",SwingConstants.CENTER);
+        JLabel usuninfoLabel = new JLabel("Aby usunąć najpierw wybierz autora z listy.");
         DefaultListModel<Autor> autorzy2 = new DefaultListModel<>();
         db.infoAutorKsiazka(autorzy2, idKsiazka);
         JList<Autor> listaAutor = new JList<>(autorzy2); 
@@ -988,7 +999,7 @@ public class MyFrame extends JFrame{
         buttonDodaj.addActionListener(e -> {
             if(db.dodajAutorKsiazka(idKsiazka, ((Autor)(autor.getSelectedItem())).getId())){
                 db.infoAutorKsiazka(autorzy2, idKsiazka);
-                infoDodajLabel.setText("Autor dodany do książki. Dodaj kolejnego autora lub kliknij przycisk dalej.");
+                infoDodajLabel.setText("<html>Autor dodany do książki. Dodaj kolejnego<br>autora lub kliknij przycisk dalej.</html>");
             }
             else
                 infoDodajLabel.setText("Nie udało się dodać autora do książki.");
@@ -1006,6 +1017,8 @@ public class MyFrame extends JFrame{
         usunLabel.setFont(new Font("TimesRoman",Font.BOLD,20));
         usunLabel.setBounds(700, 150, 270, 25);
 
+        usuninfoLabel.setBounds(700, 200, 300, 25);
+
         listaAutor.setFixedCellHeight(40);
         listaAutor.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
@@ -1015,12 +1028,14 @@ public class MyFrame extends JFrame{
         buttonUsun.setBounds(700, 510 ,300, 30);
         buttonUsun.setFocusable(false);
         buttonUsun.addActionListener(e -> {
-            if(db.usunAutorKsiazka(idKsiazka, listaAutor.getSelectedValue().getId())){
-                infoUsunLabel.setText("Autor usunięty.");
-                db.infoAutorKsiazka(autorzy2, idKsiazka);
+            if(listaAutor.getSelectedValue() != null){
+                if(db.usunAutorKsiazka(idKsiazka, listaAutor.getSelectedValue().getId())){
+                    infoUsunLabel.setText("Autor usunięty.");
+                    db.infoAutorKsiazka(autorzy2, idKsiazka);
+                }
+                else    
+                    infoUsunLabel.setText("Nie udało się usunąć autora.");
             }
-            else    
-                infoUsunLabel.setText("Nie udało się usunąć autora.");
         });
 
         infoUsunLabel.setBounds(700, 550, 270, 50);
@@ -1034,6 +1049,7 @@ public class MyFrame extends JFrame{
         ksiazkaDodajUsunAutoraPanel.add(buttonDalej);
 
         ksiazkaDodajUsunAutoraPanel.add(usunLabel);
+        ksiazkaDodajUsunAutoraPanel.add(usuninfoLabel);
         ksiazkaDodajUsunAutoraPanel.add(buttonUsun);
         ksiazkaDodajUsunAutoraPanel.add(scrollPane);
 
@@ -1070,7 +1086,8 @@ public class MyFrame extends JFrame{
         JLabel infoDodajLabel = new JLabel("* pole wymagane");
         JButton buttonZakoncz = new JButton("Zakończ");
 
-        JLabel usunLabel = new JLabel("Usuń autora",SwingConstants.CENTER);
+        JLabel usunLabel = new JLabel("Usuń dziedzinę",SwingConstants.CENTER);
+        JLabel usuninfoLabel = new JLabel("Aby usunąć najpierw wybierz dziedzinę z listy.");
         DefaultListModel<Dziedzina> dziedziny2 = new DefaultListModel<>();
         db.infoDziedzinaKsiazka(dziedziny2, idKsiazka);
         JList<Dziedzina> listaDziedzina = new JList<>(dziedziny2); 
@@ -1116,6 +1133,7 @@ public class MyFrame extends JFrame{
         usunLabel.setFont(new Font("TimesRoman",Font.BOLD,20));
         usunLabel.setBounds(700, 150, 270, 25);
 
+        usuninfoLabel.setBounds(700, 200, 300, 25);
 
         listaDziedzina.setFixedCellHeight(40);
         listaDziedzina.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -1126,12 +1144,14 @@ public class MyFrame extends JFrame{
         buttonUsun.setBounds(700, 510 ,300, 30);
         buttonUsun.setFocusable(false);
         buttonUsun.addActionListener(e -> {
-            if(db.usunDziedzinaKsiazka(idKsiazka, listaDziedzina.getSelectedValue().getId())){
-                infoUsunLabel.setText("Dziedzina usunięta.");
-                db.infoDziedzinaKsiazka(dziedziny2, idKsiazka);
+            if(listaDziedzina.getSelectedValue() != null){
+                if(db.usunDziedzinaKsiazka(idKsiazka, listaDziedzina.getSelectedValue().getId())){
+                    infoUsunLabel.setText("Dziedzina usunięta.");
+                    db.infoDziedzinaKsiazka(dziedziny2, idKsiazka);
+                }
+                else    
+                    infoUsunLabel.setText("Nie udało się usunąć dziedziny.");
             }
-            else    
-                infoUsunLabel.setText("Nie udało się usunąć dziedziny.");
         });
 
 
@@ -1146,6 +1166,7 @@ public class MyFrame extends JFrame{
         ksiazkaDodajUsunDziedzinePanel.add(buttonZakoncz);
 
         ksiazkaDodajUsunDziedzinePanel.add(usunLabel);
+        ksiazkaDodajUsunDziedzinePanel.add(usuninfoLabel);
         ksiazkaDodajUsunDziedzinePanel.add(buttonUsun);
         ksiazkaDodajUsunDziedzinePanel.add(scrollPane);
 
@@ -1188,9 +1209,12 @@ public class MyFrame extends JFrame{
 
         listaKsiazek.setFixedCellHeight(40);
         listaKsiazek.addListSelectionListener(e -> {
-            Ksiazka tmp = listaKsiazek.getSelectedValue();
-            Ksiazka book = new Ksiazka(tmp.getIdksiazka(), tmp.getTytul(), tmp.getRokwydania(), tmp.getIsbn(), tmp.getWydawnictwo(), tmp.getAutorzy(), tmp.getDziedziny());
-            EgzemplarzDodajUsun(book, egzemplarzPanel);
+            if(listaKsiazek.getSelectedValue() != null){
+                Ksiazka tmp = listaKsiazek.getSelectedValue();
+                Ksiazka book = new Ksiazka(tmp.getIdksiazka(), tmp.getTytul(), tmp.getRokwydania(), tmp.getIsbn(), tmp.getWydawnictwo(), tmp.getAutorzy(), tmp.getDziedziny());
+                EgzemplarzDodajUsun(book, egzemplarzPanel);
+                listaKsiazek.setSelectedIndex(0);
+            }
         });
         listaKsiazek.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listaKsiazek.clearSelection();
@@ -1291,13 +1315,13 @@ public class MyFrame extends JFrame{
 
         karaLabel.setBounds(465, 350, 80, 30);
         kara.setBounds(565, 350, 35, 25);
-        kara.setText("" + zalogowanyCzytelnik.getKara());
+        kara.setText(zalogowanyCzytelnik.getKara() + "zł");
 
         buttonZaplac.setBounds(600, 350 ,135, 30);
         buttonZaplac.setFocusable(false);
         buttonZaplac.addActionListener(e -> {
             if(db.aktualizujKaraCzytelnik(zalogowanyCzytelnik))
-                kara.setText(""+ zalogowanyCzytelnik.getKara());
+                kara.setText(zalogowanyCzytelnik.getKara() + "zł");
         });
 
         menuCzytelnikaPanel.add(imieLabel);
@@ -1337,7 +1361,11 @@ public class MyFrame extends JFrame{
         info.setBounds(300,110,750,30);
 
         listaKsiazek.setFixedCellHeight(40);
-        listaKsiazek.addListSelectionListener(e -> egzemplarzWyporzyczonyInfo(listaKsiazek.getSelectedValue(), wypozyczonePanel/*, listaKsiazek*/));
+        listaKsiazek.addListSelectionListener(e -> {
+            if(listaKsiazek.getSelectedValue() != null)
+                egzemplarzWyporzyczonyInfo(listaKsiazek.getSelectedValue(), wypozyczonePanel);
+            listaKsiazek.setSelectedIndex(0);
+        });
         listaKsiazek.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listaKsiazek.clearSelection();
 
@@ -1373,7 +1401,11 @@ public class MyFrame extends JFrame{
         info.setBounds(300,110,750,30);
 
         listaKsiazek.setFixedCellHeight(40);
-        listaKsiazek.addListSelectionListener(e -> ksiazkaZarezerwowanaInfo(listaKsiazek.getSelectedValue(), zarezerwowanePanel));
+        listaKsiazek.addListSelectionListener(e -> {
+            if(listaKsiazek.getSelectedValue() != null)
+                ksiazkaZarezerwowanaInfo(listaKsiazek.getSelectedValue(), zarezerwowanePanel);
+            listaKsiazek.setSelectedIndex(0);
+        });
         listaKsiazek.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listaKsiazek.clearSelection();
 
@@ -1442,19 +1474,25 @@ public class MyFrame extends JFrame{
         JComboBox<Dziedzina> dziedzina = new JComboBox<>(dziedziny);
         JButton buttonSzukaj = new JButton("Szukaj");
         
-        szukajLabel.setBounds(300, 105, 250, 30);
-        szukaj.setBounds(450, 110, 225, 25);
+
+        info.setBounds(300,110,750,30);
+        szukajLabel.setBounds(300, 145, 250, 30);
+        szukaj.setBounds(450, 150, 225, 25);
         db.infoDziedzina(dziedziny, new DefaultListModel<Dziedzina>());
-        dziedzina.setBounds(685, 110, 225, 25);
+        dziedzina.setBounds(685, 150, 225, 25);
         dziedzina.setSelectedIndex(0);
-        buttonSzukaj.setBounds(920, 110, 130, 25);
+        buttonSzukaj.setBounds(920, 150, 130, 25);
         buttonSzukaj.setFocusable(false);
         buttonSzukaj.addActionListener(e -> {
             db.infoKsiazka(ksiazki, szukaj.getText(), (Dziedzina)dziedzina.getSelectedItem());
         });
 
         listaKsiazek.setFixedCellHeight(40);
-        listaKsiazek.addListSelectionListener(e -> ksiazkaKatalogInfo(listaKsiazek.getSelectedValue(), katalogPanel));
+        listaKsiazek.addListSelectionListener(e -> {
+            if(listaKsiazek.getSelectedValue() != null)
+                ksiazkaKatalogInfo(listaKsiazek.getSelectedValue(), katalogPanel);
+            listaKsiazek.setSelectedIndex(0);
+        });
         listaKsiazek.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listaKsiazek.clearSelection();
 
@@ -1462,11 +1500,10 @@ public class MyFrame extends JFrame{
         renderer.setHorizontalAlignment(JLabel.CENTER);
         
         scrollPane.setViewportView(listaKsiazek);
-        scrollPane.setBounds(300,150,750,400);
+        scrollPane.setBounds(300,190,750,400);
 
         if(ksiazki.size()==0)
             info.setText("Brak książek :o");
-        info.setBounds(300,560,750,30);
 
         katalogPanel.add(szukajLabel);
         katalogPanel.add(szukajLabel);
@@ -1514,9 +1551,15 @@ public class MyFrame extends JFrame{
         });
 
         listaKsiazek.setFixedCellHeight(40);
-        listaKsiazek.addListSelectionListener(e -> ksiazkaInfo(listaKsiazek.getSelectedValue()));
+        listaKsiazek.addListSelectionListener(e -> {
+            if(listaKsiazek.getSelectedValue() != null){
+                ksiazkaInfo(listaKsiazek.getSelectedValue());
+                listaKsiazek.setSelectedIndex(0);
+            }
+        });
         listaKsiazek.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
+        
         DefaultListCellRenderer renderer = (DefaultListCellRenderer)listaKsiazek.getCellRenderer();
         renderer.setHorizontalAlignment(JLabel.CENTER);
         
@@ -1698,7 +1741,13 @@ public class MyFrame extends JFrame{
     private static String actionZmienAutor(Autor autor, String imie, String nazwisko){
         String toReturn = "Nie udało się zaktualizować danych autora.";
         if(autor == null){
-            toReturn = "Najpierw wybierz autora."; 
+            toReturn = "Najpierw wybierz autora z listy po prawej."; 
+        }
+        else if(imie.equals("")){
+            toReturn = "Wpisz imię.";
+        }
+        else if(nazwisko.equals("")){
+            toReturn = "Wpisz nazwisko.";
         }
         else if(db.aktualizujAutor(autor.getId(), imie, nazwisko))
             toReturn = "Autor zaktualizowany.";
@@ -1744,7 +1793,10 @@ public class MyFrame extends JFrame{
     private static String actionZmienWydawnictwo(Wydawnictwo wydawnictwo, String nazwa){
         String toReturn = "Nie udało się zaktualizować danych wydawnictwa.";
         if(wydawnictwo == null){
-            toReturn = "Najpierw wybierz wydawnictwo."; 
+            toReturn = "Najpierw wybierz wydawnictwo z listy po prawej."; 
+        }
+        else if(nazwa.equals("")){
+            toReturn = "Wpisz nazwę."; 
         }
         else if(db.aktualizujWydawnictwo(wydawnictwo.getId(), nazwa))
             toReturn = "Wydawnictwo zaktualizowane.";
@@ -1788,88 +1840,102 @@ public class MyFrame extends JFrame{
     }
 
     private static String actionZmienDziedzina(Dziedzina dziedzina, String nazwa, Dziedzina nadDziedzina){
-        String toReturn = "Nie udało się zaktualizować danych wydawnictwa.";
+        String toReturn = "Nie udało się zaktualizować dziedziny.";
         if(dziedzina == null){
-            toReturn = "Najpierw wybierz wydawnictwo."; 
+            toReturn = "Najpierw wybierz dziedzinę z listy po prawej."; 
+        }
+        else if(nazwa.equals("")){
+            toReturn = "Wpisz nazwę."; 
         }
         else if(db.aktualizujDziedzina(dziedzina.getId(), nazwa, nadDziedzina.getId()))
-            toReturn = "Wydawnictwo zaktualizowane.";
+            toReturn = "Dziedzina zaktualizowana.";
     
         return toReturn;
     }
 
     private static void actionDodajKsiazke(String nazwa, String rok, String isbn, Wydawnictwo wydawnictwo, JLabel label){
-        String blad = "";
-        boolean valid = true;
+        try{
+            String blad = "";
+            boolean valid = true;
 
-        Pattern patternRok = Pattern.compile("^\\d{4}$");
-        Matcher matcherRok = patternRok.matcher(rok);
-        Pattern patternISBN = Pattern.compile("^\\d{13}$");
-        Matcher matcherISBN = patternISBN.matcher(isbn);
-        
-        int rok_i = Integer.valueOf(rok);
-        BigDecimal isbn_i = new BigDecimal(isbn);
+            Pattern patternRok = Pattern.compile("^\\d{4}$");
+            Matcher matcherRok = patternRok.matcher(rok);
+            Pattern patternISBN = Pattern.compile("^\\d{13}$");
+            Matcher matcherISBN = patternISBN.matcher(isbn);
+            
 
-        if(nazwa.equals("") || rok.equals("") || isbn.equals("") || wydawnictwo.getId() == 0){
-            valid = false;
-            blad = "Wypełnij wszystkie wymagane pola. ";
-        }
-        else if(!matcherRok.matches()){
-            valid = false;
-            blad = "Błędny rok. ";
-        }
-        else if(!matcherISBN.matches()){
-            valid = false;
-            blad = "Błędny ISBN. ";
-        }
-        if(valid){
-            int id = db.dodajKsiazka(nazwa, rok_i, isbn_i, wydawnictwo.getId());
-            if(id == 0){
-                label.setText("Nie udało się dodać książki. Nieprawidłowy rok lub ISBN.");
+            int rok_i = Integer.valueOf(rok);
+            BigDecimal isbn_i = new BigDecimal(isbn);
+
+            if(nazwa.equals("") || rok.equals("") || isbn.equals("") || wydawnictwo.getId() == 0){
+                valid = false;
+                blad = "Wypełnij wszystkie wymagane pola. ";
             }
-            else
-                ksiazkaDodajUsunAutoraPanelInit(id, nazwa, rok, isbn, wydawnictwo.getNazwa());
+            else if(!matcherRok.matches()){
+                valid = false;
+                blad = "Błędny rok. ";
+            }
+            else if(!matcherISBN.matches()){
+                valid = false;
+                blad = "Błędny ISBN. ";
+            }
+            if(valid){
+                int id = db.dodajKsiazka(nazwa, rok_i, isbn_i, wydawnictwo.getId());
+                if(id == 0){
+                    label.setText("<html>Nie udało się dodać książki.<br />Błędny ISBN lub rok.<html>");
+                }
+                else
+                    ksiazkaDodajUsunAutoraPanelInit(id, nazwa, rok, isbn, wydawnictwo.getNazwa());
+            }
+            else{
+                label.setText(blad);
+            }
         }
-        else{
-            label.setText(blad);
+        catch(Exception e){
+            label.setText("Błędne dane.");
         }
     }
 
     
     private static void actionAutualizujKsiazke(int idKsiazka, String nazwa, String rok, String isbn, Wydawnictwo wydawnictwo, JLabel label){
-        String blad = "";
-        boolean valid = true;
+        try{
+            String blad = "";
+            boolean valid = true;
 
-        Pattern patternRok = Pattern.compile("^\\d{4}$");
-        Matcher matcherRok = patternRok.matcher(rok);
-        Pattern patternISBN = Pattern.compile("^\\d{13}$");
-        Matcher matcherISBN = patternISBN.matcher(isbn);
-        
-        int rok_i = Integer.valueOf(rok);
-        BigDecimal isbn_i = new BigDecimal(isbn);
+            Pattern patternRok = Pattern.compile("^\\d{4}$");
+            Matcher matcherRok = patternRok.matcher(rok);
+            Pattern patternISBN = Pattern.compile("^\\d{13}$");
+            Matcher matcherISBN = patternISBN.matcher(isbn);
+            
+            int rok_i = Integer.valueOf(rok);
+            BigDecimal isbn_i = new BigDecimal(isbn);
 
-        if(nazwa.equals("") || rok.equals("") || isbn.equals("") || wydawnictwo.getId() == 0){
-            valid = false;
-            blad = "Wypełnij wszystkie wymagane pola. ";
-        }
-        else if(!matcherRok.matches()){
-            valid = false;
-            blad = "Błędny rok. ";
-        }
-        else if(!matcherISBN.matches()){
-            valid = false;
-            blad = "Błędny ISBN. ";
-        }
-        if(valid){
-            int id = db.autualizujKsiazka(idKsiazka, nazwa, rok_i, isbn_i, wydawnictwo.getId());
-            if(id == 0){
-                label.setText("Nie udało się dodać książki. Nieprawidłowy rok lub ISBN.");
+            if(nazwa.equals("") || rok.equals("") || isbn.equals("") || wydawnictwo.getId() == 0){
+                valid = false;
+                blad = "Wypełnij wszystkie wymagane pola. ";
             }
-            else
-                ksiazkaDodajUsunAutoraPanelInit(id, nazwa, rok, isbn, wydawnictwo.getNazwa());
+            else if(!matcherRok.matches()){
+                valid = false;
+                blad = "Błędny rok. ";
+            }
+            else if(!matcherISBN.matches()){
+                valid = false;
+                blad = "Błędny ISBN. ";
+            }
+            if(valid){
+                int id = db.autualizujKsiazka(idKsiazka, nazwa, rok_i, isbn_i, wydawnictwo.getId());
+                if(id == 0){
+                    label.setText("<html>Nie udało się dodać książki.<br />Błędny ISBN lub rok.<html>");
+                }
+                else
+                    ksiazkaDodajUsunAutoraPanelInit(id, nazwa, rok, isbn, wydawnictwo.getNazwa());
+            }
+            else{
+                label.setText(blad);
+            }
         }
-        else{
-            label.setText(blad);
+        catch(Exception e){
+            label.setText("Błędne dane.");
         }
     }
 

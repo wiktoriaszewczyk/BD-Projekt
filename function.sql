@@ -1,4 +1,5 @@
 -- Funkcja logowanie jako pracownik
+-- Zwraca
 -- 1 - udane logowanie
 -- 0 - nieudane logowanie
 CREATE OR REPLACE FUNCTION logowanie_pracownik(l text, p text)
@@ -20,6 +21,7 @@ LANGUAGE plpgsql;
 
 
 -- Funkcja logowanie jako czytelnik
+-- Zwraca
 -- id - udane logowanie
 -- 0 - nieudane logowanie
 CREATE OR REPLACE FUNCTION logowanie_czytelnik(l text, p text)
@@ -39,11 +41,10 @@ LANGUAGE plpgsql;
 
 -------------------------------------------------------------------------------------
 
--- czy ksiazka jest juz dostepna do wypożyczenia
--- zwraca 
--- 0 jeśli nie 
--- idegzemplarz dostępnego egzemplarza jeśli tak 
-
+-- Funkcja sprawdza czy ksiazka jest dostepna do wypożyczenia
+-- Zwraca 
+-- 0 - jeśli nie 
+-- idegzemplarz dostępnego egzemplarza - jeśli tak 
 CREATE OR REPLACE FUNCTION dostepnosc_ksiazki(idK int)
 RETURNS int AS
 $$
@@ -65,11 +66,10 @@ LANGUAGE plpgsql;
 
 -------------------------------------------------------------------------------------
 
--- czy zarezerwowana ksiazka jest juz dostepna
--- zwraca 
--- 0 jeśli nie 
--- idegzemplarz dostępnego egzemplarza jeśli tak 
-
+-- Funkcja sprawdza czy zarezerwowana ksiazka jest juz dostepna
+-- Zwraca 
+-- 0 - jeśli nie 
+-- idegzemplarz dostępnego egzemplarza - jeśli tak 
 CREATE OR REPLACE FUNCTION rezerwacja_dostepnosc(idK int, idC int)
 RETURNS int AS
 $$
@@ -96,8 +96,8 @@ LANGUAGE plpgsql;
 
 -------------------------------------------------------------------------------------
 
--- usuwanie ksiazki
--- zwraca 
+-- Usuwanie ksiazki
+-- Zwraca 
 -- 0 - nie udało się usunąć (są egzemplarze)
 -- 1 - udało się usunąć
 CREATE OR REPLACE FUNCTION usuwanie_ksiazki(idK int)
@@ -106,7 +106,7 @@ $$
 DECLARE
     recEgzemplarz RECORD;
 BEGIN
-    -- Usuwam informacje z tabel ksiazka_dziedzina, ksiazka_autor i rezerwacja tylko jesli nie ma egzemplarzy
+    -- Jesli nie ma egzemplarzy, usuwam informacje o ksiażce z tabel ksiazka_dziedzina, ksiazka_autor i rezerwacja.
     -- Jeśli chcemy usunąć książke trzeba najpierw usunąć wszystkie jej egzemplarze, nie usuwam kaskadowo wszystkich informacji o książce  
     SELECT COUNT(*) AS n INTO recEgzemplarz FROM egzemplarz WHERE ksiazka_idksiazka = idK;
     
@@ -114,7 +114,7 @@ BEGIN
         RETURN 0;
     END IF;
 
-    DELETE FROM ksiazka_autor WHERE ksiazka_idksiazka = idK
+    DELETE FROM ksiazka_autor WHERE ksiazka_idksiazka = idK ;
     DELETE FROM ksiazka_dziedzina WHERE ksiazka_idksiazka = idK;
     DELETE FROM rezerwacja WHERE ksiazka_idksiazka = idK;
 
@@ -127,8 +127,8 @@ LANGUAGE plpgsql;
 
 -------------------------------------------------------------------------------------
 
--- usuwanie egzemplarza
--- zwraca 
+-- Usuwanie egzemplarza
+-- Zwraca 
 -- 0 - nie udało się usunąć (wypozyczona)
 -- 1 - udało się usunąć
 CREATE OR REPLACE FUNCTION usuwanie_egzemplarza(idE int)
@@ -154,8 +154,7 @@ LANGUAGE plpgsql;
 
 ------------------------------------------------------------------------------------------------------------
 
--- Przy oddaniu książki jeśli została przetrzymana nalicza się kara // nienajlepsze rozwiązanie :c
-
+-- Przy oddaniu książki jeśli została przetrzymana nalicza się kara (0.1 zł na dzień)   -- nienajlepsze rozwiązanie :c 
 CREATE OR REPLACE FUNCTION dodaj_kara(idC int, idE int)
 RETURNS VOID AS
 $$
