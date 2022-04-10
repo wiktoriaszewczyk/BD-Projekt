@@ -1,1 +1,0 @@
-java -jar --enable-preview BD-Projekt.jar

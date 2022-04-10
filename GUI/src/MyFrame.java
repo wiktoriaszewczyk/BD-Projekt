@@ -1112,7 +1112,7 @@ public class MyFrame extends JFrame{
         buttonDodaj.addActionListener(e -> {
             if(db.dodajDziedzinaKsiazka(idKsiazka, ((Dziedzina)(dziedzina.getSelectedItem())).getId())){
                 db.infoDziedzinaKsiazka(dziedziny2, idKsiazka);
-                infoDodajLabel.setText("Dziedzina dodana do książki. Możesz dodać kolejną dziedzinę.");
+                infoDodajLabel.setText("<html>Dziedzina dodana do książki.<br />Możesz dodać kolejną dziedzinę.<html>");
             }
             else
                 infoDodajLabel.setText("Nie udało się dodać autora do książki.");

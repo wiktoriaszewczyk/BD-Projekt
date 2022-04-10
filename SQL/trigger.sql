@@ -87,3 +87,63 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER rezerwacja_insert BEFORE INSERT ON Rezerwacja
 FOR EACH ROW EXECUTE PROCEDURE nowa_rezerwacja();
+
+
+-------------------------------------------------------------------------------------
+
+-- Usuwanie ksiazki 
+CREATE OR REPLACE FUNCTION usuwanie_ksiazki()
+RETURNS TRIGGER AS
+$$
+DECLARE
+    recEgzemplarz RECORD;
+BEGIN
+    -- Jesli nie ma egzemplarzy, usuwam informacje o ksiażce z tabel ksiazka_dziedzina, ksiazka_autor i rezerwacja.
+    -- Jeśli chcemy usunąć książke trzeba najpierw usunąć wszystkie jej egzemplarze, nie usuwam kaskadowo wszystkich informacji o książce  
+    SELECT COUNT(*) AS n INTO recEgzemplarz FROM egzemplarz WHERE ksiazka_idksiazka = OLD.idKsiazka;
+    
+    IF recEgzemplarz.n > 0 THEN
+        RETURN NULL;
+    END IF;
+
+    DELETE FROM ksiazka_autor WHERE ksiazka_idksiazka = OLD.idKsiazka ;
+    DELETE FROM ksiazka_dziedzina WHERE ksiazka_idksiazka = OLD.idKsiazka;
+    DELETE FROM rezerwacja WHERE ksiazka_idksiazka = OLD.idKsiazka;
+
+    -- DELETE FROM ksiazka WHERE idksiazka = idK;    
+
+    RETURN OLD;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER ksiazka_delete BEFORE DELETE ON Ksiazka
+FOR EACH ROW EXECUTE PROCEDURE usuwanie_ksiazki();
+
+
+-------------------------------------------------------------------------------------
+
+-- Usuwanie egzemplarza
+CREATE OR REPLACE FUNCTION usuwanie_egzemplarza()
+RETURNS TRIGGER AS
+$$
+DECLARE
+    recEgzemplarz RECORD;
+BEGIN
+    -- Usuwam egzemplarz tylko jesli nie jest wypozyczony
+    SELECT wypozyczona INTO recEgzemplarz FROM egzemplarz WHERE idegzemplarz = OLD.idEgzemplarz;
+    
+    IF recEgzemplarz.wypozyczona = true THEN
+        RETURN NULL;
+    END IF;
+
+    -- Usuwam z wypozyczen
+    DELETE FROM wypozyczenie WHERE egzemplarz_idEgzemplarz = OLD.idEgzemplarz;
+
+    RETURN OLD;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER egzemplarz_delete BEFORE DELETE ON Egzemplarz
+FOR EACH ROW EXECUTE PROCEDURE usuwanie_egzemplarza();

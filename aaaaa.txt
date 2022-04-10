@@ -1,5 +1,0 @@
-ssh 9szewczyk@pascal.fis.agh.edu.pl
-
-psql -h tyke.db.elephantsql.com -d ifxtftxk -U ifxtftxk
-
-0g7OqkBeJSAZuc67LqNSPiuns4STF5ZP
